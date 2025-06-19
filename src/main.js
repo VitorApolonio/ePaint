@@ -26,6 +26,13 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  const resizeHandler = () => {
+    const { width, height } = mainWindow.getBounds()
+    mainWindow.webContents.send('window-resized', width, height)
+  }
+  mainWindow.on('resize', resizeHandler)
+  mainWindow.webContents.once('dom-ready', resizeHandler)
 };
 
 // This method will be called when Electron has finished

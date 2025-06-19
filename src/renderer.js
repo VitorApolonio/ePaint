@@ -32,8 +32,19 @@ const brushSizeSelect = document.getElementById('brushSizeSelect')
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-let mouseClicked = false
+window.electronAPI.onResize((width, height) => {
+  const bkpCanvas = document.createElement('canvas')
+  bkpCanvas.width = canvas.width
+  bkpCanvas.height = canvas.height
+  bkpCanvas.getContext('2d').drawImage(canvas, 0, 0)
 
+  canvas.width = width * 0.8
+  canvas.height = height * 0.8
+
+  ctx.drawImage(bkpCanvas, 0, 0)
+})
+
+let mouseClicked = false
 
 // brush settings
 let brushSize = 2
@@ -59,8 +70,8 @@ const startPos = { x: 0, y: 0 }
 // set line start position on mouse click
 canvas.addEventListener('mousedown', e => {
   mouseClicked = true
-  startPos.x = e.x - canvas.offsetLeft
-  startPos.y = e.y - canvas.offsetTop
+  startPos.x = e.layerX - canvas.offsetLeft
+  startPos.y = e.layerY - canvas.offsetTop
 })
 
 // stop drawing when mouse is released
@@ -72,8 +83,9 @@ canvas.addEventListener('mouseup', () => {
 canvas.addEventListener('mousemove', e => {
   if (mouseClicked) {
     draw(e)
-    startPos.x = e.x - canvas.offsetLeft
-    startPos.y = e.y - canvas.offsetTop
+    startPos.x = e.layerX - canvas.offsetLeft
+    startPos.y = e.layerY - canvas.offsetTop
+    console.log(e)
   }
 })
 
@@ -81,7 +93,7 @@ canvas.addEventListener('mousemove', e => {
 canvas.addEventListener('mouseup', e => {
   ctx.beginPath()
   ctx.fillStyle = brushColor
-  ctx.ellipse(e.x - canvas.offsetLeft, e.y - canvas.offsetTop, brushSize / 2, brushSize / 2, 0, 0, Math.PI * 2)
+  ctx.ellipse(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop, brushSize / 2, brushSize / 2, 0, 0, Math.PI * 2)
   ctx.fill()
 })
 
@@ -92,6 +104,6 @@ const draw = (e) => {
   ctx.lineWidth = brushSize
   ctx.strokeStyle = brushColor
   ctx.moveTo(startPos.x, startPos.y)
-  ctx.lineTo(e.x - canvas.offsetLeft, e.y - canvas.offsetTop)
+  ctx.lineTo(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
   ctx.stroke()
 }

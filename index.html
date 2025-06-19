@@ -7,9 +7,11 @@
     <script defer type="module" src="/src/renderer.js"></script>
   </head>
   <body>
-    <canvas width="600" height="450"></canvas>
+    <div id="canvas-container" class="container">
+      <canvas></canvas>
+    </div>
 
-    <div class="container">
+    <div id="tools-container" class="container">
       <div class="select is-dark">
         <select id="brushSizeSelect">
           <!-- options added through JS -->

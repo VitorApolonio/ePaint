@@ -9,7 +9,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
   margin: auto;
-  max-width: 38rem;
   padding: 2rem;
 }
 
@@ -17,4 +16,9 @@ canvas {
   border-color: ghostwhite;
   border-radius: 1;
   border-style: solid;
+  display: flex;
+}
+
+#canvas-container {
+  justify-items: center;
 }
