@@ -1,14 +1,30 @@
+const brushSizeSelect = document.getElementById('brushSizeSelect')
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-// positions to begin line
-const startPos = { x: 0, y: 0 }
-
 let mouseClicked = false
 
+
 // brush settings
-let brushSize = 5
+let brushSize = 2
 let brushColor = '#ffffff'
+
+// setup brush sizes
+const sizes = [2, 5, 10, 15, 20, 25, 30]
+
+sizes.forEach(s => {
+  const e = document.createElement('option')
+  e.innerHTML = s
+  brushSizeSelect.appendChild(e)
+})
+
+// use selected brush size
+brushSizeSelect.addEventListener('change', e => {
+  brushSize = e.target.value
+})
+
+// positions to begin line
+const startPos = { x: 0, y: 0 }
 
 // set line start position on mouse click
 canvas.addEventListener('mousedown', e => {

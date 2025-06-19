@@ -4,11 +4,19 @@
     <meta charset="UTF-8" />
     <title>e-paint</title>
 
+    <script defer type="module" src="/src/renderer.js"></script>
+    <script defer src="/src/render.js"></script>
   </head>
   <body>
     <canvas width="600" height="450"></canvas>
 
-    <script type="module" src="/src/renderer.js"></script>
-    <script src="/src/render.js"></script>
+    <div class="container">
+      <div class="select is-dark">
+        <select id="brushSizeSelect">
+          <!-- options added through JS -->
+        </select>
+      </div>
+    </div>
+
   </body>
 </html>
