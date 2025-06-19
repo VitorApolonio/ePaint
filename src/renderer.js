@@ -27,11 +27,14 @@
  */
 
 import './index.css'
+import Brush from './drawing.js'
 
 const brushSizeSelect = document.getElementById('brushSizeSelect')
 const brushColorSelect = document.getElementById('color-select')
 const canvas = document.querySelector('canvas')
-const ctx = canvas.getContext('2d')
+
+// whether the mouse is being held down
+let mouseClicked = false
 
 // auto resize canvas, preserving current drawing
 window.electronAPI.onResize((width, height) => {
@@ -43,14 +46,11 @@ window.electronAPI.onResize((width, height) => {
   canvas.width = width * 0.8
   canvas.height = height * 0.8
 
-  ctx.drawImage(bkpCanvas, 0, 0)
+  canvas.getContext('2d').drawImage(bkpCanvas, 0, 0)
 })
 
-let mouseClicked = false
-
 // brush settings
-let brushSize = 2
-let brushColor = '#ffffff'
+const brush = new Brush(canvas, 2, '#ffffff')
 
 // setup brush sizes
 const sizes = [2, 5, 10, 15, 20, 25, 30]
@@ -63,7 +63,7 @@ sizes.forEach(s => {
 
 // use selected brush size
 brushSizeSelect.addEventListener('change', e => {
-  brushSize = e.target.value
+  brush.size = e.target.value
 })
 
 // set default brush color
@@ -71,10 +71,10 @@ brushColorSelect.value = '#ffffff'
 
 // use selected color
 brushColorSelect.addEventListener('change', e => {
-  brushColor = e.target.value
+  brush.color = e.target.value
 })
 
-// positions to begin line
+// position to begin line
 const startPos = { x: 0, y: 0 }
 
 // set line start position on mouse click
@@ -92,28 +92,13 @@ canvas.addEventListener('mouseup', () => {
 // draw line from startPos to current mouse position, then set startPos to current
 canvas.addEventListener('mousemove', e => {
   if (mouseClicked) {
-    draw(e)
+    brush.drawLine(startPos.x, startPos.y, e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
     startPos.x = e.layerX - canvas.offsetLeft
     startPos.y = e.layerY - canvas.offsetTop
-    console.log(e)
   }
 })
 
 // draw a dot on mouse click
 canvas.addEventListener('mouseup', e => {
-  ctx.beginPath()
-  ctx.fillStyle = brushColor
-  ctx.ellipse(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop, brushSize / 2, brushSize / 2, 0, 0, Math.PI * 2)
-  ctx.fill()
+  brush.drawPoint(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
 })
-
-// drawing algorithm
-const draw = (e) => {
-  ctx.beginPath()
-  ctx.lineCap = 'round'
-  ctx.lineWidth = brushSize
-  ctx.strokeStyle = brushColor
-  ctx.moveTo(startPos.x, startPos.y)
-  ctx.lineTo(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
-  ctx.stroke()
-}
