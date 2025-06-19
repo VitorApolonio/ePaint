@@ -85,7 +85,7 @@ canvas.addEventListener('mousedown', e => {
 })
 
 // stop drawing when mouse is released
-canvas.addEventListener('mouseup', () => {
+document.addEventListener('mouseup', () => {
   mouseClicked = false
 })
 
