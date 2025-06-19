@@ -29,9 +29,11 @@
 import './index.css'
 
 const brushSizeSelect = document.getElementById('brushSizeSelect')
+const brushColorSelect = document.getElementById('color-select')
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
+// auto resize canvas, preserving current drawing
 window.electronAPI.onResize((width, height) => {
   const bkpCanvas = document.createElement('canvas')
   bkpCanvas.width = canvas.width
@@ -62,6 +64,14 @@ sizes.forEach(s => {
 // use selected brush size
 brushSizeSelect.addEventListener('change', e => {
   brushSize = e.target.value
+})
+
+// set default brush color
+brushColorSelect.value = '#ffffff'
+
+// use selected color
+brushColorSelect.addEventListener('change', e => {
+  brushColor = e.target.value
 })
 
 // positions to begin line
