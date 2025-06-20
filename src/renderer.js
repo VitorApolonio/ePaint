@@ -74,6 +74,8 @@ document.addEventListener('mouseup', e => {
   if (mouseClicked) {
     actionStack.add(action)
     action.positions = []
+    undoBtn.removeAttribute('disabled')
+    redoBtn.setAttribute('disabled', null)
   }
   mouseClicked = false
 })
@@ -97,9 +99,17 @@ canvas.addEventListener('mouseup', e => {
 // Undo.
 undoBtn.addEventListener('click', () => {
   actionStack.undo()
+  if (!actionStack.canUndo()) {
+    undoBtn.setAttribute('disabled', null)
+  }
+  redoBtn.removeAttribute('disabled')
 })
 
 // Redo.
 redoBtn.addEventListener('click', () => {
   actionStack.redo()
+  if (!actionStack.canRedo()) {
+    redoBtn.setAttribute('disabled', null)
+  }
+  undoBtn.removeAttribute('disabled')
 })

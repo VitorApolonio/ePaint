@@ -61,6 +61,14 @@ class DrawStack {
     this.#brush = new Brush(canvas, null, null)
   }
 
+  canUndo() {
+    return this.#index > 0
+  }
+
+  canRedo() {
+    return this.#index < this.#actions.length
+  }
+
   add(action) {
     // delete actions beyond current index
     const howMany = this.#actions.length - this.#index
