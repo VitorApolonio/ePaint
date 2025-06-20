@@ -2,7 +2,8 @@ import './index.css'
 import { Action, Brush, DrawStack } from './drawing.js'
 
 const brushSizeSelect = document.getElementById('brushSizeSelect')
-const brushColorSelect = document.getElementById('color-select')
+const brushColorSelectPrimary = document.getElementById('color-select-primary')
+const brushColorSelectSecondary = document.getElementById('color-select-secondary')
 const canvas = document.querySelector('canvas')
 const undoBtn = document.getElementById('undo-btn')
 const redoBtn = document.getElementById('redo-btn')
@@ -15,7 +16,7 @@ let mouseClicked = false
 let curAction = null
 
 // brush and undo/redo stack
-const paintbrush = new Brush(canvas, 5, '#ffffff')
+const paintbrush = new Brush(canvas, 5, null)
 const actionStack = new DrawStack(canvas)
 
 // auto resize canvas, preserving current drawing
@@ -49,12 +50,8 @@ brushSizeSelect.addEventListener('change', e => {
 })
 
 // set default brush color
-brushColorSelect.value = '#ffffff'
-
-// use selected color
-brushColorSelect.addEventListener('change', e => {
-  paintbrush.color = e.target.value
-})
+brushColorSelectPrimary.value = '#ffffff'
+brushColorSelectSecondary.value = '#ff00ff'
 
 // position at which to begin line
 const startPos = { x: 0, y: 0 }
@@ -62,14 +59,17 @@ const startPos = { x: 0, y: 0 }
 // begin action on mouse click
 canvas.addEventListener('mousedown', e => {
   // make new action
-  curAction = new Action(paintbrush.size, paintbrush.color)
+  if (!mouseClicked) {
+    const color = e.button === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
+    curAction = new Action(paintbrush.size, color)
 
-  mouseClicked = true
+    mouseClicked = true
 
-  // begin path at current position
-  startPos.x = e.layerX - canvas.offsetLeft
-  startPos.y = e.layerY - canvas.offsetTop
-  curAction.addPosition(startPos.x, startPos.y)
+    // begin path at current position
+    startPos.x = e.layerX - canvas.offsetLeft
+    startPos.y = e.layerY - canvas.offsetTop
+    curAction.addPosition(startPos.x, startPos.y)
+  }
 })
 
 // stop drawing when mouse is released
@@ -79,14 +79,15 @@ document.addEventListener('mouseup', e => {
     curAction = null
     undoBtn.removeAttribute('disabled')
     redoBtn.setAttribute('disabled', null)
+    mouseClicked = false
   }
-  mouseClicked = false
 })
 
 // draw line from startPos to current mouse position, then set startPos to current
 canvas.addEventListener('mousemove', e => {
   if (mouseClicked) {
     const endPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+    paintbrush.color = curAction.brushColor
     paintbrush.drawLine(startPos.x, startPos.y, endPos.x, endPos.y)
     curAction.addPosition(endPos.x, endPos.y)
     startPos.x = endPos.x
@@ -96,7 +97,10 @@ canvas.addEventListener('mousemove', e => {
 
 // draw a dot on mouse click
 canvas.addEventListener('mouseup', e => {
-  paintbrush.drawPoint(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
+  if (mouseClicked) {
+    paintbrush.color = curAction.brushColor
+    paintbrush.drawPoint(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
+  }
 })
 
 // Undo.

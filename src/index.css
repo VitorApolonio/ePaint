@@ -23,6 +23,8 @@ canvas {
 
 .tool {
   margin: 0 4vw 0 0;
+  text-align: center;
+  justify-items: center;
 }
 
 #canvas-container {
@@ -36,7 +38,7 @@ canvas {
   user-select: none;
 }
 
-#color-select {
+#color-select-primary, #color-select-secondary {
   width: 5rem;
   cursor: pointer;
 }
