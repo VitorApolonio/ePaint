@@ -116,5 +116,11 @@ redoBtn.addEventListener('click', () => {
 })
 
 clearBtn.addEventListener('click', () => {
-  brush.clearCanvas()
+  // wiping the canvas counts as an action only if it's not already blank
+  if (!brush.canvasIsBlank()) {
+    brush.clearCanvas()
+    actionStack.add(action)
+    undoBtn.removeAttribute('disabled')
+    redoBtn.setAttribute('disabled', null)
+  }
 })

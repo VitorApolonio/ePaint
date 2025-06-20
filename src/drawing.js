@@ -49,6 +49,12 @@ class Brush {
     const h = this.#ctx.canvas.height
     this.#ctx.clearRect(0, 0, w, h)
   }
+
+  canvasIsBlank() {
+    const w = this.#ctx.canvas.width
+    const h = this.#ctx.canvas.height
+    return !this.#ctx.getImageData(0, 0, w, h).data.some(ch => ch !== 0)
+  }
 }
 
 class DrawStack {
@@ -115,8 +121,12 @@ class DrawStack {
         this.#brush.drawLine(startPos.x, startPos.y, positions[i].x, positions[i].y)
         startPos = positions[i]
       }
-    } else {
+    // draw a point if the action has only one position
+    } else if (positions.length === 1) {
       this.#brush.drawPoint(positions[0].x, positions[0].y)
+    // an action without any coordinates means the canvas was wiped
+    } else {
+      this.#brush.clearCanvas()
     }
   }
 }
