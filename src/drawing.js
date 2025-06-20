@@ -1,3 +1,31 @@
+class Action {
+  #brushState = { size: null, color: null }
+  #positions = []
+
+  constructor(brushSize, brushColor) {
+    this.#brushState.size = brushSize
+    this.#brushState.color = brushColor
+  }
+
+  get brushSize() {
+    return this.#brushState.size
+  }
+
+  get brushColor() {
+    return this.#brushState.color
+  }
+
+  get positions() {
+    // returns a copy to prevent issues with mutation
+    // the positions can still be modified, as this is a shallow copy
+    return this.#positions.slice()
+  }
+
+  addPosition(x, y) {
+    this.#positions.push({ x, y })
+  }
+}
+
 class Brush {
   #size
   #color
@@ -81,9 +109,9 @@ class DrawStack {
     for (let i = 0; i < howMany; i++) {
       this.#actions.pop()
     }
-    // a deep copy of the action is pushed, as objects are references
-    this.#actions.push(JSON.parse(JSON.stringify(action)))
+    this.#actions.push(action)
     this.#index++
+    console.log(this.#actions)
   }
 
   undo() {
@@ -110,8 +138,8 @@ class DrawStack {
 
   drawAction(action) {
     // restore brush state
-    this.#brush.color = action.brushState.color
-    this.#brush.size = action.brushState.size
+    this.#brush.color = action.brushColor
+    this.#brush.size = action.brushSize
 
     const positions = action.positions
     if (positions.length > 1) {
@@ -128,7 +156,15 @@ class DrawStack {
     } else {
       this.#brush.clearCanvas()
     }
+
+    // reset brush state
+    this.#brush.color = null
+    this.#brush.size = null
   }
 }
 
-export { Brush, DrawStack }
+export {
+  Action,
+  Brush,
+  DrawStack
+}

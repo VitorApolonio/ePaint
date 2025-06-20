@@ -1,5 +1,5 @@
 import './index.css'
-import { Brush, DrawStack } from './drawing.js'
+import { Action, Brush, DrawStack } from './drawing.js'
 
 const brushSizeSelect = document.getElementById('brushSizeSelect')
 const brushColorSelect = document.getElementById('color-select')
@@ -10,6 +10,13 @@ const clearBtn = document.getElementById('clear-btn')
 
 // whether the mouse is being held down
 let mouseClicked = false
+
+// current action (i.e. shape drawn with mouse)
+let curAction = null
+
+// brush and undo/redo stack
+const paintbrush = new Brush(canvas, 2, '#ffffff')
+const actionStack = new DrawStack(canvas)
 
 // auto resize canvas, preserving current drawing
 window.electronAPI.onResize((width, height) => {
@@ -24,14 +31,6 @@ window.electronAPI.onResize((width, height) => {
   canvas.getContext('2d').drawImage(bkpCanvas, 0, 0)
 })
 
-// brush settings
-const brush = new Brush(canvas, 2, '#ffffff')
-const actionStack = new DrawStack(canvas)
-const action = {
-  positions: [],
-  brushState: { size: null, color: null }
-}
-
 // setup brush sizes
 const sizes = [2, 5, 10, 15, 20, 25, 30]
 
@@ -43,7 +42,7 @@ sizes.forEach(s => {
 
 // use selected brush size
 brushSizeSelect.addEventListener('change', e => {
-  brush.size = e.target.value
+  paintbrush.size = Number(e.target.value)
 })
 
 // set default brush color
@@ -51,30 +50,30 @@ brushColorSelect.value = '#ffffff'
 
 // use selected color
 brushColorSelect.addEventListener('change', e => {
-  brush.color = e.target.value
+  paintbrush.color = e.target.value
 })
 
-// position to begin line
+// position at which to begin line
 const startPos = { x: 0, y: 0 }
 
-// set line start position on mouse click
+// begin action on mouse click
 canvas.addEventListener('mousedown', e => {
-  // record current brush settings
-  action.brushState.color = brush.color
-  action.brushState.size = brush.size
+  // make new action
+  curAction = new Action(paintbrush.size, paintbrush.color)
 
   mouseClicked = true
+
+  // begin path at current position
   startPos.x = e.layerX - canvas.offsetLeft
   startPos.y = e.layerY - canvas.offsetTop
-
-  action.positions.push({ x: startPos.x, y: startPos.y })
+  curAction.addPosition(startPos.x, startPos.y)
 })
 
 // stop drawing when mouse is released
 document.addEventListener('mouseup', e => {
   if (mouseClicked) {
-    actionStack.add(action)
-    action.positions = []
+    actionStack.add(curAction)
+    curAction = null
     undoBtn.removeAttribute('disabled')
     redoBtn.setAttribute('disabled', null)
   }
@@ -85,16 +84,16 @@ document.addEventListener('mouseup', e => {
 canvas.addEventListener('mousemove', e => {
   if (mouseClicked) {
     const endPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
-    brush.drawLine(startPos.x, startPos.y, endPos.x, endPos.y)
+    paintbrush.drawLine(startPos.x, startPos.y, endPos.x, endPos.y)
+    curAction.addPosition(endPos.x, endPos.y)
     startPos.x = endPos.x
     startPos.y = endPos.y
-    action.positions.push({ x: endPos.x, y: endPos.y })
   }
 })
 
 // draw a dot on mouse click
 canvas.addEventListener('mouseup', e => {
-  brush.drawPoint(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
+  paintbrush.drawPoint(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
 })
 
 // Undo.
@@ -115,11 +114,12 @@ redoBtn.addEventListener('click', () => {
   undoBtn.removeAttribute('disabled')
 })
 
+// clear canvas
 clearBtn.addEventListener('click', () => {
   // wiping the canvas counts as an action only if it's not already blank
-  if (!brush.canvasIsBlank()) {
-    brush.clearCanvas()
-    actionStack.add(action)
+  if (!paintbrush.canvasIsBlank()) {
+    paintbrush.clearCanvas()
+    actionStack.add(new Action(null, null))
     undoBtn.removeAttribute('disabled')
     redoBtn.setAttribute('disabled', null)
   }
