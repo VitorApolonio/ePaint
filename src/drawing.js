@@ -81,7 +81,9 @@ class Brush {
   canvasIsBlank() {
     const w = this.#ctx.canvas.width
     const h = this.#ctx.canvas.height
-    return !this.#ctx.getImageData(0, 0, w, h).data.some(ch => ch !== 0)
+    // https://stackoverflow.com/a/17386803
+    const pixelBuffer = new Uint32Array(this.#ctx.getImageData(0, 0, w, h).data.buffer)
+    return !pixelBuffer.some(c => c !== 0)
   }
 }
 
