@@ -46,7 +46,7 @@ window.electronAPI.onResize((width, height) => {
   bkpCanvas.getContext('2d').drawImage(canvas, 0, 0)
 
   canvas.width = width * 0.8
-  canvas.height = height * 0.8
+  canvas.height = height * 0.75
 
   canvas.getContext('2d').drawImage(bkpCanvas, 0, 0)
 })
