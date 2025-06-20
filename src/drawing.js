@@ -17,6 +17,14 @@ class Brush {
     this.#color = newColor
   }
 
+  get size() {
+    return this.#size
+  }
+
+  get color() {
+    return this.#color
+  }
+
   drawPoint(x, y) {
     this.#ctx.fillStyle = this.#color
 
@@ -35,6 +43,66 @@ class Brush {
     this.#ctx.lineTo(endX, endY)
     this.#ctx.stroke()
   }
+
+  clearCanvas() {
+    const w = this.#ctx.canvas.width
+    const h = this.#ctx.canvas.height
+    this.#ctx.clearRect(0, 0, w, h)
+  }
 }
 
-export default Brush
+class DrawStack {
+  // note that actions will be one-indexed, as 0 represents the state before any action
+  #index = 0
+  #actions = []
+  #brush
+
+  constructor(canvas) {
+    this.#brush = new Brush(canvas, null, null)
+  }
+
+  add(action) {
+    // delete actions beyond current index
+    const howMany = this.#actions.length - this.#index
+    for (let i = 0; i < howMany; i++) {
+      this.#actions.pop()
+      console.log(i)
+    }
+    // a deep copy of the action is pushed, as objects are references
+    this.#actions.push(JSON.parse(JSON.stringify(action)))
+    this.#index++
+    console.log(this.#index, this.#actions)
+  }
+
+  undo() {
+    if (this.#index > 0) {
+      this.#index--
+      this.#brush.clearCanvas()
+      // draw this action and all the ones before it
+      for (let i = 1; i <= this.#index; i++) {
+        this.drawAction(this.#actions[i - 1])
+      }
+    }
+    console.log(this.#index, this.#actions)
+  }
+
+  drawAction(action) {
+    // restore brush state
+    this.#brush.color = action.brushState.color
+    this.#brush.size = action.brushState.size
+
+    const positions = action.positions
+    if (positions.length > 1) {
+      // connect all positions with lines
+      let startPos = { x: positions[0].x, y: positions[0].y }
+      for (let i = 1; i < positions.length; i++) {
+        this.#brush.drawLine(startPos.x, startPos.y, positions[i].x, positions[i].y)
+        startPos = positions[i]
+      }
+    } else {
+      this.#brush.drawPoint(positions[0].x, positions[0].y)
+    }
+  }
+}
+
+export { Brush, DrawStack }

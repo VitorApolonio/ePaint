@@ -27,11 +27,13 @@
  */
 
 import './index.css'
-import Brush from './drawing.js'
+import { Brush, DrawStack } from './drawing.js'
 
 const brushSizeSelect = document.getElementById('brushSizeSelect')
 const brushColorSelect = document.getElementById('color-select')
 const canvas = document.querySelector('canvas')
+const undoBtn = document.getElementById('undo-btn')
+const redoBtn = document.getElementById('redo-btn')
 
 // whether the mouse is being held down
 let mouseClicked = false
@@ -51,6 +53,11 @@ window.electronAPI.onResize((width, height) => {
 
 // brush settings
 const brush = new Brush(canvas, 2, '#ffffff')
+const actionStack = new DrawStack(canvas)
+const action = {
+  positions: [],
+  brushState: { size: null, color: null }
+}
 
 // setup brush sizes
 const sizes = [2, 5, 10, 15, 20, 25, 30]
@@ -79,26 +86,43 @@ const startPos = { x: 0, y: 0 }
 
 // set line start position on mouse click
 canvas.addEventListener('mousedown', e => {
+  // record current brush settings
+  action.brushState.color = brush.color
+  action.brushState.size = brush.size
+
   mouseClicked = true
   startPos.x = e.layerX - canvas.offsetLeft
   startPos.y = e.layerY - canvas.offsetTop
+
+  action.positions.push({ x: startPos.x, y: startPos.y })
 })
 
 // stop drawing when mouse is released
-document.addEventListener('mouseup', () => {
+document.addEventListener('mouseup', e => {
+  if (mouseClicked) {
+    actionStack.add(action)
+    action.positions = []
+  }
   mouseClicked = false
 })
 
 // draw line from startPos to current mouse position, then set startPos to current
 canvas.addEventListener('mousemove', e => {
   if (mouseClicked) {
-    brush.drawLine(startPos.x, startPos.y, e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
-    startPos.x = e.layerX - canvas.offsetLeft
-    startPos.y = e.layerY - canvas.offsetTop
+    const endPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+    brush.drawLine(startPos.x, startPos.y, endPos.x, endPos.y)
+    startPos.x = endPos.x
+    startPos.y = endPos.y
+    action.positions.push({ x: endPos.x, y: endPos.y })
   }
 })
 
 // draw a dot on mouse click
 canvas.addEventListener('mouseup', e => {
   brush.drawPoint(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
+})
+
+// Undo.
+undoBtn.addEventListener('click', () => {
+  actionStack.undo()
 })
