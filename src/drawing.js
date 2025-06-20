@@ -66,12 +66,10 @@ class DrawStack {
     const howMany = this.#actions.length - this.#index
     for (let i = 0; i < howMany; i++) {
       this.#actions.pop()
-      console.log(i)
     }
     // a deep copy of the action is pushed, as objects are references
     this.#actions.push(JSON.parse(JSON.stringify(action)))
     this.#index++
-    console.log(this.#index, this.#actions)
   }
 
   undo() {
@@ -94,7 +92,6 @@ class DrawStack {
         this.drawAction(this.#actions[i - 1])
       }
     }
-    console.log(this.#index, this.#actions)
   }
 
   drawAction(action) {
