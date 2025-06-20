@@ -5,6 +5,8 @@
     <title>e-paint</title>
 
     <script defer type="module" src="/src/renderer.js"></script>
+    <!-- FontAwesome: fontawesome.com -->
+    <script src="https://kit.fontawesome.com/e16d9e4568.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <div id="canvas-container" class="container">
@@ -12,6 +14,7 @@
     </div>
 
     <div id="tools-container" class="container">
+      <!-- brush size -->
       <div class="tool">
         <p><strong>Brush size</strong></p>
         <div class="select is-dark">
@@ -21,20 +24,29 @@
         </div>
       </div>
 
+      <!-- brush color -->
       <div class="tool">
         <p><strong>Brush color</strong></p>
         <input id="color-select" type="color" class="input is-dark tool">
       </div>
 
+      <!-- undo / redo -->
       <div class="tool">
         <p><strong>Undo&nbsp;/&nbsp;Redo</strong></p>
-        <button disabled id="undo-btn" class="button is-dark">Undo</button>
-        <button disabled id="redo-btn" class="button is-dark">Redo</button>
+        <div class="buttons has-addons">
+          <button disabled id="undo-btn" class="button is-dark">
+            <span class="icon"><i class="fas fa-undo"></i></span>
+          </button>
+          <button disabled id="redo-btn" class="button is-dark">
+            <span class="icon"><i class="fas fa-redo"></i></span>
+          </button>
+        </div>
       </div>
 
+      <!-- wipe canvas -->
       <div class="tool">
         <p><strong>Clear canvas</strong></p>
-        <button id="clear-btn" class="button is-dark">Clear</button>
+        <button id="clear-btn" class="button is-warning">Clear</button>
       </div>
     </div>
   </body>
