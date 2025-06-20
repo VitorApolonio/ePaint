@@ -6,6 +6,7 @@ const brushColorSelect = document.getElementById('color-select')
 const canvas = document.querySelector('canvas')
 const undoBtn = document.getElementById('undo-btn')
 const redoBtn = document.getElementById('redo-btn')
+const clearBtn = document.getElementById('clear-btn')
 
 // whether the mouse is being held down
 let mouseClicked = false
@@ -112,4 +113,8 @@ redoBtn.addEventListener('click', () => {
     redoBtn.setAttribute('disabled', null)
   }
   undoBtn.removeAttribute('disabled')
+})
+
+clearBtn.addEventListener('click', () => {
+  brush.clearCanvas()
 })
