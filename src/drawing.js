@@ -113,7 +113,6 @@ class DrawStack {
     }
     this.#actions.push(action)
     this.#index++
-    console.log(this.#actions)
   }
 
   undo() {

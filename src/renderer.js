@@ -15,7 +15,7 @@ let mouseClicked = false
 let curAction = null
 
 // brush and undo/redo stack
-const paintbrush = new Brush(canvas, 2, '#ffffff')
+const paintbrush = new Brush(canvas, 5, '#ffffff')
 const actionStack = new DrawStack(canvas)
 
 // auto resize canvas, preserving current drawing
@@ -39,6 +39,9 @@ sizes.forEach(s => {
   e.innerHTML = s
   brushSizeSelect.appendChild(e)
 })
+
+// set default brush size
+brushSizeSelect.value = 5
 
 // use selected brush size
 brushSizeSelect.addEventListener('change', e => {
