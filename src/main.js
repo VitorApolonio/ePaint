@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu, MenuItem } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -33,6 +33,25 @@ const createWindow = () => {
   }
   mainWindow.on('resize', resizeHandler)
   mainWindow.webContents.once('dom-ready', resizeHandler)
+
+  const menu = new Menu()
+  menu.append(new MenuItem({
+    role: 'editMenu',
+    submenu: [
+      {
+        label: 'Undo',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Z' : 'Ctrl+Z',
+        click: () => { mainWindow.webContents.send('undo-shortcut') }
+      },
+      {
+        label: 'Redo',
+        accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Ctrl+Y',
+        click: () => { mainWindow.webContents.send('redo-shortcut') }
+      }
+    ]
+  }))
+
+  Menu.setApplicationMenu(menu)
 };
 
 // This method will be called when Electron has finished

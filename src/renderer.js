@@ -103,23 +103,29 @@ canvas.addEventListener('mouseup', e => {
   }
 })
 
-// Undo.
-undoBtn.addEventListener('click', () => {
+// Undo/Redo
+const undoHandler = () => {
   actionStack.undo()
   if (!actionStack.canUndo()) {
     undoBtn.setAttribute('disabled', null)
   }
   redoBtn.removeAttribute('disabled')
-})
-
-// Redo.
-redoBtn.addEventListener('click', () => {
+}
+const redoHandler = () => {
   actionStack.redo()
   if (!actionStack.canRedo()) {
     redoBtn.setAttribute('disabled', null)
   }
   undoBtn.removeAttribute('disabled')
-})
+}
+
+// undo/redo buttons
+undoBtn.addEventListener('click', undoHandler)
+redoBtn.addEventListener('click', redoHandler)
+
+// undo/redo shortcuts
+window.electronAPI.onUndoShortcut(undoHandler)
+window.electronAPI.onRedoShortcut(redoHandler)
 
 // clear canvas
 clearBtn.addEventListener('click', () => {

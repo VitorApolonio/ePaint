@@ -3,5 +3,7 @@
 import { contextBridge, ipcRenderer } from "electron"
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  onResize: (callback) => ipcRenderer.on('window-resized', (_event, w, h) => callback(w, h))
+  onResize: (callback) => ipcRenderer.on('window-resized', (_event, w, h) => callback(w, h)),
+  onUndoShortcut: (callback) => ipcRenderer.on('undo-shortcut', (_event) => callback()),
+  onRedoShortcut: (callback) => ipcRenderer.on('redo-shortcut', (_event) => callback())
 })
