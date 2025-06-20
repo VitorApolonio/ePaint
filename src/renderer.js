@@ -121,6 +121,11 @@ redoBtn.addEventListener('click', () => {
 clearBtn.addEventListener('click', () => {
   // wiping the canvas counts as an action only if it's not already blank
   if (!paintbrush.canvasIsBlank()) {
+    // if pressed while drawing, save current path before erasing
+    if (curAction) {
+      actionStack.add(curAction)
+      curAction = new Action(curAction.brushSize, curAction.brushColor)
+    }
     paintbrush.clearCanvas()
     actionStack.add(new Action(null, null))
     undoBtn.removeAttribute('disabled')
