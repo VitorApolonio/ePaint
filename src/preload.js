@@ -3,6 +3,5 @@
 import { contextBridge, ipcRenderer } from "electron"
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  onResize: (callback) => ipcRenderer.on('window-resized', (_event, w, h) => callback(w, h)),
-  test: () => console.log('hello, world')
+  onResize: (callback) => ipcRenderer.on('window-resized', (_event, w, h) => callback(w, h))
 })
