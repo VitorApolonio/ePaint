@@ -98,3 +98,8 @@ canvas.addEventListener('mouseup', e => {
 undoBtn.addEventListener('click', () => {
   actionStack.undo()
 })
+
+// Redo.
+redoBtn.addEventListener('click', () => {
+  actionStack.redo()
+})

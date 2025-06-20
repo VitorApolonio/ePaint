@@ -83,6 +83,17 @@ class DrawStack {
         this.drawAction(this.#actions[i - 1])
       }
     }
+  }
+
+  redo() {
+    if (this.#index < this.#actions.length) {
+      this.#index++
+      this.#brush.clearCanvas()
+      // draw this action and all the ones before it
+      for (let i = 1; i <= this.#index; i++) {
+        this.drawAction(this.#actions[i - 1])
+      }
+    }
     console.log(this.#index, this.#actions)
   }
 
