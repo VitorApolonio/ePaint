@@ -1,13 +1,18 @@
 import './index.css'
-import { Action, Brush, DrawStack } from './drawing.js'
+import { Action, Brush, DrawStack, Tool } from './drawing.js'
 
-const brushSizeSelect = document.getElementById('brushSizeSelect')
+const toolSelectBrush = document.getElementById('brush-tool')
+const toolSelectEraser = document.getElementById('eraser-tool')
+const brushSizeSelect = document.getElementById('brush-size-select')
 const brushColorSelectPrimary = document.getElementById('color-select-primary')
 const brushColorSelectSecondary = document.getElementById('color-select-secondary')
 const canvas = document.querySelector('canvas')
 const undoBtn = document.getElementById('undo-btn')
 const redoBtn = document.getElementById('redo-btn')
 const clearBtn = document.getElementById('clear-btn')
+
+// selected tool code
+let curTool = Tool.PAINTBRUSH
 
 // whether the mouse is being held down
 let mouseClicked = false
@@ -53,6 +58,18 @@ brushSizeSelect.addEventListener('change', e => {
 brushColorSelectPrimary.value = '#ffffff'
 brushColorSelectSecondary.value = '#ff00ff'
 
+// tool select
+toolSelectBrush.addEventListener('click', e => {
+  curTool = Tool.PAINTBRUSH
+  toolSelectBrush.classList.add('is-primary')
+  toolSelectEraser.classList.remove('is-primary')
+})
+toolSelectEraser.addEventListener('click', e => {
+  curTool = Tool.ERASER
+  toolSelectEraser.classList.add('is-primary')
+  toolSelectBrush.classList.remove('is-primary')
+})
+
 // position at which to begin line
 const startPos = { x: 0, y: 0 }
 
@@ -60,7 +77,17 @@ const startPos = { x: 0, y: 0 }
 canvas.addEventListener('mousedown', e => {
   // make new action
   if (!mouseClicked) {
-    const color = e.button === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
+    let color
+    switch (curTool) {
+      case Tool.PAINTBRUSH: {
+        color = e.button === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
+        break
+      }
+      case Tool.ERASER: {
+        color = Brush.COLOR_ERASER
+        break
+      }
+    }
     curAction = new Action(paintbrush.size, color)
 
     mouseClicked = true

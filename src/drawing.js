@@ -1,3 +1,17 @@
+class Tool {
+  constructor(name) {
+    this.name = name
+  }
+
+  static PAINTBRUSH = new Tool('Paintbrush')
+  static ERASER = new Tool('Eraser')
+  static BUCKET = new Tool('Bucket')
+
+  toString() {
+    return this.name
+  }
+}
+
 class Action {
   #brushState = { size: null, color: null }
   #positions = []
@@ -37,6 +51,8 @@ class Brush {
     this.#color = color
   }
 
+  static COLOR_ERASER = 'rgba(0, 0, 0, 1)'
+
   set size(newSize) {
     this.#size = newSize
   }
@@ -55,6 +71,12 @@ class Brush {
 
   drawPoint(x, y) {
     this.#ctx.fillStyle = this.#color
+    // handle special case for eraser tool
+    if (this.#color === Brush.COLOR_ERASER) {
+      this.#ctx.globalCompositeOperation = 'destination-out'
+    } else {
+      this.#ctx.globalCompositeOperation = 'source-over'
+    }
 
     this.#ctx.beginPath()
     this.#ctx.ellipse(x, y, this.#size / 2, this.#size / 2, 0, 0, Math.PI * 2)
@@ -65,6 +87,23 @@ class Brush {
     this.#ctx.lineCap = 'round'
     this.#ctx.lineWidth = this.#size
     this.#ctx.strokeStyle = this.#color
+    // handle special case for eraser tool
+    if (this.#color === Brush.COLOR_ERASER) {
+      this.#ctx.globalCompositeOperation = 'destination-out'
+    } else {
+      this.#ctx.globalCompositeOperation = 'source-over'
+    }
+
+    this.#ctx.beginPath()
+    this.#ctx.moveTo(startX, startY)
+    this.#ctx.lineTo(endX, endY)
+    this.#ctx.stroke()
+  }
+
+  eraseLine(startX, startY, endX, endY) {
+    this.#ctx.lineCap = 'round'
+    this.#ctx.lineWidth = this.#size
+    this.#ctx.strokeStyle = COLOR_ERASER
 
     this.#ctx.beginPath()
     this.#ctx.moveTo(startX, startY)
@@ -167,5 +206,6 @@ class DrawStack {
 export {
   Action,
   Brush,
-  DrawStack
+  DrawStack,
+  Tool
 }

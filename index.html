@@ -14,11 +14,23 @@
     </div>
 
     <div id="tools-container" class="container">
+      <!-- tool selection -->
+       <div class="tool">
+        <p><strong>Selected&nbsp;tool</strong></p>
+        <div class="buttons has-addons">
+          <button id="brush-tool" class="button is-primary is-selected">
+            <span class="icon"><i class="fas fa-paintbrush"></i></span>
+          </button>
+          <button id="eraser-tool" class="button is-selected">
+            <span class="icon"><i class="fas fa-eraser"></i></span>
+          </button>
+        </div>
+       </div>
       <!-- brush size -->
       <div class="tool">
         <p><strong>Brush&nbsp;size</strong></p>
         <div class="select is-dark">
-          <select id="brushSizeSelect">
+          <select id="brush-size-select">
             <!-- options added through JS -->
           </select>
         </div>
@@ -38,10 +50,10 @@
       <div class="tool">
         <p><strong>Undo&nbsp;/&nbsp;Redo</strong></p>
         <div class="buttons has-addons">
-          <button disabled id="undo-btn" class="button is-dark">
+          <button disabled id="undo-btn" class="button is-dark is-selected">
             <span class="icon"><i class="fas fa-undo"></i></span>
           </button>
-          <button disabled id="redo-btn" class="button is-dark">
+          <button disabled id="redo-btn" class="button is-dark is-selected">
             <span class="icon"><i class="fas fa-redo"></i></span>
           </button>
         </div>
