@@ -18,6 +18,7 @@ canvas {
   border-radius: 1;
   border-style: solid;
   display: flex;
+  cursor: crosshair;
 }
 
 .tool {
@@ -37,4 +38,5 @@ canvas {
 
 #color-select {
   width: 5rem;
+  cursor: pointer;
 }
