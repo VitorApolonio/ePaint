@@ -1,5 +1,6 @@
 import './index.css'
 import { Action, Brush, DrawStack, Tool } from './drawing.js'
+import './lucide.js'
 
 const toolSelectBrush = document.getElementById('brush-tool')
 const toolSelectEraser = document.getElementById('eraser-tool')

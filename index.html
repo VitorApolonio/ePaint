@@ -5,8 +5,6 @@
     <title>ePaint: Drawing App</title>
 
     <script defer type="module" src="/src/renderer.js"></script>
-    <!-- FontAwesome: fontawesome.com -->
-    <script src="https://kit.fontawesome.com/e16d9e4568.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <div id="canvas-container" class="container">
@@ -19,10 +17,10 @@
         <p><strong>Selected&nbsp;tool</strong></p>
         <div class="buttons has-addons">
           <button id="brush-tool" class="button is-primary is-selected">
-            <span class="icon"><i class="fas fa-paintbrush"></i></span>
+            <span class="icon"><i data-lucide="brush"></i></span>
           </button>
           <button id="eraser-tool" class="button is-selected">
-            <span class="icon"><i class="fas fa-eraser"></i></span>
+            <span class="icon"><i data-lucide="eraser"></i></span>
           </button>
         </div>
        </div>
@@ -43,7 +41,7 @@
         <div class="field is-grouped">
           <input id="color-select-primary" type="color" class="input is-dark">
           <button id="swap-colors" class="button">
-            <span class="icon"><i class="fas fa-right-left"></i></span>
+            <span class="icon"><i data-lucide="arrow-left-right"></i></span>
           </button>
           <input id="color-select-secondary" type="color" class="input is-dark">
         </div>
@@ -54,10 +52,10 @@
         <p><strong>Undo&nbsp;/&nbsp;Redo</strong></p>
         <div class="buttons has-addons">
           <button disabled id="undo-btn" class="button is-dark is-selected">
-            <span class="icon"><i class="fas fa-undo"></i></span>
+            <span class="icon"><i data-lucide="undo"></i></span>
           </button>
           <button disabled id="redo-btn" class="button is-dark is-selected">
-            <span class="icon"><i class="fas fa-redo"></i></span>
+            <span class="icon"><i data-lucide="redo"></i></span>
           </button>
         </div>
       </div>
