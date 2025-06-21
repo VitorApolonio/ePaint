@@ -126,7 +126,7 @@ class Brush {
     const queue = [{ x: startX, y: startY }]
 
     // color current pixel
-    const newColor = this.#hexToRgb(this.#color).concat(color[3])
+    const newColor = this.#hexToRgb(this.#color).concat(255)
     this.#getColorIndicesForCoord(startX, startY, w).forEach((colIdx, arrIdx) => {
       newImageData.data[colIdx] = newColor[arrIdx]
     })
@@ -214,9 +214,14 @@ class Brush {
    * Compares two RGBA color arrays.
    * @param {Array} a first array
    * @param {Array} b second array
+   * @param {number} tolerance how different colors are allowed to be
    */
-  #colorEquals(a, b) {
-    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3]
+  #colorEquals(a, b, tolerance = 30) {
+    return (
+      Math.abs(a[0] - b[0]) <= tolerance
+      && Math.abs(a[1] - b[1]) <= tolerance
+      && Math.abs(a[2] - b[2]) <= tolerance
+    )
   }
 }
 
