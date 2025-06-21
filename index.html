@@ -7,21 +7,30 @@
     <script defer type="module" src="/src/renderer.js"></script>
   </head>
   <body>
-    <div id="canvas-container" class="container">
+    <div id="canvas-container">
       <canvas></canvas>
     </div>
 
-    <div id="tools-container" class="container">
+    <div id="tools-container">
       <!-- tool selection -->
        <div class="tool">
         <p><strong>Selected&nbsp;tool</strong></p>
-        <div class="buttons has-addons">
-          <button id="brush-tool" class="button is-primary is-selected" title="Paintbrush">
-            <span class="icon"><i data-lucide="brush"></i></span>
-          </button>
-          <button id="eraser-tool" class="button is-selected" title="Eraser">
-            <span class="icon"><i data-lucide="eraser"></i></span>
-          </button>
+        <div class="field has-addons">
+          <p class="control">
+            <button id="brush-tool" class="button is-primary is-selected" title="Paintbrush">
+              <span class="icon"><i data-lucide="brush"></i></span>
+            </button>
+          </p>
+          <p class="control">
+            <button id="eraser-tool" class="button" title="Eraser">
+              <span class="icon"><i data-lucide="eraser"></i></span>
+            </button>
+          </p>
+          <p class="control">
+            <button disabled id="fill-tool" class="button" title="Flood fill">
+              <span class="icon"><i data-lucide="paint-bucket"></i></span>
+            </button>
+          </p>
         </div>
        </div>
 
@@ -39,24 +48,34 @@
       <div class="tool">
         <p><strong>Color&nbsp;1&nbsp;/&nbsp;Color&nbsp;2</strong></p>
         <div class="field is-grouped">
-          <input id="color-select-primary" type="color" class="input is-dark">
-          <button id="swap-colors" class="button" title="Swap colors">
-            <span class="icon"><i data-lucide="arrow-left-right"></i></span>
-          </button>
-          <input id="color-select-secondary" type="color" class="input is-dark">
+          <p class="control">
+            <input id="color-select-primary" type="color" class="input is-dark">
+          </p>
+          <p class="control">
+            <button id="swap-colors" class="button" title="Swap colors">
+              <span class="icon"><i data-lucide="arrow-left-right"></i></span>
+            </button>
+          </p>
+          <p class="control">
+            <input id="color-select-secondary" type="color" class="input is-dark">
+          </p>
         </div>
       </div>
 
       <!-- undo / redo -->
       <div class="tool">
         <p><strong>Undo&nbsp;/&nbsp;Redo</strong></p>
-        <div class="buttons has-addons">
-          <button disabled id="undo-btn" class="button is-dark is-selected">
-            <span class="icon"><i data-lucide="undo"></i></span>
-          </button>
-          <button disabled id="redo-btn" class="button is-dark is-selected">
-            <span class="icon"><i data-lucide="redo"></i></span>
-          </button>
+        <div class="field has-addons">
+          <p class="control">
+            <button disabled id="undo-btn" class="button is-dark">
+              <span class="icon"><i data-lucide="undo"></i></span>
+            </button>
+          </p>
+          <p class="control">
+            <button disabled id="redo-btn" class="button is-dark">
+              <span class="icon"><i data-lucide="redo"></i></span>
+            </button>
+          </p>
         </div>
       </div>
 
@@ -64,7 +83,8 @@
       <div class="tool">
         <p><strong>Clear&nbsp;canvas</strong></p>
         <button id="clear-btn" class="button is-warning">
-          <i data-lucide="brush-cleaning"></i>&nbsp;Clear
+          <span class="icon"><i data-lucide="brush-cleaning"></i></span>
+          <span>Clear</span>
         </button>
       </div>
     </div>

@@ -21,9 +21,10 @@ canvas {
 }
 
 .tool {
-  margin: 0 4vw 0 0;
+  margin: 2vh 0;
   text-align: center;
   justify-items: center;
+  flex: 1 12.5%
 }
 
 #canvas-container {
@@ -31,9 +32,12 @@ canvas {
 }
 
 #tools-container {
-  margin: 2vw;
-  align-items: flex-end;
+  margin: 0 2vw;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  justify-items: center;
+  align-items: flex-end;
   user-select: none;
 }
 
