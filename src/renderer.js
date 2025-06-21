@@ -6,6 +6,7 @@ const toolSelectEraser = document.getElementById('eraser-tool')
 const brushSizeSelect = document.getElementById('brush-size-select')
 const brushColorSelectPrimary = document.getElementById('color-select-primary')
 const brushColorSelectSecondary = document.getElementById('color-select-secondary')
+const colorSwapBtn = document.getElementById('swap-colors')
 const canvas = document.querySelector('canvas')
 const undoBtn = document.getElementById('undo-btn')
 const redoBtn = document.getElementById('redo-btn')
@@ -57,6 +58,13 @@ brushSizeSelect.addEventListener('change', e => {
 // set default brush color
 brushColorSelectPrimary.value = '#ffffff'
 brushColorSelectSecondary.value = '#ff00ff'
+
+// swap colors
+colorSwapBtn.addEventListener('click', () => {
+  const helper = brushColorSelectPrimary.value
+  brushColorSelectPrimary.value = brushColorSelectSecondary.value
+  brushColorSelectSecondary.value = helper
+})
 
 // tool select
 toolSelectBrush.addEventListener('click', e => {

@@ -26,6 +26,7 @@
           </button>
         </div>
        </div>
+
       <!-- brush size -->
       <div class="tool">
         <p><strong>Brush&nbsp;size</strong></p>
@@ -38,12 +39,14 @@
 
       <!-- brush color -->
       <div class="tool">
-        <p><strong>Color&nbsp;1</strong></p>
-        <input id="color-select-primary" type="color" class="input is-dark">
-      </div>
-      <div class="tool">
-        <p><strong>Color&nbsp;2</strong></p>
-        <input id="color-select-secondary" type="color" class="input is-dark">
+        <p><strong>Color&nbsp;1&nbsp;/&nbsp;Color&nbsp;2</strong></p>
+        <div class="field is-grouped">
+          <input id="color-select-primary" type="color" class="input is-dark">
+          <button id="swap-colors" class="button">
+            <span class="icon"><i class="fas fa-right-left"></i></span>
+          </button>
+          <input id="color-select-secondary" type="color" class="input is-dark">
+        </div>
       </div>
 
       <!-- undo / redo -->

@@ -33,12 +33,12 @@ canvas {
 
 #tools-container {
   margin: 2vw;
-  align-items: baseline;
+  align-items: flex-end;
   display: flex;
   user-select: none;
 }
 
 #color-select-primary, #color-select-secondary {
-  width: 5rem;
+  width: 4rem;
   cursor: pointer;
 }
