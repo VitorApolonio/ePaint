@@ -18,6 +18,7 @@
 - [DONE] eraser
 - [DONE] save drawings as png
 - [DONE] swap colors
+- [DONE] remove ridiculous web depedency (who thought css through a CDN was a good idea?)
 
 ## To be done (most of these, anyways)
 
@@ -25,7 +26,6 @@
 - dark/light mode switch
 - use scrollbars instead of cropping canvas canvas
 - documentation for the love of god
-- remove ridiculous web depedency (who thought css through a CDN was a good idea?)
 - remove all debug messages (when finished)
 - package application
 - create app icon
