@@ -23,6 +23,7 @@
 ## To be done (most of these, anyways)
 
 - paint bucket
+- color picker
 - dark/light mode switch
 - use scrollbars instead of cropping canvas canvas
 - documentation for the love of god

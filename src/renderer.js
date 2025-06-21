@@ -4,6 +4,8 @@ import './lucide.js'
 
 const toolSelectBrush = document.getElementById('brush-tool')
 const toolSelectEraser = document.getElementById('eraser-tool')
+const toolSelectFloodFill = document.getElementById('fill-tool')
+const toolsContainer = document.getElementById('tools-container')
 const brushSizeSelect = document.getElementById('brush-size-select')
 const brushColorSelectPrimary = document.getElementById('color-select-primary')
 const brushColorSelectSecondary = document.getElementById('color-select-secondary')
@@ -68,15 +70,25 @@ colorSwapBtn.addEventListener('click', () => {
 })
 
 // tool select
-toolSelectBrush.addEventListener('click', e => {
+const deselectTools = () => {
+  toolsContainer.querySelectorAll('button').forEach(b => {
+    b.classList.remove('is-primary', 'is-selected')
+  })
+}
+toolSelectBrush.addEventListener('click', () => {
   curTool = Tool.PAINTBRUSH
-  toolSelectBrush.classList.add('is-primary')
-  toolSelectEraser.classList.remove('is-primary')
+  deselectTools()
+  toolSelectBrush.classList.add('is-primary', 'is-selected')
 })
-toolSelectEraser.addEventListener('click', e => {
+toolSelectEraser.addEventListener('click', () => {
   curTool = Tool.ERASER
-  toolSelectEraser.classList.add('is-primary')
-  toolSelectBrush.classList.remove('is-primary')
+  deselectTools()
+  toolSelectEraser.classList.add('is-primary', 'is-selected')
+})
+toolSelectFloodFill.addEventListener('click', () => {
+  curTool = Tool.BUCKET
+  deselectTools()
+  toolSelectFloodFill.classList.add('is-primary', 'is-selected')
 })
 
 // position at which to begin line
@@ -86,9 +98,11 @@ const startPos = { x: 0, y: 0 }
 canvas.addEventListener('mousedown', e => {
   // make new action
   if (!mouseClicked) {
+    // set color to use for path
     let color
     switch (curTool) {
-      case Tool.PAINTBRUSH: {
+      case Tool.PAINTBRUSH:
+      case Tool.BUCKET: {
         color = e.button === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
         break
       }
@@ -97,14 +111,17 @@ canvas.addEventListener('mousedown', e => {
         break
       }
     }
-    curAction = new Action(paintbrush.size, color)
+    // begin path if either brush or eraser is selected
+    if (curTool === Tool.PAINTBRUSH || curTool === Tool.ERASER) {
+      curAction = new Action(paintbrush.size, color)
 
-    mouseClicked = true
+      mouseClicked = true
 
-    // begin path at current position
-    startPos.x = e.layerX - canvas.offsetLeft
-    startPos.y = e.layerY - canvas.offsetTop
-    curAction.addPosition(startPos.x, startPos.y)
+      // begin path at current position
+      startPos.x = e.layerX - canvas.offsetLeft
+      startPos.y = e.layerY - canvas.offsetTop
+      curAction.addPosition(startPos.x, startPos.y)
+    }
   }
 })
 
@@ -131,11 +148,16 @@ canvas.addEventListener('mousemove', e => {
   }
 })
 
-// draw a dot on mouse click
+// draw a dot on mouse click or flood fill if bucket is selected
 canvas.addEventListener('mouseup', e => {
+  const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
   if (mouseClicked) {
     paintbrush.color = curAction.brushColor
-    paintbrush.drawPoint(e.layerX - canvas.offsetLeft, e.layerY - canvas.offsetTop)
+    paintbrush.drawPoint(curPos.x, curPos.y)
+  }
+  if (curTool === Tool.BUCKET) {
+    paintbrush.color = e.button === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
+    paintbrush.floodFill(curPos.x, curPos.y)
   }
 })
 
