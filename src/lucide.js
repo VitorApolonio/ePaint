@@ -1,4 +1,4 @@
-import { createIcons, Brush, Eraser, Undo, Redo, ArrowLeftRight } from "lucide";
+import { createIcons, Brush, Eraser, Undo, Redo, ArrowLeftRight, BrushCleaning } from "lucide";
 
 // adds icons to elements with matching 'data-lucide' attribute
 createIcons({
@@ -7,6 +7,7 @@ createIcons({
     Eraser,
     Undo,
     Redo,
-    ArrowLeftRight
+    ArrowLeftRight,
+    BrushCleaning
   }
 })
