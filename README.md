@@ -41,4 +41,3 @@
 - add shortcuts for remaining tools (maybe)
 - save as SVG, maybe
 - support for extra file formats
-- tooltips for all tools
