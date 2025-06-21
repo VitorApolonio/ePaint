@@ -169,3 +169,16 @@ clearBtn.addEventListener('click', () => {
     redoBtn.setAttribute('disabled', null)
   }
 })
+
+// save drawing as image
+window.electronAPI.onSaveImage(path => {
+  if (path) {
+    canvas.toBlob(blob => {
+      if (blob) {
+        blob.arrayBuffer().then(buf => {
+          window.electronAPI.saveImageToFile(path, buf)
+        })
+      }
+    })
+  }
+}, 'image/png')

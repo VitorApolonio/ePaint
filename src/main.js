@@ -1,4 +1,5 @@
-import { app, BrowserWindow, Menu, MenuItem } from 'electron';
+import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron';
+import fs from 'fs'
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -36,6 +37,22 @@ const createWindow = () => {
 
   const menu = new Menu()
   menu.append(new MenuItem({
+    role: 'fileMenu',
+    submenu: [
+      {
+        label: 'Save image',
+        accelerator: process.platform === 'darwin' ? 'Cmd+S' : 'Ctrl+S',
+        click: () => {
+          dialog.showSaveDialog({
+            title: 'Save drawing',
+            defaultPath: `${app.getPath('documents')}/image.png`,
+            filters: [{ name: 'Images', extensions: ['png'] }]
+          }).then(r => mainWindow.webContents.send('save-image', r.filePath))
+        }
+      }
+    ]
+  }))
+  menu.append(new MenuItem({
     role: 'editMenu',
     submenu: [
       {
@@ -53,6 +70,11 @@ const createWindow = () => {
 
   Menu.setApplicationMenu(menu)
 };
+
+// file saving
+ipcMain.on('save-image-to-file', (_event, path, arrBuffer) => {
+  fs.writeFile(path, Buffer.from(arrBuffer), console.error)
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
