@@ -1,8 +1,8 @@
 {
   "name": "e-paint",
-  "productName": "ePaint",
+  "productName": "e-paint",
   "version": "1.0.0",
-  "description": "A drawing application.",
+  "description": "A drawing app",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
