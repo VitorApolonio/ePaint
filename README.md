@@ -19,18 +19,19 @@
 - [DONE] save drawings as png
 - [DONE] swap colors
 - [DONE] remove ridiculous web depedency (who thought css through a CDN was a good idea?)
+- [DONE] paint bucket
 
 ## To be done (most of these, anyways)
 
-- paint bucket
-- color picker
+- color picker (sampler)
+- lower fill tolerance, or allow user to adjust it
 - dark/light mode switch
 - use scrollbars instead of cropping canvas canvas
 - documentation for the love of god
 - remove all debug messages (when finished)
 - package application
 - create app icon
-- maybe replace the color picker
+- maybe replace the default HTML color picker
 - reorder tools
 - fix painting dot when leaving color picker
 - global menu items

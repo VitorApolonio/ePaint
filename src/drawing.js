@@ -128,39 +128,64 @@ class Brush {
       return
     }
 
-    const queue = [{ x: startX, y: startY }]
+    let head = 0
+    let tail = 0
+    const queueX = new Uint32Array(w * h)
+    const queueY = new Uint32Array(w * h)
+    const visited = new Uint8Array(w * h)
+    visited[startY * w + startX] = 1
+
+    // add starting pixel
+    queueX[tail] = startX
+    queueY[tail++] = startY
 
     // color current pixel
     const newColor = this.#hexToRgb(this.#color).concat(255)
-    this.#getColorIndicesForCoord(startX, startY, w).forEach((colIdx, arrIdx) => {
-      newImageData.data[colIdx] = newColor[arrIdx]
-    })
+    let idx = (startY * w + startX) * 4
+    for (let i = 0; i < 4; i++) {
+      newImageData.data[idx + i] = newColor[i]
+    }
 
-    while (queue.length) {
-      const { x, y } = queue.shift()
+    while (head < tail) {
+      const x = queueX[head]
+      const y = queueY[head++]
 
-      // adjacent pixels to check
-      const pairs = [
-        { nx: x, ny: y + 1 },
-        { nx: x + 1, ny: y },
-        { nx: x, ny: y - 1 },
-        { nx: x - 1, ny: y }
-      ]
+      // adjacent pixel coords
+      const dx = [0, 1, 0, -1]
+      const dy = [1, 0, -1, 0]
 
-      for (const { nx, ny } of pairs) {
-        const curColor = this.#getColorDataAtCoords(nx, ny, newImageData)
-        const insideCanvas = nx >= 0 && ny >= 0 && nx < w && ny < h
-        const colorDidntChange = this.#colorEquals(color, curColor)
+      for (let i = 0; i < 4; i++) {
+        const nx = x + dx[i]
+        const ny = y + dy[i]
 
-        if (insideCanvas && colorDidntChange) {
-          // color current pixel
-          this.#getColorIndicesForCoord(nx, ny, w).forEach((colIdx, arrIdx) => {
-            newImageData.data[colIdx] = newColor[arrIdx]
-          })
-
-          // add to queue
-          queue.push({ x: nx, y: ny })
+        // avoid revisiting pixels
+        if (visited[ny * w + nx]) {
+          continue
         }
+
+        // don't access pixels outside of canvas
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) {
+          continue
+        }
+
+        // check that color is still the same as the origin pixel
+        const curColor = this.#getColorDataAtCoords(nx, ny, newImageData)
+        if (!this.#colorEquals(color, curColor)) {
+          continue
+        }
+
+        // color current pixel
+        idx = (ny * w + nx) * 4
+        for (let i = 0; i < 4; i++) {
+          newImageData.data[idx + i] = newColor[i]
+        }
+
+        // add to queue
+        queueX[tail] = nx
+        queueY[tail++] = ny
+
+        // mark as visited
+        visited[ny * w + nx] = 1
       }
     }
 
@@ -183,16 +208,6 @@ class Brush {
   }
 
   /**
-   * Given coordinates x, y and a canvas width, returns
-   * the indexes of the colors at that coordinate, in
-   * the format [red, green, blue, alpha].
-   */
-  #getColorIndicesForCoord(x, y, width) {
-    const r = y * (width * 4) + x * 4
-    return [r, r + 1, r + 2, r + 3]
-  }
-
-  /**
    * Given a hexadecimal color code (e.g. #ffffff), returns an
    * array with the red, green and blue values in base 10.
    * @param {string} code a hex color code
@@ -212,7 +227,9 @@ class Brush {
    */
   #getColorDataAtCoords(x, y, data) {
     const w = this.#ctx.canvas.width
-    return this.#getColorIndicesForCoord(x, y, w).map(i => data.data[i])
+    const i = (y * w + x) * 4
+    const d = data.data
+    return [d[i], d[i + 1], d[i + 2], d[i + 3]]
   }
 
   /**
