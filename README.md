@@ -20,13 +20,15 @@
 - [DONE] swap colors
 - [DONE] remove ridiculous web depedency (who thought css through a CDN was a good idea?)
 - [DONE] paint bucket
+- [DONE] use scrollbars instead of cropping canvas
 
 ## To be done (most of these, anyways)
 
 - color picker (sampler)
 - lower fill tolerance, or allow user to adjust it
+- allow different canvas resolutions (maybe dragging?)
+- Ctrl+Scroll or Ctrl+-\+ to zoom
 - dark/light mode switch
-- use scrollbars instead of cropping canvas canvas
 - documentation for the love of god
 - remove all debug messages (when finished)
 - package application
