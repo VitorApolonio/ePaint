@@ -1,15 +1,19 @@
 @import 'bulma/css/bulma.css';
 
-/* disable browser scrollbar on right */
-::-webkit-scrollbar {
-    display: none;
+html {
+  overflow-y: hidden;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
-  margin: auto;
-  padding: 2rem;
+  padding: 1rem;
+  max-width: 100vw;
+  max-height: 100vh;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-items: end;
 }
 
 canvas {
@@ -21,24 +25,27 @@ canvas {
 }
 
 .tool {
-  margin: 2vh 0;
+  margin: 2vh 2vw;
   text-align: center;
   justify-items: center;
-  flex: 1 12.5%
+  flex: 1;
 }
 
 #canvas-container {
-  justify-items: center;
+  justify-self: center;
+  overflow: auto;
+  max-width: 80vw;
+  flex: 1 50%
 }
 
 #tools-container {
-  margin: 0 2vw;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   justify-items: center;
   align-items: flex-end;
   user-select: none;
+  flex: 1 50%
 }
 
 #color-select-primary, #color-select-secondary {

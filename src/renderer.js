@@ -29,6 +29,7 @@ const paintbrush = new Brush(canvas, 5, null)
 const actionStack = new DrawStack(canvas)
 
 // auto resize canvas, preserving current drawing
+/*
 window.electronAPI.onResize((width, height) => {
   const bkpCanvas = document.createElement('canvas')
   bkpCanvas.width = canvas.width
@@ -40,6 +41,12 @@ window.electronAPI.onResize((width, height) => {
 
   canvas.getContext('2d').drawImage(bkpCanvas, 0, 0)
 })
+  */
+
+// TODO: allow users to pick this
+// fix canvas size
+canvas.width = 800
+canvas.height = 600
 
 // setup brush sizes
 const sizes = [2, 5, 10, 15, 20, 25, 30]
