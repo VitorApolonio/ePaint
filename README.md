@@ -1,30 +1,6 @@
 # ePaint to-do list
 
-## Completed so far
-
-- [DONE] refactor an action into its own class
-- [DONE] fix conflict when wiping canvas while drawing
-- [DONE] change default brush size to 5
-- [DONE] optimize clearing the canvas
-- [DONE] brush color selection
-- [DONE] undo/redo functionality
-- [DONE] ability to clear canvas
-- [DONE] fix persisting mouse click when releasing outside of canvas
-- [DONE] change cursor to crosshair
-- [DONE] use fontawesome for undo/redo buttons? maybe?
-- [DONE] maybe rename the app, something like "ePaint: Drawing App"
-- [DONE] use two colors, one for each mouse button
-- [DONE] implement ctrl+Z/Y for undo/redo
-- [DONE] eraser
-- [DONE] save drawings as png
-- [DONE] swap colors
-- [DONE] remove ridiculous web depedency (who thought css through a CDN was a good idea?)
-- [DONE] paint bucket
-- [DONE] use scrollbars instead of cropping canvas
-- [DONE] color picker (sampler)
-
-## To be done (most of these, anyways)
-
+- figure out how to compile this for Windows
 - lower fill tolerance, or allow user to adjust it
 - allow different canvas resolutions (maybe dragging?)
 - Ctrl+Scroll or Ctrl+-\+ to zoom
@@ -32,14 +8,12 @@
 - documentation for the love of god
 - remove all debug messages (when finished)
 - package application
-- create app icon
 - maybe replace the default HTML color picker
-- reorder tools
 - fix painting dot when leaving color picker
 - global menu items
 - disable html shortcuts (reload, inspect, etc.)
 - limit number of kept actions
-- add app info menu entry
+- add app info menu entry (credits etc.)
 - add shortcut to clear canvas
 - add shortcuts for swapping between tools
 - add shortcuts for remaining tools (maybe)
@@ -47,4 +21,3 @@
 - support for extra file formats
 - show brush size on cursor
 - split drawing.js into multiple files
-- fix poor coordinate precision
