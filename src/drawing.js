@@ -83,6 +83,7 @@ class Brush {
   }
 
   drawPoint(x, y) {
+    this.#ctx.globalAlpha = 1
     this.#ctx.fillStyle = this.#color
     // handle special case for eraser tool
     if (this.#color === Brush.COLOR_ERASER) {
@@ -97,6 +98,7 @@ class Brush {
   }
 
   drawLine(startX, startY, endX, endY) {
+    this.#ctx.globalAlpha = 1
     this.#ctx.lineCap = 'round'
     this.#ctx.lineWidth = this.#size
     this.#ctx.strokeStyle = this.#color
@@ -152,7 +154,7 @@ class Brush {
     queueY[tail++] = startY
 
     // color current pixel
-    const newColor = this.#hexToRgb(this.#color).concat(255)
+    let newColor = this.#hexToRgb(this.#color).concat(color[3] ? color[3] : 255)
     let idx = (startY * w + startX) * 4
     for (let i = 0; i < 4; i++) {
       newImageData.data[idx + i] = newColor[i]
@@ -187,6 +189,7 @@ class Brush {
         }
 
         // color current pixel
+        newColor = this.#hexToRgb(this.#color).concat(curColor[3] ? curColor[3] : 255)
         idx = (ny * w + nx) * 4
         for (let i = 0; i < 4; i++) {
           newImageData.data[idx + i] = newColor[i]
