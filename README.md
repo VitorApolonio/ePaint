@@ -47,3 +47,4 @@
 - support for extra file formats
 - show brush size on cursor
 - split drawing.js into multiple files
+- fix poor coordinate precision
