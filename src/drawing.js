@@ -250,7 +250,7 @@ class Brush {
    * @param {Array} b second array
    * @param {number} tolerance how different colors are allowed to be
    */
-  #colorEquals(a, b, tolerance = 30) {
+  #colorEquals(a, b, tolerance = 15) {
     return (
       Math.abs(a[0] - b[0]) <= tolerance
       && Math.abs(a[1] - b[1]) <= tolerance
