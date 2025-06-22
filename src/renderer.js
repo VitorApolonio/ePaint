@@ -5,6 +5,7 @@ import './lucide.js'
 const toolSelectBrush = document.getElementById('brush-tool')
 const toolSelectEraser = document.getElementById('eraser-tool')
 const toolSelectFloodFill = document.getElementById('fill-tool')
+const toolSelectEyedropper = document.getElementById('eyedropper-tool')
 const toolsContainer = document.getElementById('tools-container')
 const brushSizeSelect = document.getElementById('brush-size-select')
 const brushColorSelectPrimary = document.getElementById('color-select-primary')
@@ -15,11 +16,17 @@ const undoBtn = document.getElementById('undo-btn')
 const redoBtn = document.getElementById('redo-btn')
 const clearBtn = document.getElementById('clear-btn')
 
-// selected tool code
+// currently selected tool
 let curTool = Tool.PAINTBRUSH
 
 // whether the mouse is being held down
 let mouseClicked = false
+
+/* HTML mouse button code
+ * 0 - left button
+ * 1 - mouse wheel
+ * 2 - right button */
+let curButtonCode = null
 
 // current action (i.e. shape drawn with mouse)
 let curAction = null
@@ -77,42 +84,43 @@ colorSwapBtn.addEventListener('click', () => {
 })
 
 // tool select
-const deselectTools = () => {
-  toolsContainer.querySelectorAll('button').forEach(b => {
-    b.classList.remove('is-primary', 'is-selected')
-  })
+const selectTool = tool => {
+  toolsContainer.querySelectorAll('button').forEach(b => b.classList.remove('is-primary', 'is-selected'))
+  tool.classList.add('is-primary', 'is-selected')
 }
-toolSelectBrush.addEventListener('click', () => {
+toolSelectBrush.addEventListener('click', e => {
   curTool = Tool.PAINTBRUSH
-  deselectTools()
-  toolSelectBrush.classList.add('is-primary', 'is-selected')
+  selectTool(e.currentTarget)
 })
-toolSelectEraser.addEventListener('click', () => {
+toolSelectEraser.addEventListener('click', e => {
   curTool = Tool.ERASER
-  deselectTools()
-  toolSelectEraser.classList.add('is-primary', 'is-selected')
+  selectTool(e.currentTarget)
 })
-toolSelectFloodFill.addEventListener('click', () => {
+toolSelectFloodFill.addEventListener('click', e => {
   curTool = Tool.BUCKET
-  deselectTools()
-  toolSelectFloodFill.classList.add('is-primary', 'is-selected')
+  selectTool(e.currentTarget)
+})
+toolSelectEyedropper.addEventListener('click', e => {
+  curTool = Tool.EYEDROPPER
+  selectTool(e.currentTarget)
 })
 
 // position at which to begin line
 const startPos = { x: 0, y: 0 }
 
-// begin action on mouse click
+// handle mouse click
 canvas.addEventListener('mousedown', e => {
   // make new action
   if (!mouseClicked) {
     mouseClicked = true
+    curButtonCode = e.button
 
-    // set color to use for path
-    let color
+    // set color to use for path (none for eyedropper)
+    let color = ''
     switch (curTool) {
       case Tool.PAINTBRUSH:
       case Tool.BUCKET: {
-        color = e.button === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
+        color = curButtonCode === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
         break
       }
       case Tool.ERASER: {
@@ -121,53 +129,90 @@ canvas.addEventListener('mousedown', e => {
       }
     }
 
-    curAction = new Action(paintbrush.size, color, curTool === Tool.BUCKET)
-
-    // begin path at current position
-    startPos.x = e.layerX - canvas.offsetLeft
-    startPos.y = e.layerY - canvas.offsetTop
-    curAction.addPosition(startPos.x, startPos.y)
+    if (color) {
+      curAction = new Action(paintbrush.size, color, curTool === Tool.BUCKET)
+      // begin path at current position
+      startPos.x = e.layerX - canvas.offsetLeft
+      startPos.y = e.layerY - canvas.offsetTop
+      curAction.addPosition(startPos.x, startPos.y)
+    }
   }
 })
 
-// draw line from startPos to current mouse position, then set startPos to current
+// handle mouse movement
 canvas.addEventListener('mousemove', e => {
-  if (mouseClicked && !curAction.isFill) {
-    const endPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
-    paintbrush.color = curAction.brushColor
-    paintbrush.drawLine(startPos.x, startPos.y, endPos.x, endPos.y)
-    curAction.addPosition(endPos.x, endPos.y)
-    startPos.x = endPos.x
-    startPos.y = endPos.y
-  }
-})
-
-// finish path on mouse release / draw dot or fill on click
-document.addEventListener('mouseup', e => {
   if (mouseClicked) {
-    if (e.target === canvas) {
-      const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
-      paintbrush.color = curAction.brushColor
-
-      if (curAction.isFill) {
-        // only add action if fill was performed
-        if (paintbrush.floodFill(curPos.x, curPos.y)) {
-          curAction.fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
+    const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+    switch (curTool) {
+      case Tool.PAINTBRUSH:
+      case Tool.ERASER: {
+        // draw line from startPos to current mouse position, then set startPos to current
+        paintbrush.color = curAction.brushColor
+        paintbrush.drawLine(startPos.x, startPos.y, curPos.x, curPos.y)
+        curAction.addPosition(curPos.x, curPos.y)
+        startPos.x = curPos.x
+        startPos.y = curPos.y
+        break
+      }
+      case Tool.EYEDROPPER: {
+        // update selected color
+        const color = paintbrush.getColorAtPixel(curPos.x, curPos.y)
+        if (curButtonCode === 0) {
+          brushColorSelectPrimary.value = color
+        } else {
+          brushColorSelectSecondary.value = color
         }
-      } else {
-        paintbrush.drawPoint(curPos.x, curPos.y)
+        break
       }
     }
+  }
+})
 
-    // a fill action is only added if it has image data
-    if (curAction.isFill && curAction.fillData || !curAction.isFill) {
-      actionStack.add(curAction)
-      undoBtn.removeAttribute('disabled')
-      redoBtn.setAttribute('disabled', null)
+// handle mouse release
+document.addEventListener('mouseup', e => {
+  if (mouseClicked) {
+    const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+    switch (curTool) {
+      case Tool.PAINTBRUSH:
+      case Tool.ERASER: {
+        if (e.target === canvas) {
+          paintbrush.color = curAction.brushColor
+          paintbrush.drawPoint(curPos.x, curPos.y)
+        }
+        // add action to stack
+        actionStack.add(curAction)
+        undoBtn.removeAttribute('disabled')
+        redoBtn.setAttribute('disabled', null)
+        break
+      }
+      case Tool.BUCKET: {
+        paintbrush.color = curAction.brushColor
+        // only add action if fill was performed on valid coordinate and selected color != pixel color
+        if (e.target === canvas && paintbrush.floodFill(curPos.x, curPos.y)) {
+          curAction.fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
+          actionStack.add(curAction)
+          undoBtn.removeAttribute('disabled')
+          redoBtn.setAttribute('disabled', null)
+        }
+        break
+      }
+      case Tool.EYEDROPPER: {
+        if (e.target === canvas) {
+          // update selected color
+          const color = paintbrush.getColorAtPixel(curPos.x, curPos.y)
+          if (curButtonCode === 0) {
+            brushColorSelectPrimary.value = color
+          } else {
+            brushColorSelectSecondary.value = color
+          }
+          break
+        }
+      }
     }
 
     curAction = null
     mouseClicked = false
+    curButtonCode = null 
   }
 })
 

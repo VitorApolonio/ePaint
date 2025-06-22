@@ -6,6 +6,7 @@ class Tool {
   static PAINTBRUSH = new Tool('Paintbrush')
   static ERASER = new Tool('Eraser')
   static BUCKET = new Tool('Bucket')
+  static EYEDROPPER = new Tool('Eyedropper')
 
   toString() {
     return this.name
@@ -221,6 +222,18 @@ class Brush {
     // https://stackoverflow.com/a/17386803
     const pixelBuffer = new Uint32Array(this.#ctx.getImageData(0, 0, w, h).data.buffer)
     return !pixelBuffer.some(c => c !== 0)
+  }
+
+  getColorAtPixel(x, y) {
+    const w = this.#ctx.canvas.width
+    const h = this.#ctx.canvas.height
+
+    // the slice is to exclude alpha
+    const d = this.#getColorDataAtCoords(x, y, this.#ctx.getImageData(1, 0, w, h)).slice(0, 3)
+    return '#' + d.map(n => {
+      const c = n.toString(16)
+      return c.length === 1 ? '0' + c : c
+    }).join('')
   }
 
   /**
