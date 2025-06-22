@@ -132,8 +132,8 @@ canvas.addEventListener('mousedown', e => {
     if (color) {
       curAction = new Action(paintbrush.size, color, curTool === Tool.BUCKET)
       // begin path at current position
-      startPos.x = e.layerX - canvas.offsetLeft
-      startPos.y = e.layerY - canvas.offsetTop
+      startPos.x = e.offsetX
+      startPos.y = e.offsetY
       curAction.addPosition(startPos.x, startPos.y)
     }
   }
@@ -142,7 +142,7 @@ canvas.addEventListener('mousedown', e => {
 // handle mouse movement
 canvas.addEventListener('mousemove', e => {
   if (mouseClicked) {
-    const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+    const curPos = { x: e.offsetX, y: e.offsetY }
     switch (curTool) {
       case Tool.PAINTBRUSH:
       case Tool.ERASER: {
@@ -171,7 +171,7 @@ canvas.addEventListener('mousemove', e => {
 // handle mouse release
 document.addEventListener('mouseup', e => {
   if (mouseClicked) {
-    const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+    const curPos = { x: e.offsetX, y: e.offsetY }
     switch (curTool) {
       case Tool.PAINTBRUSH:
       case Tool.ERASER: {
