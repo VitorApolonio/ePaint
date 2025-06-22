@@ -139,7 +139,7 @@ class Brush {
 
     // return if pixel is already painted
     if (this.#colorEquals(color, this.#hexToRgb(this.#color).concat(color[3]))) {
-      return
+      return false
     }
 
     let head = 0
@@ -206,6 +206,7 @@ class Brush {
 
     // apply changes to canvas
     this.#ctx.putImageData(newImageData, 0, 0)
+    return true
   }
 
   clearCanvas() {

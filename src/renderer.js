@@ -123,17 +123,6 @@ canvas.addEventListener('mousedown', e => {
   }
 })
 
-// stop drawing when mouse is released
-document.addEventListener('mouseup', e => {
-  if (mouseClicked) {
-    actionStack.add(curAction)
-    curAction = null
-    undoBtn.removeAttribute('disabled')
-    redoBtn.setAttribute('disabled', null)
-    mouseClicked = false
-  }
-})
-
 // draw line from startPos to current mouse position, then set startPos to current
 canvas.addEventListener('mousemove', e => {
   if (mouseClicked && !curAction.isFill) {
@@ -146,18 +135,32 @@ canvas.addEventListener('mousemove', e => {
   }
 })
 
-// draw a dot on mouse click or flood fill if bucket is selected
-canvas.addEventListener('mouseup', e => {
-  const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+// finish path on mouse release / draw dot or fill on click
+document.addEventListener('mouseup', e => {
   if (mouseClicked) {
-    paintbrush.color = curAction.brushColor
+    if (e.target === canvas) {
+      const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
+      paintbrush.color = curAction.brushColor
 
-    if (curAction.isFill) {
-      paintbrush.floodFill(curPos.x, curPos.y)
-      curAction.fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
-    } else {
-      paintbrush.drawPoint(curPos.x, curPos.y)
+      if (curAction.isFill) {
+        // only add action if fill was performed
+        if (paintbrush.floodFill(curPos.x, curPos.y)) {
+          curAction.fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
+        }
+      } else {
+        paintbrush.drawPoint(curPos.x, curPos.y)
+      }
     }
+
+    // a fill action is only added if it has image data
+    if (curAction.isFill && curAction.fillData || !curAction.isFill) {
+      actionStack.add(curAction)
+      undoBtn.removeAttribute('disabled')
+      redoBtn.setAttribute('disabled', null)
+    }
+
+    curAction = null
+    mouseClicked = false
   }
 })
 
