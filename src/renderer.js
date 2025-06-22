@@ -98,6 +98,8 @@ const startPos = { x: 0, y: 0 }
 canvas.addEventListener('mousedown', e => {
   // make new action
   if (!mouseClicked) {
+    mouseClicked = true
+
     // set color to use for path
     let color
     switch (curTool) {
@@ -111,17 +113,13 @@ canvas.addEventListener('mousedown', e => {
         break
       }
     }
-    // begin path if either brush or eraser is selected
-    if (curTool === Tool.PAINTBRUSH || curTool === Tool.ERASER) {
-      curAction = new Action(paintbrush.size, color)
 
-      mouseClicked = true
+    curAction = new Action(paintbrush.size, color, curTool === Tool.BUCKET)
 
-      // begin path at current position
-      startPos.x = e.layerX - canvas.offsetLeft
-      startPos.y = e.layerY - canvas.offsetTop
-      curAction.addPosition(startPos.x, startPos.y)
-    }
+    // begin path at current position
+    startPos.x = e.layerX - canvas.offsetLeft
+    startPos.y = e.layerY - canvas.offsetTop
+    curAction.addPosition(startPos.x, startPos.y)
   }
 })
 
@@ -138,7 +136,7 @@ document.addEventListener('mouseup', e => {
 
 // draw line from startPos to current mouse position, then set startPos to current
 canvas.addEventListener('mousemove', e => {
-  if (mouseClicked) {
+  if (mouseClicked && !curAction.isFill) {
     const endPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
     paintbrush.color = curAction.brushColor
     paintbrush.drawLine(startPos.x, startPos.y, endPos.x, endPos.y)
@@ -153,11 +151,12 @@ canvas.addEventListener('mouseup', e => {
   const curPos = { x: e.layerX - canvas.offsetLeft, y: e.layerY - canvas.offsetTop }
   if (mouseClicked) {
     paintbrush.color = curAction.brushColor
-    paintbrush.drawPoint(curPos.x, curPos.y)
-  }
-  if (curTool === Tool.BUCKET) {
-    paintbrush.color = e.button === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
-    paintbrush.floodFill(curPos.x, curPos.y)
+
+    if (curAction.isFill) {
+      paintbrush.floodFill(curPos.x, curPos.y)
+    } else {
+      paintbrush.drawPoint(curPos.x, curPos.y)
+    }
   }
 })
 

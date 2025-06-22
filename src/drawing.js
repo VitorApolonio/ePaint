@@ -13,12 +13,13 @@ class Tool {
 }
 
 class Action {
-  #brushState = { size: null, color: null }
+  #brushState = { size: null, color: null, isFill: false }
   #positions = []
 
-  constructor(brushSize, brushColor) {
+  constructor(brushSize, brushColor, isFill = false) {
     this.#brushState.size = brushSize
     this.#brushState.color = brushColor
+    this.#brushState.isFill = isFill
   }
 
   get brushSize() {
@@ -27,6 +28,10 @@ class Action {
 
   get brushColor() {
     return this.#brushState.color
+  }
+
+  get isFill() {
+    return this.#brushState.isFill
   }
 
   get positions() {
@@ -288,9 +293,13 @@ class DrawStack {
         this.#brush.drawLine(startPos.x, startPos.y, positions[i].x, positions[i].y)
         startPos = positions[i]
       }
-    // draw a point if the action has only one position
+    // draw a point / fill if the action has only one position
     } else if (positions.length === 1) {
-      this.#brush.drawPoint(positions[0].x, positions[0].y)
+      if (action.isFill) {
+        this.#brush.floodFill(positions[0].x, positions[0].y)
+      } else {
+        this.#brush.drawPoint(positions[0].x, positions[0].y)
+      }
     // an action without any coordinates means the canvas was wiped
     } else {
       this.#brush.clearCanvas()
