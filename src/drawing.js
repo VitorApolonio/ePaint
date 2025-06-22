@@ -13,7 +13,7 @@ class Tool {
 }
 
 class Action {
-  #brushState = { size: null, color: null, isFill: false }
+  #brushState = { size: null, color: null, isFill: null, fillData: null }
   #positions = []
 
   constructor(brushSize, brushColor, isFill = false) {
@@ -32,6 +32,14 @@ class Action {
 
   get isFill() {
     return this.#brushState.isFill
+  }
+
+  get fillData() {
+    return this.#brushState.fillData
+  }
+
+  set fillData(newData) {
+    this.#brushState.fillData = newData
   }
 
   get positions() {
@@ -103,6 +111,10 @@ class Brush {
     this.#ctx.moveTo(startX, startY)
     this.#ctx.lineTo(endX, endY)
     this.#ctx.stroke()
+  }
+
+  drawImage(image) {
+    this.#ctx.putImageData(image, 0, 0)
   }
 
   eraseLine(startX, startY, endX, endY) {
@@ -313,7 +325,8 @@ class DrawStack {
     // draw a point / fill if the action has only one position
     } else if (positions.length === 1) {
       if (action.isFill) {
-        this.#brush.floodFill(positions[0].x, positions[0].y)
+        this.#brush.clearCanvas()
+        this.#brush.drawImage(action.fillData)
       } else {
         this.#brush.drawPoint(positions[0].x, positions[0].y)
       }

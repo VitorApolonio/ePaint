@@ -154,6 +154,7 @@ canvas.addEventListener('mouseup', e => {
 
     if (curAction.isFill) {
       paintbrush.floodFill(curPos.x, curPos.y)
+      curAction.fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
     } else {
       paintbrush.drawPoint(curPos.x, curPos.y)
     }
