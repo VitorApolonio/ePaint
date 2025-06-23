@@ -216,6 +216,8 @@ class Brush {
       Math.abs(a[0] - b[0]) <= tolerance
       && Math.abs(a[1] - b[1]) <= tolerance
       && Math.abs(a[2] - b[2]) <= tolerance
+      // only false when comparing brush color with background (alpha = 0)
+      && Math.abs(a[3] - b[3]) < 255
     )
   }
 }
