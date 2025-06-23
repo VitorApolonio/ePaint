@@ -16,8 +16,6 @@ body {
 }
 
 canvas {
-  border-radius: 1;
-  border-style: solid;
   display: flex;
   cursor: crosshair;
 }
@@ -30,6 +28,8 @@ canvas {
 }
 
 #canvas-container {
+  border-radius: 1;
+  border-style: solid;
   align-content: center;
   justify-self: center;
   overflow: auto;
