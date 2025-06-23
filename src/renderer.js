@@ -69,6 +69,7 @@ sizes.forEach(s => {
 
 // set default brush size
 brushSizeSelect.value = 5
+paintbrush.size = brushSizeSelect.value
 
 // use selected brush size
 brushSizeSelect.addEventListener('change', e => {
