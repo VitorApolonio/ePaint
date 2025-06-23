@@ -1,5 +1,8 @@
 import './index.css'
-import { Action, Brush, DrawStack, Tool } from './drawing.js'
+import Action from './logic/action.js'
+import Brush from './logic/brush.js'
+import DrawStack from './logic/draw_stack.js'
+import Tool from './logic/tool.js'
 import './lucide.js'
 
 const toolSelectBrush = document.getElementById('brush-tool')
