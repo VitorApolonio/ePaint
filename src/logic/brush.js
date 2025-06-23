@@ -64,17 +64,6 @@ class Brush {
     this.#ctx.putImageData(image, 0, 0)
   }
 
-  eraseLine(startX, startY, endX, endY) {
-    this.#ctx.lineCap = 'round'
-    this.#ctx.lineWidth = this.#size
-    this.#ctx.strokeStyle = COLOR_ERASER
-
-    this.#ctx.beginPath()
-    this.#ctx.moveTo(startX, startY)
-    this.#ctx.lineTo(endX, endY)
-    this.#ctx.stroke()
-  }
-
   floodFill(startX, startY) {
     const w = this.#ctx.canvas.width
     const h = this.#ctx.canvas.height
