@@ -77,8 +77,8 @@ brushSizeSelect.addEventListener('change', e => {
 })
 
 // set default brush color
-brushColorSelectPrimary.value = '#ffffff'
-brushColorSelectSecondary.value = '#ff00ff'
+brushColorSelectPrimary.value = '#ff7f00'
+brushColorSelectSecondary.value = '#007fff'
 
 // swap colors
 colorSwapBtn.addEventListener('click', () => {
