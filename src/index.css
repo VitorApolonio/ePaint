@@ -13,6 +13,7 @@ body {
   display: flex;
   flex-flow: column;
   align-items: center;
+  justify-content: space-around;
 }
 
 canvas {
@@ -28,12 +29,12 @@ canvas {
 }
 
 #canvas-container {
-  border-radius: 1;
   border-style: solid;
   align-content: center;
   justify-self: center;
   overflow: auto;
   max-width: 80vw;
+  max-height: fit-content;
   flex: 1 80%;
 }
 
@@ -45,7 +46,6 @@ canvas {
   justify-items: center;
   align-items: flex-end;
   user-select: none;
-  flex: 1;
 }
 
 #color-select-primary, #color-select-secondary {
