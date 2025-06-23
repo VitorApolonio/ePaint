@@ -3,7 +3,7 @@ class Brush {
   #color
   #ctx
 
-  constructor(canvas, size, color) {
+  constructor(canvas, size = 1, color = '#ffffff') {
     this.#ctx = canvas.getContext('2d')
     this.#size = size
     this.#color = color

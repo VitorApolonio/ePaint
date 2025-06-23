@@ -7,7 +7,7 @@ class DrawStack {
   #brush
 
   constructor(canvas) {
-    this.#brush = new Brush(canvas, null, null)
+    this.#brush = new Brush(canvas)
   }
 
   canUndo() {

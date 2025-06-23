@@ -35,7 +35,7 @@ let curButtonCode = null
 let curAction = null
 
 // brush and undo/redo stack
-const paintbrush = new Brush(canvas, 5, null)
+const paintbrush = new Brush(canvas)
 const actionStack = new DrawStack(canvas)
 
 // auto resize canvas, preserving current drawing
