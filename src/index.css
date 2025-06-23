@@ -16,7 +16,6 @@ body {
 }
 
 canvas {
-  border-color: ghostwhite;
   border-radius: 1;
   border-style: solid;
   display: flex;
