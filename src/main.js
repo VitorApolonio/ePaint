@@ -21,7 +21,7 @@ const createWindow = () => {
   });
 
   // display window when CSS finishes loading
-  ipcMain.on('main-win-ready', () => {
+  ipcMain.once('main-win-ready', () => {
     if (mainWindow && !mainWindow.isVisible()) {
       mainWindow.show()
     }
@@ -37,6 +37,46 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
+  // preload new canvas prompt
+  const newCanvasWin = new BrowserWindow({
+    width: 320,
+    height: 256,
+    show: false,
+    parent: mainWindow,
+    modal: true,
+    resizable: false,
+    minimizable: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
+    icon: path.join(__dirname, 'img/icon.png')
+  })
+
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/prompt/new-canvas.html`);
+  } else {
+    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt/new-canvas.html`))
+  }
+
+  // close when user clicks cancel
+  ipcMain.on('cancel-new', () => {
+    if (newCanvasWin && !newCanvasWin.isDestroyed()) {
+      newCanvasWin.hide()
+    }
+  })
+
+  // prevent destroying the window on close
+  newCanvasWin.on('close', e => {
+    e.preventDefault()
+    newCanvasWin.hide()
+  })
+
+  // disable minimize
+  newCanvasWin.on('minimize', e => {
+    e.preventDefault()
+    newCanvasWin.restore()
+  })
+
   const menu = new Menu()
   menu.append(new MenuItem({
     role: 'fileMenu',
@@ -45,36 +85,8 @@ const createWindow = () => {
         label: 'New canvas...',
         accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
         click: () => {
-          const newCanvasWin = new BrowserWindow({
-            width: 320,
-            height: 256,
-            show: false,
-            parent: mainWindow,
-            modal: true,
-            resizable: false,
-            webPreferences: {
-              preload: path.join(__dirname, 'preload.js'),
-            },
-            icon: path.join(__dirname, 'img/icon.png')
-          })
-
-          ipcMain.on('new-canvas-win-ready', () => {
-            if (newCanvasWin && !newCanvasWin.isVisible()) {
-              newCanvasWin.show()
-            }
-          })
-
-          // close when user clicks cancel
-          ipcMain.once('cancel-new', () => {
-            if (newCanvasWin && !newCanvasWin.isDestroyed()) {
-              newCanvasWin.close()
-            }
-          })
-
-          if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-            newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/prompt/new-canvas.html`);
-          } else {
-            newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt/new-canvas.html`))
+          if (newCanvasWin && !newCanvasWin.isVisible()) {
+            newCanvasWin.show()
           }
         }
       },

@@ -4,7 +4,6 @@ import { contextBridge, ipcRenderer } from "electron"
 
 contextBridge.exposeInMainWorld('electronAPI', {
   mainWinReady: () => ipcRenderer.send('main-win-ready'),
-  newCanvasWinReady: () => ipcRenderer.send('new-canvas-win-ready'),
   onUndoShortcut: (callback) => ipcRenderer.on('undo-shortcut', (_event) => callback()),
   onRedoShortcut: (callback) => ipcRenderer.on('redo-shortcut', (_event) => callback()),
   onSaveImage: (callback) => ipcRenderer.on('save-image', (_event, path) => callback(path)),

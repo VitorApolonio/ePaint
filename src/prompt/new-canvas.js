@@ -1,5 +1,4 @@
 import './new-canvas.css'
-window.electronAPI.newCanvasWinReady()
 
 const cancelBtn = document.getElementById('cancel-btn')
 
