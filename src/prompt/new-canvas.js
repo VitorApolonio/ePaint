@@ -1,5 +1,5 @@
 import './new-canvas.css'
-document.querySelector('body').removeAttribute('hidden')
+window.electronAPI.newCanvasWinReady()
 
 const cancelBtn = document.getElementById('cancel-btn')
 

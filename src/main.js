@@ -13,11 +13,19 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
     icon: path.join(__dirname, 'img/icon.png')
   });
+
+  // display window when CSS finishes loading
+  ipcMain.on('main-win-ready', () => {
+    if (mainWindow && !mainWindow.isVisible()) {
+      mainWindow.show()
+    }
+  })
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -40,6 +48,7 @@ const createWindow = () => {
           const newCanvasWin = new BrowserWindow({
             width: 320,
             height: 256,
+            show: false,
             parent: mainWindow,
             modal: true,
             resizable: false,
@@ -47,6 +56,12 @@ const createWindow = () => {
               preload: path.join(__dirname, 'preload.js'),
             },
             icon: path.join(__dirname, 'img/icon.png')
+          })
+
+          ipcMain.on('new-canvas-win-ready', () => {
+            if (newCanvasWin && !newCanvasWin.isVisible()) {
+              newCanvasWin.show()
+            }
           })
 
           // close when user clicks cancel

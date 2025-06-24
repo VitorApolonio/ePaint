@@ -1,6 +1,6 @@
 import './index.css'
 import './lucide.js'
-document.querySelector('body').removeAttribute('hidden')
+window.electronAPI.mainWinReady()
 
 import Action from './logic/action.js'
 import Brush from './logic/brush.js'
