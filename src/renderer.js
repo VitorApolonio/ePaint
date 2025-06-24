@@ -1,9 +1,11 @@
 import './index.css'
+import './lucide.js'
+document.querySelector('body').removeAttribute('hidden')
+
 import Action from './logic/action.js'
 import Brush from './logic/brush.js'
 import DrawStack from './logic/draw_stack.js'
 import Tool from './logic/tool.js'
-import './lucide.js'
 
 const toolSelectBrush = document.getElementById('brush-tool')
 const toolSelectEraser = document.getElementById('eraser-tool')
