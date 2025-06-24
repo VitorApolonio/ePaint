@@ -7,5 +7,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onUndoShortcut: (callback) => ipcRenderer.on('undo-shortcut', (_event) => callback()),
   onRedoShortcut: (callback) => ipcRenderer.on('redo-shortcut', (_event) => callback()),
   onSaveImage: (callback) => ipcRenderer.on('save-image', (_event, path) => callback(path)),
-  saveImageToFile: (path, arrBuffer) => ipcRenderer.send('save-image-to-file', path, arrBuffer)
+  saveImageToFile: (path, arrBuffer) => ipcRenderer.send('save-image-to-file', path, arrBuffer),
+  cancelNew: () => ipcRenderer.send('cancel-new')
 })

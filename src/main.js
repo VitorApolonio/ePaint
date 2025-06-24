@@ -1,11 +1,11 @@
-import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron'
 import fs from 'fs'
-import path from 'node:path';
-import started from 'electron-squirrel-startup';
+import path from 'node:path'
+import started from 'electron-squirrel-startup'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
-  app.quit();
+  app.quit()
 }
 
 const createWindow = () => {
@@ -23,25 +23,48 @@ const createWindow = () => {
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
-  const resizeHandler = () => {
-    const { width, height } = mainWindow.getBounds()
-    mainWindow.webContents.send('window-resized', width, height)
-  }
-  mainWindow.on('resize', resizeHandler)
-  mainWindow.webContents.once('dom-ready', resizeHandler)
+  mainWindow.webContents.openDevTools()
 
   const menu = new Menu()
   menu.append(new MenuItem({
     role: 'fileMenu',
     submenu: [
       {
-        label: 'Save image',
+        label: 'New canvas...',
+        accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
+        click: () => {
+          const newCanvasWin = new BrowserWindow({
+            width: 320,
+            height: 256,
+            parent: mainWindow,
+            modal: true,
+            resizable: false,
+            webPreferences: {
+              preload: path.join(__dirname, 'preload.js'),
+            },
+            icon: path.join(__dirname, 'img/icon.png')
+          })
+
+          // close when user clicks cancel
+          ipcMain.once('cancel-new', () => {
+            if (newCanvasWin && !newCanvasWin.isDestroyed()) {
+              newCanvasWin.close()
+            }
+          })
+
+          if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+            newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/prompt/new-canvas.html`);
+          } else {
+            newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt/new-canvas.html`))
+          }
+        }
+      },
+      {
+        label: 'Save image...',
         accelerator: process.platform === 'darwin' ? 'Cmd+S' : 'Ctrl+S',
         click: () => {
           dialog.showSaveDialog({
@@ -81,13 +104,13 @@ ipcMain.on('save-image-to-file', (_event, path, arrBuffer) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow();
+  createWindow()
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+      createWindow()
     }
   });
 });
@@ -97,7 +120,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit();
+    app.quit()
   }
 });
 

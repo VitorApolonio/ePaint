@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>New canvas</title>
+  <script defer type="module" src="/src/prompt/new-canvas.js"></script>
+</head>
+<body hidden>
+  <div class="container">
+    <label class="label">Desired resolution:</label>
+    <div class="field has-addons">
+      <div class="control">
+        <input type="text" class="input" placeholder="Width" />
+      </div>
+      <div class="control">
+        <span class="button is-static">px</span>
+      </div>
+    </div>
+    <div class="field has-addons">
+      <div class="control">
+        <input type="text" class="input" placeholder="Height" />
+      </div>
+      <div class="control">
+        <span class="button is-static">px</span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="field is-grouped is-grouped-right">
+      <div class="control">
+        <button class="button is-link">Confirm</button>
+      </div>
+      <div class="control">
+        <button id="cancel-btn" class="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
