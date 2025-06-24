@@ -1,5 +1,18 @@
 import './new-canvas.css'
 
 const cancelBtn = document.getElementById('cancel-btn')
+const widthField = document.getElementById('width')
+const heightField = document.getElementById('height')
 
-cancelBtn.addEventListener('click', window.electronAPI.cancelNew)
+const clearFields = () => {
+  widthField.value = ''
+  heightField.value = ''
+}
+
+cancelBtn.addEventListener('click', () => {
+  clearFields()
+  window.electronAPI.cancelNew()
+})
+
+// window close event
+window.electronAPI.onClearNewFields(clearFields)

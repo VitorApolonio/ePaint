@@ -4,9 +4,10 @@ import { contextBridge, ipcRenderer } from "electron"
 
 contextBridge.exposeInMainWorld('electronAPI', {
   mainWinReady: () => ipcRenderer.send('main-win-ready'),
-  onUndoShortcut: (callback) => ipcRenderer.on('undo-shortcut', (_event) => callback()),
-  onRedoShortcut: (callback) => ipcRenderer.on('redo-shortcut', (_event) => callback()),
-  onSaveImage: (callback) => ipcRenderer.on('save-image', (_event, path) => callback(path)),
+  onUndoShortcut: callback => ipcRenderer.on('undo-shortcut', callback),
+  onRedoShortcut: callback => ipcRenderer.on('redo-shortcut', callback),
+  onSaveImage: callback => ipcRenderer.on('save-image', (_event, path) => callback(path)),
   saveImageToFile: (path, arrBuffer) => ipcRenderer.send('save-image-to-file', path, arrBuffer),
-  cancelNew: () => ipcRenderer.send('cancel-new')
+  cancelNew: () => ipcRenderer.send('cancel-new'),
+  onClearNewFields: callback => ipcRenderer.on('clear-new-fields', callback)
 })

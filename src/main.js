@@ -111,15 +111,14 @@ const createNewCanvasPrompt = parent => {
 
   // close when user clicks cancel
   ipcMain.on('cancel-new', () => {
-    if (newCanvasWin && !newCanvasWin.isDestroyed()) {
-      newCanvasWin.hide()
-    }
+    newCanvasWin.hide()
   })
 
   // prevent destroying the window on close
   newCanvasWin.on('close', e => {
     e.preventDefault()
     newCanvasWin.hide()
+    newCanvasWin.webContents.send('clear-new-fields')
   })
 
   // disable minimize
