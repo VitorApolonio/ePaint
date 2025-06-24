@@ -47,6 +47,7 @@ const createWindow = () => {
         accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
         click: () => {
           if (newCanvasWin && !newCanvasWin.isVisible()) {
+            newCanvasWin.center()
             newCanvasWin.show()
           }
         }
