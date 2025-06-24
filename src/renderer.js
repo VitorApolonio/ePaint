@@ -1,5 +1,6 @@
 import './index.css'
 import './lucide.js'
+// display window
 window.electronAPI.mainWinReady()
 
 import Action from './logic/action.js'
@@ -45,16 +46,24 @@ canvas.width = 800
 canvas.height = 600
 
 // setup brush sizes
-const sizes = [2, 5, 10, 15, 20, 25, 30]
+const sizes = {
+  xsmall: 2,
+  small: 5,
+  medium: 10,
+  large: 15,
+  xlarge: 20,
+  xxlarge: 25,
+  xxxlarge: 30,
+}
 
-sizes.forEach(s => {
-  const e = document.createElement('option')
-  e.innerHTML = s
-  brushSizeSelect.appendChild(e)
-})
+for (const s in sizes) {
+  const o = document.createElement('option')
+  o.innerHTML = sizes[s]
+  brushSizeSelect.appendChild(o)
+}
 
 // set default brush size
-brushSizeSelect.value = 5
+brushSizeSelect.value = sizes.small
 paintbrush.size = brushSizeSelect.value
 
 // use selected brush size
