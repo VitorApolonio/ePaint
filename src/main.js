@@ -37,6 +37,11 @@ const createWindow = () => {
   // preload new canvas prompt
   const newCanvasWin = createNewCanvasPrompt(mainWindow)
 
+  // forward data with width/height on resize confirm
+  ipcMain.on('canvas-resize', (_event, width, height) => {
+    mainWindow.webContents.send('canvas-resize', width, height)
+  })
+
   // create app menu
   const menu = new Menu()
   menu.append(new MenuItem({

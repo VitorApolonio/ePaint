@@ -50,6 +50,11 @@ class DrawStack {
     }
   }
 
+  clear() {
+    this.#index = 0
+    this.#actions.length = 0 // man i love this language
+  }
+
   drawAction(action) {
     // restore brush state
     this.#brush.color = action.brushColor

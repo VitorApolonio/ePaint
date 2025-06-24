@@ -9,5 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onSaveImage: callback => ipcRenderer.on('save-image', (_event, path) => callback(path)),
   saveImageToFile: (path, arrBuffer) => ipcRenderer.send('save-image-to-file', path, arrBuffer),
   cancelNew: () => ipcRenderer.send('cancel-new'),
-  onClearNewFields: callback => ipcRenderer.on('clear-new-fields', callback)
+  onClearNewFields: callback => ipcRenderer.on('clear-new-fields', callback),
+  resizeCanvas: (width, height) => ipcRenderer.send('canvas-resize', width, height),
+  onResizeCanvas: callback => ipcRenderer.on('canvas-resize', (_event, width, height) => callback(width, height))
 })

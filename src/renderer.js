@@ -41,9 +41,19 @@ let curAction = null
 const paintbrush = new Brush(canvas)
 const actionStack = new DrawStack(canvas)
 
-// fix canvas size
+// initial canvas size
 canvas.width = 800
 canvas.height = 600
+
+// new canvas
+window.electronAPI.onResizeCanvas((width, height) => {
+  paintbrush.clearCanvas()
+  actionStack.clear()
+  undoBtn.setAttribute('disabled', null)
+  redoBtn.setAttribute('disabled', null)
+  canvas.width = width
+  canvas.height = height
+})
 
 // setup brush sizes
 const sizes = {
