@@ -16,6 +16,7 @@ heightField.addEventListener('input', e => restrict(e))
 const clearFields = () => {
   widthField.value = ''
   heightField.value = ''
+  widthField.focus()
 }
 const resize = () => {
   const w = Math.max(widthField.value, 100)
