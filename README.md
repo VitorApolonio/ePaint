@@ -1,10 +1,10 @@
 # ePaint to-do list
 
 - figure out how to compile this for Windows
-- lower fill tolerance, or allow user to adjust it
-- allow different canvas resolutions (maybe dragging?)
+- maybe allow resizing current drawing instead of having to make a new one
+- set default res on canvas when typing nothing
+- allow only numbers on resolution fields
 - Ctrl+Scroll or Ctrl+-\+ to zoom
-- dark/light mode switch
 - documentation for the love of god
 - remove all debug messages (when finished)
 - package application

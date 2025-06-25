@@ -5,6 +5,14 @@ const confirmBtn = document.getElementById('confirm-btn')
 const widthField = document.getElementById('width')
 const heightField = document.getElementById('height')
 
+// prevent non-numeric values from being typed
+const restrict = e => {
+  e.target.value = e.target.value.replace(/\D/g, '')
+}
+
+widthField.addEventListener('input', e => restrict(e))
+heightField.addEventListener('input', e => restrict(e))
+
 const clearFields = () => {
   widthField.value = ''
   heightField.value = ''
