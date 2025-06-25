@@ -41,6 +41,26 @@ let curAction = null
 const paintbrush = new Brush(canvas)
 const actionStack = new DrawStack(canvas)
 
+// toggle undo/redo
+const setUndoEnabled = enable => {
+  if (enable) {
+    undoBtn.disabled = false
+    window.electronAPI.enableUndo()
+  } else {
+    undoBtn.disabled = true
+    window.electronAPI.disableUndo()
+  }
+}
+const setRedoEnabled = enable => {
+  if (enable) {
+    redoBtn.disabled = false
+    window.electronAPI.enableRedo()
+  } else {
+    redoBtn.disabled = true
+    window.electronAPI.disableRedo()
+  }
+}
+
 // initial canvas size
 canvas.width = 800
 canvas.height = 600
@@ -49,8 +69,8 @@ canvas.height = 600
 window.electronAPI.onResizeCanvas((width, height) => {
   paintbrush.clearCanvas()
   actionStack.clear()
-  undoBtn.setAttribute('disabled', null)
-  redoBtn.setAttribute('disabled', null)
+  setUndoEnabled(false)
+  setRedoEnabled(false)
   canvas.width = width
   canvas.height = height
 })
@@ -190,8 +210,8 @@ document.addEventListener('mouseup', e => {
         }
         // add action to stack
         actionStack.add(curAction)
-        undoBtn.removeAttribute('disabled')
-        redoBtn.setAttribute('disabled', null)
+        setUndoEnabled(true)
+        setRedoEnabled(false)
         break
       }
       case Tool.BUCKET: {
@@ -200,8 +220,8 @@ document.addEventListener('mouseup', e => {
         if (e.target === canvas && paintbrush.floodFill(curPos.x, curPos.y)) {
           curAction.fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
           actionStack.add(curAction)
-          undoBtn.removeAttribute('disabled')
-          redoBtn.setAttribute('disabled', null)
+          setUndoEnabled(true)
+          setRedoEnabled(false)
         }
         break
       }
@@ -229,16 +249,16 @@ document.addEventListener('mouseup', e => {
 const undoHandler = () => {
   actionStack.undo()
   if (!actionStack.canUndo()) {
-    undoBtn.setAttribute('disabled', null)
+    setUndoEnabled(false)
   }
-  redoBtn.removeAttribute('disabled')
+  setRedoEnabled(true)
 }
 const redoHandler = () => {
   actionStack.redo()
   if (!actionStack.canRedo()) {
-    redoBtn.setAttribute('disabled', null)
+    setRedoEnabled(false)
   }
-  undoBtn.removeAttribute('disabled')
+  setUndoEnabled(true)
 }
 
 // undo/redo buttons
@@ -260,8 +280,8 @@ clearBtn.addEventListener('click', () => {
     }
     paintbrush.clearCanvas()
     actionStack.add(new Action(null, null))
-    undoBtn.removeAttribute('disabled')
-    redoBtn.setAttribute('disabled', null)
+    setUndoEnabled(true)
+    setRedoEnabled(false)
   }
 })
 

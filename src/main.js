@@ -70,21 +70,40 @@ const createWindow = () => {
       }
     ]
   }))
+  const undoItem = new MenuItem({
+    label: 'Undo',
+    accelerator: process.platform === 'darwin' ? 'Cmd+Z' : 'Ctrl+Z',
+    enabled: false,
+    click: () => { mainWindow.webContents.send('undo-shortcut') }
+  })
+  const redoItem = new MenuItem({
+    label: 'Redo',
+    accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Ctrl+Y',
+    enabled: false,
+    click: () => { mainWindow.webContents.send('redo-shortcut') }
+  })
   menu.append(new MenuItem({
     role: 'editMenu',
-    submenu: [
-      {
-        label: 'Undo',
-        accelerator: process.platform === 'darwin' ? 'Cmd+Z' : 'Ctrl+Z',
-        click: () => { mainWindow.webContents.send('undo-shortcut') }
-      },
-      {
-        label: 'Redo',
-        accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Ctrl+Y',
-        click: () => { mainWindow.webContents.send('redo-shortcut') }
-      }
-    ]
+    submenu: [undoItem, redoItem]
   }))
+
+  // disable or enable undo/redo buttons
+  ipcMain.on('undo-enable', () => {
+    undoItem.enabled = true;
+    Menu.setApplicationMenu(menu);
+  });
+  ipcMain.on('undo-disable', () => {
+    undoItem.enabled = false;
+    Menu.setApplicationMenu(menu);
+  });
+  ipcMain.on('redo-enable', () => {
+    redoItem.enabled = true;
+    Menu.setApplicationMenu(menu);
+  });
+  ipcMain.on('redo-disable', () => {
+    redoItem.enabled = false;
+    Menu.setApplicationMenu(menu);
+  });
 
   Menu.setApplicationMenu(menu)
 
