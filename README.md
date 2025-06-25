@@ -1,5 +1,6 @@
 # ePaint to-do list
 
+- restructure the project to use React (would simplify making a new color picker)
 - use custom method for drawing lines to get rid of antialiasing
 - properly space out items in new canvas dialog
 - instead of quietly setting res to 100x100, inform user of this minimum when making a new canvas
