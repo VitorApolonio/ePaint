@@ -1,5 +1,7 @@
 # ePaint to-do list
 
+- properly space out items in new canvas dialog
+- instead of quietly setting res to 100x100, inform user of this minimum when making a new canvas
 - figure out how to compile this for Windows
 - maybe allow resizing current drawing instead of having to make a new one
 - set default res on canvas when typing nothing

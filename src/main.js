@@ -48,7 +48,7 @@ const createWindow = () => {
     role: 'fileMenu',
     submenu: [
       {
-        label: 'New canvas...',
+        label: 'New...',
         accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
         click: () => {
           if (newCanvasWin && !newCanvasWin.isVisible()) {
