@@ -18,7 +18,9 @@ const clearFields = () => {
   heightField.value = ''
 }
 const resize = () => {
-  window.electronAPI.resizeCanvas(widthField.value, heightField.value)
+  const w = Math.max(widthField.value, 100)
+  const h = Math.max(heightField.value, 100)
+  window.electronAPI.resizeCanvas(w, h)
   window.electronAPI.cancelNew()
 }
 
@@ -27,11 +29,15 @@ cancelBtn.addEventListener('click', () => {
   window.electronAPI.cancelNew()
 })
 
-confirmBtn.addEventListener('click', resize)
+confirmBtn.addEventListener('click', () => {
+  resize()
+  clearFields()
+})
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     resize()
+    clearFields()
   }
 })
 
