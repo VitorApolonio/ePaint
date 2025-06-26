@@ -13,5 +13,8 @@ body {
   display: flex;
   flex-flow: column;
   justify-content: space-around;
-  align-items: center;
+}
+
+#fields {
+  align-self: center;
 }
