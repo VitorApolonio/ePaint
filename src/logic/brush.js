@@ -20,7 +20,7 @@ class Brush {
   }
 
   /** @type {string} Color value used for the eraser tool */
-  static COLOR_ERASER = 'rgba(0, 0, 0, 1)'
+  static COLOR_ERASER = '#000000ff'
 
   /**
    * Sets the brush size.
