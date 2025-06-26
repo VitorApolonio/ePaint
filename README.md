@@ -2,15 +2,12 @@
 
 - restructure the project to use React (would simplify making a new color picker)
 - use custom method for drawing lines to get rid of antialiasing
-- properly space out items in new canvas dialog
 - instead of quietly setting res to 100x100, inform user of this minimum when making a new canvas
 - figure out how to compile this for Windows
 - maybe allow resizing current drawing instead of having to make a new one
-- set default res on canvas when typing nothing
-- allow only numbers on resolution fields
 - Ctrl+Scroll or Ctrl+-\+ to zoom
-- documentation for the love of god
 - remove all debug messages (when finished)
+- remove dev tools line from main.js (when packaging)
 - package application
 - maybe replace the default HTML color picker
 - fix painting dot when leaving color picker
