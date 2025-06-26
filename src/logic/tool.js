@@ -1,7 +1,7 @@
 /**
  * Enum for drawing tools.
  * @readonly
- * @enum {number}
+ * @enum {string}
  */
 const Tool = Object.freeze({
   PAINTBRUSH: 'Paintbrush',

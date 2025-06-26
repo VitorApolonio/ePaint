@@ -5,8 +5,9 @@ window.electronAPI.mainWinReady()
 
 import Action from './logic/action.js'
 import Brush from './logic/brush.js'
-import DrawStack from './logic/draw_stack.js'
+import DrawStack from './logic/draw-stack.js'
 import Tool from './logic/tool.js'
+import MouseButton from './logic/mouse-button.js'
 
 const toolSelectBrush = document.getElementById('brush-tool')
 const toolSelectEraser = document.getElementById('eraser-tool')
@@ -28,10 +29,7 @@ let curTool = Tool.PAINTBRUSH
 // whether the mouse is being held down
 let mouseClicked = false
 
-/* HTML mouse button code
- * 0 - left button
- * 1 - mouse wheel
- * 2 - right button */
+// currently clicked mouse button
 let curButtonCode = null
 
 // current action (i.e. shape drawn with mouse)
@@ -149,7 +147,7 @@ canvas.addEventListener('mousedown', e => {
     switch (curTool) {
       case Tool.PAINTBRUSH:
       case Tool.BUCKET: {
-        color = curButtonCode === 0 ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
+        color = curButtonCode === MouseButton.MAIN ? brushColorSelectPrimary.value : brushColorSelectSecondary.value
         break
       }
       case Tool.ERASER: {
@@ -186,7 +184,7 @@ canvas.addEventListener('mousemove', e => {
       case Tool.EYEDROPPER: {
         // update selected color
         const color = paintbrush.getColorAtPixel(curPos.x, curPos.y)
-        if (curButtonCode === 0) {
+        if (curButtonCode === MouseButton.MAIN) {
           brushColorSelectPrimary.value = color
         } else {
           brushColorSelectSecondary.value = color
@@ -229,7 +227,7 @@ document.addEventListener('mouseup', e => {
         if (e.target === canvas) {
           // update selected color
           const color = paintbrush.getColorAtPixel(curPos.x, curPos.y)
-          if (curButtonCode === 0) {
+          if (curButtonCode === MouseButton.MAIN) {
             brushColorSelectPrimary.value = color
           } else {
             brushColorSelectSecondary.value = color
