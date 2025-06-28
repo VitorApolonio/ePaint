@@ -8,20 +8,6 @@ module.exports = {
   },
   rebuildConfig: {},
   makers: [
-    // Windows - creates .msi installer using WiX
-    {
-      name: '@electron-forge/maker-wix',
-      config: {
-        name: 'ePaint',
-        icon: 'src/img/icon.ico',
-        ui: {
-          chooseDirectory: true
-        },
-        upgradeCode: '7967ab5f-913b-4e2a-ad0c-c7dee76749f2',
-      },
-      platforms: ['win32'],
-    },
-    // Linux - creates .deb package
     {
       name: '@electron-forge/maker-deb',
       config: {
@@ -32,18 +18,6 @@ module.exports = {
       },
       platforms: ['linux'],
     },
-    // Linux - creates .rpm package
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {
-        options: {
-          bin: 'ePaint',
-          icon: 'src/img/icon.png',
-        },
-      },
-      platforms: ['linux'],
-    },
-    // Cross-platform - creates .zip archives
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin', 'linux', 'win32'],
