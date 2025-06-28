@@ -19,10 +19,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install NSIS (Windows only)
-        if: matrix.os == 'windows-latest'
-        run: choco install nsis
-
       - name: Install Dependencies
         run: npm ci
 

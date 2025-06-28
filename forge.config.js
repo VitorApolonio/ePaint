@@ -8,19 +8,6 @@ module.exports = {
   },
   rebuildConfig: {},
   makers: [
-    // Windows
-    {
-      name: 'electron-forge-maker-nsis',
-      config: {
-        oneClick: false,
-        allowToChangeInstallationDirectory: true,
-        createDesktopShortcut: true,
-        installerIcon: 'src/img/icon.ico',
-        setupIcon: 'src/img/icon.ico',
-      },
-      platforms: ['win32'],
-    },
-    // Linux
     {
       name: '@electron-forge/maker-deb',
       config: {
@@ -31,10 +18,9 @@ module.exports = {
       },
       platforms: ['linux'],
     },
-    // macOS
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      platforms: ['darwin', 'linux', 'win32'],
     },
   ],
   plugins: [
