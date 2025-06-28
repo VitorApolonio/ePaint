@@ -18,6 +18,7 @@ module.exports = {
         installerIcon: 'src/img/icon.ico',
         setupIcon: 'src/img/icon.ico',
       },
+      platforms: ['win32'],
     },
     // Linux
     {
@@ -26,8 +27,9 @@ module.exports = {
         options: {
           bin: 'ePaint',
           icon: 'src/img/icon.png',
-        }
+        },
       },
+      platforms: ['linux'],
     },
     // macOS
     {
