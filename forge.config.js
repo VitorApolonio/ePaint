@@ -10,7 +10,7 @@ module.exports = {
   makers: [
     // Windows
     {
-      name: '@electron-forge/maker-nsis',
+      name: 'electron-forge-maker-nsis',
       config: {
         oneClick: false,
         allowToChangeInstallationDirectory: true,
