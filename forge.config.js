@@ -33,6 +33,7 @@ module.exports = {
       platforms: ['linux'],
     },
     // Linux - creates .rpm package
+    /*
     {
       name: '@electron-forge/maker-rpm',
       config: {
@@ -43,6 +44,7 @@ module.exports = {
       },
       platforms: ['linux'],
     },
+     */
     // Cross-platform - creates .zip archives
     {
       name: '@electron-forge/maker-zip',
