@@ -1,6 +1,6 @@
 {
   "name": "e-paint",
-  "productName": "e-paint",
+  "productName": "ePaint",
   "version": "1.0.0",
   "description": "A drawing app",
   "main": ".vite/build/main.js",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "VitorApolonio",
+    "name": "Vitor Apolonio",
     "email": "vitorapolonio74@gmail.com"
   },
   "license": "MIT",
