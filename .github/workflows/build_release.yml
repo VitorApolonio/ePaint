@@ -1,32 +1,78 @@
 name: Build & Release
 
+# Trigger when a new release is created from the GitHub UI / API
 on:
   release:
     types: [created]
 
+# Minimal permissions for the built-in token
+permissions:
+  contents: write   # needed to upload assets to the release
+  packages: read
+
 jobs:
+# ────────────────────────────────────────────────────────────────────────────────
+# 1. Build for each target OS
+# ────────────────────────────────────────────────────────────────────────────────
   build:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Build Application
+      # WiX is only required on Windows when maker-wix is in the Forge config.
+      - name: Install WiX Toolset
+        if: matrix.os == 'windows-latest'
+        run: |
+          curl -L -o wix311.exe https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311.exe
+          .\wix311.exe /install /quiet /norestart
+
+      - name: Package application (Electron Forge “make”)
         run: npm run make
 
-      - name: Upload Build Artifacts
+      - name: Upload compilation results
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-build
-          path: out/make
+          # One artefact per OS
+          name: ${{ matrix.os }}-output
+          path: |
+            out/make/**/*
+            !out/make/**/blockmap
+            !out/make/**/*.txt   # exclude noisy logs if any
+
+# ────────────────────────────────────────────────────────────────────────────────
+# 2. Publish everything to the Release page (single, tidy step)
+# ────────────────────────────────────────────────────────────────────────────────
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all build artefacts
+        uses: actions/download-artifact@v4
+        with:
+          # downloads *every* artefact created in prior jobs
+          path: dist
+
+      - name: Upload assets to the GitHub Release
+        # 'gh' is pre-installed on ubuntu-latest
+        run: |
+          # $TAG holds the release tag (e.g. v1.2.3)
+          # --clobber allows re-uploading if a file with the same
+          # name already exists (handy for re-runs).
+          gh release upload "$TAG" dist/**/* --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
