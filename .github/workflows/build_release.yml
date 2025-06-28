@@ -26,8 +26,17 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build Application
-        run: npm run make
+      - name: Build Application (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npm run make -- --platform=win32
+
+      - name: Build Application (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: npm run make -- --platform=linux
+
+      - name: Build Application (MacOS)
+        if: matrix.os == 'macos-latest'
+        run: npm run make -- --platform=darwin
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
