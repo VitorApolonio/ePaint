@@ -43,9 +43,9 @@ setting for how colors are mixed that makes existing pixels get set to that same
 The eyedropper is also rather simple; when you click a pixel, it looks at whatever color it is then sets the primary or
 secondary color to be that, depending on the mouse button pressed.
 
-And then there is the paint bucket... oh boy, here we go.
+And then there is the paint bucket...
 
-### The paint bucket
+### The Paint Bucket
 
 The basis for how this tool works is something called a flood-fill algorithm, which works by running some checks on the
 current pixel, and if it passes them, running the same checks on the neighboring pixels.
@@ -56,7 +56,7 @@ one using a queue. I opted for the latter as I found it simpler.
 ![queue-based implementation](https://upload.wikimedia.org/wikipedia/commons/b/b6/Wfm_floodfill_animation_queue.gif)
 
 A queue is a data structure where the first items to be added are also the first to be removed (hence the name). In a
-queue-based approach, pixels are added to a queue where they wait to be checked. If they pass, they get painted
+queue-based approach, pixels are added to one where they wait to be checked. If they pass the checks, they get painted
 and their surrounding pixels (excluding diagonals) are added to the queue. This continues until the queue is emptied.
 
 Outlining the algorithm:
@@ -69,57 +69,55 @@ Outlining the algorithm:
 4. If queue not empty:
 - Go to 2
 
-The things we need to check are the coordinates and the color of the pixel. Specifically, we need to ensure the pixel is inside
-the canvas and that it is the same color as the starting pixel (as a different color marks the border of a region).
+The checks we need to perform are whether the pixel is inside the canvas (as we don't want to try and edit invalid pixel data),
+and whether it is the same color as the starting pixel (as a different color marks the border of a region).
 
-It may not sound too complicated put this way, just use a list and some loops and you're golden, but there's a
-problem: performance.
+Sounds simple enough, right? However, if you try and make an implementation of it, you'll likely come across one issue:
+the process is very, very slow. As in, it takes several seconds to paint a relatively small region.
 
-Constantly adding and moving stuff in a list like this ends up being noticeably slow; even painting a 300x300 region
-already requires running the checks at least 90.000 times, so it's important that they are done as efficiently as possible.
+If you use built-in methods for popping a queue, such as `shift()` in JavaScript, all pixels will be repositioned whenever
+one is processed, which is quite expensive computationally; even painting a 300x300 region already requires running
+the checks tens of thousands of times, so it's important that they are done as efficiently as possible.
 
 Several changes can be made to improve the run time of the algorithm, some of them being:
 
 - Keeping track of visited pixels with an array
 - Only applying the changes to the canvas once the algorithm finishes
 - Using separate arrays for pixel x- and y-coordinates instead of one array with objects
-- Using typed arrays
+- Avoiding using `shift()` for popping the queue
 - Avoiding methods like `map()` and `forEach()`
 
 To see this project's implementation, which includes these optimizations, look at the `floodFill()` method in the `brush.js` file.
 
 ### Undo / Redo
 
-You can only undo/redo things that change the state of the canvas in some way, which I decided to call an "action."
+You can only undo/redo things that change the state of the canvas in some way, which I decided to call "actions."
 
-Whenever you draw some path with the brush or eraser, the positions of your pointer are recorded until you release the
+Whenever you draw some path with the brush or eraser, the positions of your mouse pointer are recorded until you release the
 button, at which point they are saved, along with the current color and size, as a new action.
 
-A stack is kept with all actions and an index. When you click undo, that index goes down by one and every action up to
-the new index is performed again, with the appropriate brush settings. Redo is the same but it increases the index instead.
+A stack is kept with all actions and an index. When you undo an action, that index goes down by one, and everything up to
+the new index is redrawn with the appropriate brush settings. Redo works similarly, but it increases the index instead.
 
-When you draw an action while the index is lower than that of the last action, the more recent actions are lost and get replaced
-by the new action.
+When you perform an action after one or more undos, the more recent actions are lost and get replaced by the new action.
 
 Clearing the canvas and the bucket are special cases. I decided to represent the action of clearing the canvas with an empty
 action (no positions), as it made sense intuitively. For the bucket, as it would be quite slow redoing several fill
-actions, I opted to simply save images of the canvas and redraw them, which has
-the same overall effect but is much faster.
+actions, I opted to simply save images of the canvas and redraw them, which has the same overall effect but is much faster.
 
 ## What's with the icon?
 
 This app is a remake of an older project that didn't go very far called "JPaint" (you'll
-never guess the language). As I'm still not very creative with names, I decided to call this one "ePaint," with the "e"
+never guess the language). As I'm still just as creative with names, I decided to call this one "ePaint," with the "e"
 standing for Electron and being lowercase because it looks cool.
 
-One thing I find kinda fun to do is draw mathematical stuff, like integrals and whatnot, kinda like you see on channels
-like The Organic Chemistry Tutor (I might disable the light theme at some point also for this reason, it's not quite as
-fun with a light background).
+One thing I find kinda fun to do is draw mathematical equations and stuff, kinda like you see on channels
+like The Organic Chemistry Tutor, so from the get-go the app was designed with this use in mind.
 
-I wanted the icon to be something in white on a rainbow gradient in the background, and while looking for stuff I could
-use for the icon, I came across the exponential function symbol, and just knew it was meant to be.
+I wanted the icon to be something drawn onto a rainbow gradient, and while looking for stuff I could
+use I came across the exponential function and just knew it was meant to be.
 ___
-## ePaint to-do list
+## To-do list
 
 - fix issues with file naming on release, improve windows installer
 - restructure the project to use React (would simplify making a new color picker)
