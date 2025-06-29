@@ -1,7 +1,7 @@
 # ePaint
-#### Video for CS50 final project: PENDING
+#### Video for CS50 final project: COMING SOON™
 #### Description: A drawing app.
-
+___
 ## What is this?
 
 ePaint is a drawing application, similar to MS Paint and other such apps. The feature set is intentionally somewhat
@@ -118,7 +118,6 @@ fun with a light background).
 
 I wanted the icon to be something in white on a rainbow gradient in the background, and while looking for stuff I could
 use for the icon, I came across the exponential function symbol, and just knew it was meant to be.
-
 ___
 ## ePaint to-do list
 
