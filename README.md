@@ -1,5 +1,5 @@
 # ePaint
-#### Video for CS50 final project: COMING SOON™
+#### Video for CS50 final project: https://www.youtube.com/watch?v=-QS09AChDkg
 #### Description: A drawing app.
 ___
 ## What is this?
