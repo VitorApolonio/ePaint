@@ -1,14 +1,12 @@
 # ePaint to-do list
 
+- fix issues with file naming on release, improve windows installer
 - restructure the project to use React (would simplify making a new color picker)
 - use custom method for drawing lines to get rid of antialiasing
 - instead of quietly setting res to 100x100, inform user of this minimum when making a new canvas
-- figure out how to compile this for Windows
 - maybe allow resizing current drawing instead of having to make a new one
 - Ctrl+Scroll or Ctrl+-\+ to zoom
 - remove all debug messages (when finished)
-- remove dev tools line from main.js (when packaging)
-- package application
 - maybe replace the default HTML color picker
 - fix painting dot when leaving color picker
 - global menu items
@@ -21,5 +19,3 @@
 - save as SVG, maybe
 - support for extra file formats
 - show brush size on cursor
-
-test
