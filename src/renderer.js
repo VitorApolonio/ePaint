@@ -294,4 +294,4 @@ window.electronAPI.onSaveImage(path => {
       }
     })
   }
-}, 'image/png')
+})

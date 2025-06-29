@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron'
 import fs from 'fs'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
+import { Jimp } from 'jimp';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -63,8 +64,14 @@ const createWindow = () => {
         click: () => {
           dialog.showSaveDialog({
             title: 'Save drawing',
-            defaultPath: `${app.getPath('documents')}/image.png`,
-            filters: [{ name: 'Images', extensions: ['png'] }]
+            defaultPath: path.join(app.getPath('pictures'), 'drawing.png'),
+            filters: [
+              { name: 'Portable Network Graphics (PNG)', extensions: ['png'] },
+              { name: 'Joint Photographic Experts Group (JPEG)', extensions: ['jpg', 'jpeg'] },
+              { name: 'Tagged Image File Format (TIFF)', extensions: ['tif', 'tiff'] },
+              { name: 'Windows Bitmap (BMP)', extensions: ['bmp'] },
+              { name: 'All Files', extensions: ['*'] },
+            ]
           }).then(r => mainWindow.webContents.send('save-image', r.filePath))
         }
       }
@@ -155,8 +162,14 @@ const createNewCanvasPrompt = parent => {
 }
 
 // file saving
-ipcMain.on('save-image-to-file', (_event, path, arrBuffer) => {
-  fs.writeFile(path, Buffer.from(arrBuffer), console.error)
+ipcMain.on('save-image-to-file', async (_event, path, arrBuffer) => {
+  const supported = ['png', 'jpg', 'jpeg', 'bmp', 'tif', 'tiff']
+  const ext = path.split('.').pop().toLowerCase()
+  if (supported.includes(ext)) {
+    Jimp.read(arrBuffer).then(img => {
+      img.write(path)
+    }).catch(console.error)
+  }
 })
 
 // This method will be called when Electron has finished

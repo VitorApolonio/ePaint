@@ -133,6 +133,5 @@ ___
 - add shortcut to clear canvas
 - add shortcuts for swapping between tools
 - add shortcuts for remaining tools (maybe)
-- save as SVG, maybe
-- support for extra file formats
 - show brush size on cursor
+- use a linter to add semicolons to codebase
