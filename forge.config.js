@@ -13,10 +13,15 @@ module.exports = {
       name: '@electron-forge/maker-wix',
       config: {
         name: 'ePaint',
+        exe: 'ePaint',
         icon: 'src/img/icon.ico',
         ui: {
-          chooseDirectory: true
+          chooseDirectory: true,
         },
+        language: 1033,
+        appUserModelId: 'dev.apolonio.paint',
+        programFilesFolderName: 'ePaint',
+        shortcutFolderName: 'ePaint',
         upgradeCode: '7967ab5f-913b-4e2a-ad0c-c7dee76749f2',
       },
       platforms: ['win32'],
