@@ -134,6 +134,5 @@ ___
 - add shortcuts for swapping between tools
 - add shortcuts for remaining tools (maybe)
 - show brush size on cursor
-- use a linter to add semicolons to codebase
 - refactor action into several classes (e.g., FillAction, ClearAction, PaintAction, etc.)
 - create unit tests
