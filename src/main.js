@@ -1,12 +1,11 @@
-import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron'
-import fs from 'fs'
-import path from 'node:path'
-import started from 'electron-squirrel-startup'
+import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron';
+import path from 'node:path';
+import started from 'electron-squirrel-startup';
 import { Jimp } from 'jimp';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
-  app.quit()
+  app.quit();
 }
 
 const createWindow = () => {
@@ -18,33 +17,33 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    icon: path.join(__dirname, 'img/icon.png')
+    icon: path.join(__dirname, 'img/icon.png'),
   });
 
   // display window when CSS finishes loading
   ipcMain.once('main-win-ready', () => {
     if (mainWindow && !mainWindow.isVisible()) {
-      mainWindow.show()
+      mainWindow.show();
     }
-  })
+  });
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
   // preload new canvas prompt
-  const newCanvasWin = createNewCanvasPrompt(mainWindow)
+  const newCanvasWin = createNewCanvasPrompt(mainWindow);
 
   // forward data with width/height on resize confirm
   ipcMain.on('canvas-resize', (_event, width, height) => {
-    mainWindow.webContents.send('canvas-resize', width, height)
-  })
+    mainWindow.webContents.send('canvas-resize', width, height);
+  });
 
   // create app menu
-  const menu = new Menu()
+  const menu = new Menu();
   menu.append(new MenuItem({
     role: 'fileMenu',
     submenu: [
@@ -53,10 +52,10 @@ const createWindow = () => {
         accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
         click: () => {
           if (newCanvasWin && !newCanvasWin.isVisible()) {
-            newCanvasWin.center()
-            newCanvasWin.show()
+            newCanvasWin.center();
+            newCanvasWin.show();
           }
-        }
+        },
       },
       {
         label: 'Save image...',
@@ -71,28 +70,28 @@ const createWindow = () => {
               { name: 'Tagged Image File Format (TIFF)', extensions: ['tif', 'tiff'] },
               { name: 'Windows Bitmap (BMP)', extensions: ['bmp'] },
               { name: 'All Files', extensions: ['*'] },
-            ]
-          }).then(r => mainWindow.webContents.send('save-image', r.filePath))
-        }
-      }
-    ]
-  }))
+            ],
+          }).then(r => mainWindow.webContents.send('save-image', r.filePath));
+        },
+      },
+    ],
+  }));
   const undoItem = new MenuItem({
     label: 'Undo',
     accelerator: process.platform === 'darwin' ? 'Cmd+Z' : 'Ctrl+Z',
     enabled: false,
-    click: () => { mainWindow.webContents.send('undo-shortcut') }
-  })
+    click: () => { mainWindow.webContents.send('undo-shortcut'); },
+  });
   const redoItem = new MenuItem({
     label: 'Redo',
     accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Ctrl+Y',
     enabled: false,
-    click: () => { mainWindow.webContents.send('redo-shortcut') }
-  })
+    click: () => { mainWindow.webContents.send('redo-shortcut'); },
+  });
   menu.append(new MenuItem({
     role: 'editMenu',
-    submenu: [undoItem, redoItem]
-  }))
+    submenu: [undoItem, redoItem],
+  }));
 
   // disable or enable undo/redo buttons
   ipcMain.on('undo-enable', () => {
@@ -112,11 +111,11 @@ const createWindow = () => {
     Menu.setApplicationMenu(menu);
   });
 
-  Menu.setApplicationMenu(menu)
+  Menu.setApplicationMenu(menu);
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
-}
+};
 
 const createNewCanvasPrompt = parent => {
   // preload new canvas prompt
@@ -131,58 +130,58 @@ const createNewCanvasPrompt = parent => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    icon: path.join(__dirname, 'img/icon.png')
-  })
+    icon: path.join(__dirname, 'img/icon.png'),
+  });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/prompt/new-canvas.html`);
   } else {
-    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt/new-canvas.html`))
+    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt/new-canvas.html`));
   }
 
   // close when user clicks cancel
   ipcMain.on('cancel-new', () => {
-    newCanvasWin.hide()
-  })
+    newCanvasWin.hide();
+  });
 
   // prevent destroying the window on close
   newCanvasWin.on('close', e => {
-    e.preventDefault()
-    newCanvasWin.hide()
-    newCanvasWin.webContents.send('clear-new-fields')
-  })
+    e.preventDefault();
+    newCanvasWin.hide();
+    newCanvasWin.webContents.send('clear-new-fields');
+  });
 
   // disable minimize
   newCanvasWin.on('minimize', e => {
-    e.preventDefault()
-    newCanvasWin.restore()
-  })
+    e.preventDefault();
+    newCanvasWin.restore();
+  });
 
-  return newCanvasWin
-}
+  return newCanvasWin;
+};
 
 // file saving
 ipcMain.on('save-image-to-file', async (_event, path, arrBuffer) => {
-  const supported = ['png', 'jpg', 'jpeg', 'bmp', 'tif', 'tiff']
-  const ext = path.split('.').pop().toLowerCase()
+  const supported = ['png', 'jpg', 'jpeg', 'bmp', 'tif', 'tiff'];
+  const ext = path.split('.').pop().toLowerCase();
   if (supported.includes(ext)) {
     Jimp.read(arrBuffer).then(img => {
-      img.write(path)
-    }).catch(console.error)
+      img.write(path);
+    }).catch(console.error);
   }
-})
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      createWindow();
     }
   });
 });
@@ -192,7 +191,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
 });
 

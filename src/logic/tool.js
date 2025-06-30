@@ -8,6 +8,6 @@ const Tool = Object.freeze({
   ERASER: 'Eraser',
   BUCKET: 'Bucket',
   EYEDROPPER: 'Eyedropper',
-})
+});
 
-export default Tool
+export default Tool;

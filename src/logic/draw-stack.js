@@ -1,4 +1,4 @@
-import Brush from './brush.js'
+import Brush from './brush.js';
 
 /**
  * Manages a stack of drawing actions that can be undone and redone.
@@ -7,16 +7,16 @@ import Brush from './brush.js'
  */
 class DrawStack {
   // note that actions will be one-indexed, as 0 represents the state before any action
-  #index = 0
-  #actions = []
-  #brush
+  #index = 0;
+  #actions = [];
+  #brush;
 
   /**
    * Creates a new DrawStack instance.
    * @param {HTMLCanvasElement} canvas - The canvas element to draw on
    */
   constructor(canvas) {
-    this.#brush = new Brush(canvas)
+    this.#brush = new Brush(canvas);
   }
 
   /**
@@ -24,7 +24,7 @@ class DrawStack {
    * @returns {boolean} True if there are actions that can be undone, false otherwise
    */
   canUndo() {
-    return this.#index > 0
+    return this.#index > 0;
   }
 
   /**
@@ -32,7 +32,7 @@ class DrawStack {
    * @returns {boolean} True if there are actions that can be redone, false otherwise
    */
   canRedo() {
-    return this.#index < this.#actions.length
+    return this.#index < this.#actions.length;
   }
 
   /**
@@ -41,12 +41,12 @@ class DrawStack {
    */
   add(action) {
     // delete actions beyond the current index
-    const howMany = this.#actions.length - this.#index
+    const howMany = this.#actions.length - this.#index;
     for (let i = 0; i < howMany; i++) {
-      this.#actions.pop()
+      this.#actions.pop();
     }
-    this.#actions.push(action)
-    this.#index++
+    this.#actions.push(action);
+    this.#index++;
   }
 
   /**
@@ -55,11 +55,11 @@ class DrawStack {
    */
   undo() {
     if (this.#index > 0) {
-      this.#index--
-      this.#brush.clearCanvas()
+      this.#index--;
+      this.#brush.clearCanvas();
       // draw this action and all the ones before it
       for (let i = 1; i <= this.#index; i++) {
-        this.drawAction(this.#actions[i - 1])
+        this.drawAction(this.#actions[i - 1]);
       }
     }
   }
@@ -70,11 +70,11 @@ class DrawStack {
    */
   redo() {
     if (this.#index < this.#actions.length) {
-      this.#index++
-      this.#brush.clearCanvas()
+      this.#index++;
+      this.#brush.clearCanvas();
       // draw this action and all the ones before it
       for (let i = 1; i <= this.#index; i++) {
-        this.drawAction(this.#actions[i - 1])
+        this.drawAction(this.#actions[i - 1]);
       }
     }
   }
@@ -83,8 +83,8 @@ class DrawStack {
    * Clears all actions from the stack and resets the index to 0.
    */
   clear() {
-    this.#index = 0
-    this.#actions.length = 0 // man i love this language
+    this.#index = 0;
+    this.#actions.length = 0; // man i love this language
   }
 
   /**
@@ -94,34 +94,34 @@ class DrawStack {
    */
   drawAction(action) {
     // restore brush state
-    this.#brush.color = action.brushColor
-    this.#brush.size = action.brushSize
+    this.#brush.color = action.brushColor;
+    this.#brush.size = action.brushSize;
 
-    const positions = action.positions
+    const positions = action.positions;
     if (positions.length > 1) {
       // connect all positions with lines
-      let startPos = { x: positions[0].x, y: positions[0].y }
+      let startPos = { x: positions[0].x, y: positions[0].y };
       for (let i = 1; i < positions.length; i++) {
-        this.#brush.drawLine(startPos.x, startPos.y, positions[i].x, positions[i].y)
-        startPos = positions[i]
+        this.#brush.drawLine(startPos.x, startPos.y, positions[i].x, positions[i].y);
+        startPos = positions[i];
       }
     // draw a point / fill if the action has only one position
     } else if (positions.length === 1) {
       if (action.isFill) {
-        this.#brush.clearCanvas()
-        this.#brush.drawImage(action.fillData)
+        this.#brush.clearCanvas();
+        this.#brush.drawImage(action.fillData);
       } else {
-        this.#brush.drawPoint(positions[0].x, positions[0].y)
+        this.#brush.drawPoint(positions[0].x, positions[0].y);
       }
     // an action without any coordinates means the canvas was wiped
     } else {
-      this.#brush.clearCanvas()
+      this.#brush.clearCanvas();
     }
 
     // reset brush state
-    this.#brush.color = null
-    this.#brush.size = null
+    this.#brush.color = null;
+    this.#brush.size = null;
   }
 }
 
-export default DrawStack
+export default DrawStack;
