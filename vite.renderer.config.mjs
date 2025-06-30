@@ -6,8 +6,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'index.html',
-        newCanvas: 'src/prompt/new-canvas.html'
-      }
-    }
-  }
+        newCanvas: 'src/prompt/new-canvas.html',
+      },
+    },
+  },
 });

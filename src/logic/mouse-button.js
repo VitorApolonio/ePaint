@@ -9,6 +9,6 @@ const MouseButton = Object.freeze({
   SECONDARY: 2,
   FOURTH: 3,
   FIFTH: 4,
-})
+});
 
-export default MouseButton
+export default MouseButton;

@@ -4,8 +4,8 @@
  * compose it.
  */
 class Action {
-  #brushState = { size: null, color: null, isFill: null, fillData: null }
-  #positions = []
+  #brushState = { size: null, color: null, isFill: null, fillData: null };
+  #positions = [];
 
   /**
    * Creates an Action instance.
@@ -14,9 +14,9 @@ class Action {
    * @param {boolean} [isFill=false] - Whether the action is a fill operation.
    */
   constructor(brushSize, brushColor, isFill = false) {
-    this.#brushState.size = brushSize
-    this.#brushState.color = brushColor
-    this.#brushState.isFill = isFill
+    this.#brushState.size = brushSize;
+    this.#brushState.color = brushColor;
+    this.#brushState.isFill = isFill;
   }
 
   /**
@@ -24,7 +24,7 @@ class Action {
    * @returns {number}
    */
   get brushSize() {
-    return this.#brushState.size
+    return this.#brushState.size;
   }
 
   /**
@@ -32,7 +32,7 @@ class Action {
    * @returns {string}
    */
   get brushColor() {
-    return this.#brushState.color
+    return this.#brushState.color;
   }
 
   /**
@@ -40,7 +40,7 @@ class Action {
    * @returns {boolean}
    */
   get isFill() {
-    return this.#brushState.isFill
+    return this.#brushState.isFill;
   }
 
   /**
@@ -48,7 +48,7 @@ class Action {
    * @returns {ImageData}
    */
   get fillData() {
-    return this.#brushState.fillData
+    return this.#brushState.fillData;
   }
 
   /**
@@ -56,7 +56,7 @@ class Action {
    * @param {ImageData} newData - Canvas state after a fill operation.
    */
   set fillData(newData) {
-    this.#brushState.fillData = newData
+    this.#brushState.fillData = newData;
   }
 
   /**
@@ -64,7 +64,7 @@ class Action {
    * @returns {{x: number, y: number}[]}
    */
   get positions() {
-    return this.#positions.slice()
+    return this.#positions.slice();
   }
 
   /**
@@ -73,8 +73,8 @@ class Action {
    * @param {number} y - The y-coordinate.
    */
   addPosition(x, y) {
-    this.#positions.push({ x, y })
+    this.#positions.push({ x, y });
   }
 }
 
-export default Action
+export default Action;

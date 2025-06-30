@@ -1,6 +1,6 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
-import { contextBridge, ipcRenderer } from "electron"
+import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   // show window
@@ -20,4 +20,4 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onClearNewFields: callback => ipcRenderer.on('clear-new-fields', callback),
   resizeCanvas: (width, height) => ipcRenderer.send('canvas-resize', width, height),
   onResizeCanvas: callback => ipcRenderer.on('canvas-resize', (_event, width, height) => callback(width, height)),
-})
+});
