@@ -1,11 +1,14 @@
 import js from '@eslint/js';
 import globals from 'globals';
-import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
 
 export default defineConfig([
-  { files: ['**/*.{js,mjs,cjs}'], plugins: { js }, extends: ['js/recommended'] },
-  { files: ['**/*.{js,mjs,cjs}'], languageOptions: { globals: globals.browser } },
+  globalIgnores(['.vite/*']),
+  { files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], plugins: { js }, extends: ['js/recommended'] },
+  { files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], languageOptions: { globals: globals.browser } },
+  tseslint.configs.recommended,
   {
     rules: {
       semi: [2, 'always'],
@@ -16,18 +19,6 @@ export default defineConfig([
         SwitchCase: 1,
       }],
       'comma-dangle': [2, 'always-multiline'],
-    },
-  },
-  // prevent undefined variable errors
-  {
-    files: ['src/main.js'],
-    languageOptions: {
-      sourceType: 'module',
-      globals: {
-        ...globals.node,
-        MAIN_WINDOW_VITE_DEV_SERVER_URL: 'readonly',
-        MAIN_WINDOW_VITE_NAME: 'readonly',
-      },
     },
   },
 ]);
