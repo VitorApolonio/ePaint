@@ -136,3 +136,4 @@ ___
 - show brush size on cursor
 - refactor action into several classes (e.g., FillAction, ClearAction, PaintAction, etc.)
 - create unit tests
+- click and drag copy paste/move
