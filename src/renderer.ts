@@ -1,46 +1,46 @@
 import './index.css';
-import './lucide.js';
+import './lucide';
 // display window
 window.electronAPI.mainWinReady();
 
-import Action from './logic/action.js';
-import Brush from './logic/brush.js';
-import DrawStack from './logic/draw-stack.js';
-import Tool from './logic/tool.js';
-import MouseButton from './logic/mouse-button.js';
+import Action from './logic/action';
+import Brush from './logic/brush';
+import DrawStack from './logic/draw-stack';
+import Tool from './logic/tool';
+import MouseButton from './logic/mouse-button';
 
-const toolSelectBrush = document.getElementById('brush-tool');
-const toolSelectEraser = document.getElementById('eraser-tool');
-const toolSelectFloodFill = document.getElementById('fill-tool');
-const toolSelectEyedropper = document.getElementById('eyedropper-tool');
-const toolsContainer = document.getElementById('tools-container');
-const brushSizeSelect = document.getElementById('brush-size-select');
-const brushColorSelectPrimary = document.getElementById('color-select-primary');
-const brushColorSelectSecondary = document.getElementById('color-select-secondary');
-const colorSwapBtn = document.getElementById('swap-colors');
-const canvas = document.querySelector('canvas');
-const undoBtn = document.getElementById('undo-btn');
-const redoBtn = document.getElementById('redo-btn');
-const clearBtn = document.getElementById('clear-btn');
+const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+const toolSelectBrush = document.getElementById('brush-tool') as HTMLButtonElement;
+const toolSelectEraser = document.getElementById('eraser-tool') as HTMLButtonElement;
+const toolSelectFloodFill = document.getElementById('fill-tool') as HTMLButtonElement;
+const toolSelectEyedropper = document.getElementById('eyedropper-tool') as HTMLButtonElement;
+const toolsContainer = document.getElementById('tools-container') as HTMLDivElement;
+const brushSizeSelect = document.getElementById('brush-size-select') as HTMLSelectElement;
+const brushColorSelectPrimary = document.getElementById('color-select-primary') as HTMLInputElement;
+const brushColorSelectSecondary = document.getElementById('color-select-secondary') as HTMLInputElement;
+const colorSwapBtn = document.getElementById('swap-colors') as HTMLButtonElement;
+const undoBtn = document.getElementById('undo-btn') as HTMLButtonElement;
+const redoBtn = document.getElementById('redo-btn') as HTMLButtonElement;
+const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
 
 // currently selected tool
-let curTool = Tool.PAINTBRUSH;
+let curTool: Tool = Tool.PAINTBRUSH;
 
 // whether the mouse is being held down
-let mouseClicked = false;
+let mouseClicked: boolean = false;
 
-// currently clicked mouse button
-let curButtonCode = null;
+// the currently clicked mouse button
+let curButtonCode: MouseButton = null;
 
-// current action (i.e. shape drawn with mouse)
-let curAction = null;
+// current action (i.e., shape drawn with mouse)
+let curAction: Action = null;
 
 // brush and undo/redo stack
-const paintbrush = new Brush(canvas);
-const actionStack = new DrawStack(canvas);
+const paintbrush: Brush = new Brush(canvas);
+const actionStack: DrawStack = new DrawStack(canvas);
 
 // toggle undo/redo
-const setUndoEnabled = enable => {
+const setUndoEnabled = (enable: boolean) => {
   if (enable) {
     undoBtn.disabled = false;
     window.electronAPI.enableUndo();
@@ -49,7 +49,7 @@ const setUndoEnabled = enable => {
     window.electronAPI.disableUndo();
   }
 };
-const setRedoEnabled = enable => {
+const setRedoEnabled = (enable: boolean) => {
   if (enable) {
     redoBtn.disabled = false;
     window.electronAPI.enableRedo();
@@ -64,7 +64,7 @@ canvas.width = 800;
 canvas.height = 600;
 
 // new canvas
-window.electronAPI.onResizeCanvas((width, height) => {
+window.electronAPI.onResizeCanvas((width: number, height: number) => {
   paintbrush.clearCanvas();
   actionStack.clear();
   setUndoEnabled(false);
@@ -73,30 +73,19 @@ window.electronAPI.onResizeCanvas((width, height) => {
   canvas.height = height;
 });
 
-// setup brush sizes
-const sizes = {
-  xsmall: 2,
-  small: 5,
-  medium: 10,
-  large: 15,
-  xlarge: 20,
-  xxlarge: 25,
-  xxxlarge: 30,
-};
-
-for (const s in sizes) {
-  const o = document.createElement('option');
-  o.innerHTML = sizes[s];
-  brushSizeSelect.appendChild(o);
-}
+// set up brush sizes
+const sizes = [2, 5, 10, 15, 20, 25, 30];
+sizes.forEach(size => {
+  brushSizeSelect.appendChild(new Option(size.toString(), size.toString()));
+});
 
 // set default brush size
-brushSizeSelect.value = sizes.small;
-paintbrush.size = brushSizeSelect.value;
+paintbrush.size = sizes[1];
+brushSizeSelect.value = paintbrush.size.toString();
 
 // use selected brush size
 brushSizeSelect.addEventListener('change', e => {
-  paintbrush.size = Number(e.target.value);
+  paintbrush.size = Number((e.target as HTMLSelectElement).value);
 });
 
 // set default brush color
@@ -111,28 +100,28 @@ colorSwapBtn.addEventListener('click', () => {
 });
 
 // tool select
-const selectTool = tool => {
+const selectTool = (tool: HTMLButtonElement) => {
   toolsContainer.querySelectorAll('button').forEach(b => b.classList.remove('is-primary', 'is-selected'));
   tool.classList.add('is-primary', 'is-selected');
 };
 toolSelectBrush.addEventListener('click', e => {
   curTool = Tool.PAINTBRUSH;
-  selectTool(e.currentTarget);
+  selectTool(e.currentTarget as HTMLButtonElement);
 });
 toolSelectEraser.addEventListener('click', e => {
   curTool = Tool.ERASER;
-  selectTool(e.currentTarget);
+  selectTool(e.currentTarget as HTMLButtonElement);
 });
 toolSelectFloodFill.addEventListener('click', e => {
   curTool = Tool.BUCKET;
-  selectTool(e.currentTarget);
+  selectTool(e.currentTarget as HTMLButtonElement);
 });
 toolSelectEyedropper.addEventListener('click', e => {
   curTool = Tool.EYEDROPPER;
-  selectTool(e.currentTarget);
+  selectTool(e.currentTarget as HTMLButtonElement);
 });
 
-// position at which to begin line
+// position at which to begin a line
 const startPos = { x: 0, y: 0 };
 
 // handle mouse click
@@ -284,7 +273,7 @@ clearBtn.addEventListener('click', () => {
 });
 
 // save drawing as image
-window.electronAPI.onSaveImage(path => {
+window.electronAPI.onSaveImage((path: string) => {
   if (path) {
     canvas.toBlob(blob => {
       if (blob) {

@@ -1,13 +1,13 @@
 import './new-canvas.css';
 
-const cancelBtn = document.getElementById('cancel-btn');
-const confirmBtn = document.getElementById('confirm-btn');
-const widthField = document.getElementById('width');
-const heightField = document.getElementById('height');
+const cancelBtn = document.getElementById('cancel-btn') as HTMLButtonElement;
+const confirmBtn = document.getElementById('confirm-btn') as HTMLButtonElement;
+const widthField = document.getElementById('width') as HTMLInputElement;
+const heightField = document.getElementById('height') as HTMLInputElement;
 
 // prevent non-numeric values from being typed
-const restrict = e => {
-  e.target.value = e.target.value.replace(/\D/g, '');
+const restrict = (e: Event) => {
+  (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.replace(/\D/g, '');
 };
 
 widthField.addEventListener('input', e => restrict(e));
@@ -19,8 +19,8 @@ const clearFields = () => {
   widthField.focus();
 };
 const resize = () => {
-  const w = Math.max(widthField.value, 100);
-  const h = Math.max(heightField.value, 100);
+  const w = Math.max(parseInt(widthField.value), 100);
+  const h = Math.max(parseInt(heightField.value), 100);
   window.electronAPI.resizeCanvas(w, h);
   window.electronAPI.cancelNew();
 };

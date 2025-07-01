@@ -76,18 +76,18 @@ const createWindow = () => {
       },
     ],
   }));
-  const undoItem = new MenuItem({
+  const undoItem = {
     label: 'Undo',
     accelerator: process.platform === 'darwin' ? 'Cmd+Z' : 'Ctrl+Z',
     enabled: false,
     click: () => { mainWindow.webContents.send('undo-shortcut'); },
-  });
-  const redoItem = new MenuItem({
+  };
+  const redoItem = {
     label: 'Redo',
     accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Ctrl+Y',
     enabled: false,
     click: () => { mainWindow.webContents.send('redo-shortcut'); },
-  });
+  };
   menu.append(new MenuItem({
     role: 'editMenu',
     submenu: [undoItem, redoItem],
@@ -117,7 +117,7 @@ const createWindow = () => {
   // mainWindow.webContents.openDevTools()
 };
 
-const createNewCanvasPrompt = parent => {
+const createNewCanvasPrompt = (parent: BrowserWindow) => {
   // preload new canvas prompt
   const newCanvasWin = new BrowserWindow({
     width: 320,
@@ -152,7 +152,7 @@ const createNewCanvasPrompt = parent => {
   });
 
   // disable minimize
-  newCanvasWin.on('minimize', e => {
+  newCanvasWin.on('minimize', (e: Event) => {
     e.preventDefault();
     newCanvasWin.restore();
   });
