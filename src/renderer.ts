@@ -3,7 +3,7 @@ import './lucide';
 // display window
 window.electronAPI.mainWinReady();
 
-import Action from './logic/action';
+import { DrawAction, FillAction, ClearAction } from './logic/action';
 import Brush from './logic/brush';
 import DrawStack from './logic/draw-stack';
 import Tool from './logic/tool';
@@ -32,8 +32,8 @@ let mouseClicked: boolean = false;
 // the currently clicked mouse button
 let curButtonCode: MouseButton = null;
 
-// current action (i.e., shape drawn with mouse)
-let curAction: Action = null;
+// positions the mouse pointer has passed through while drawing a path
+let positions: { x: number, y: number }[] = [];
 
 // brush and undo/redo stack
 const paintbrush: Brush = new Brush(canvas);
@@ -122,7 +122,10 @@ toolSelectEyedropper.addEventListener('click', e => {
 });
 
 // position at which to begin a line
-const startPos = { x: 0, y: 0 };
+let startPos = { x: 0, y: 0 };
+
+// brush color to use (based on button clicked)
+let brushColor = '';
 
 // handle mouse click
 canvas.addEventListener('mousedown', e => {
@@ -132,25 +135,24 @@ canvas.addEventListener('mousedown', e => {
     curButtonCode = e.button;
 
     // set color to use for path (none for eyedropper)
-    let color = '';
     switch (curTool) {
       case Tool.PAINTBRUSH:
       case Tool.BUCKET: {
-        color = curButtonCode === MouseButton.MAIN ? brushColorSelectPrimary.value : brushColorSelectSecondary.value;
+        brushColor = curButtonCode === MouseButton.MAIN
+          ? brushColorSelectPrimary.value
+          : brushColorSelectSecondary.value;
         break;
       }
       case Tool.ERASER: {
-        color = Brush.COLOR_ERASER;
+        brushColor = Brush.COLOR_ERASER;
         break;
       }
     }
 
-    if (color) {
-      curAction = new Action(paintbrush.size, color, curTool === Tool.BUCKET);
+    if (brushColor) {
       // begin path at current position
-      startPos.x = e.offsetX;
-      startPos.y = e.offsetY;
-      curAction.addPosition(startPos.x, startPos.y);
+      startPos = { x: e.offsetX, y: e.offsetY };
+      positions.push(startPos);
     }
   }
 });
@@ -163,11 +165,10 @@ canvas.addEventListener('mousemove', e => {
       case Tool.PAINTBRUSH:
       case Tool.ERASER: {
         // draw line from startPos to current mouse position, then set startPos to current
-        paintbrush.color = curAction.brushColor;
+        paintbrush.color = brushColor;
         paintbrush.drawLine(startPos.x, startPos.y, curPos.x, curPos.y);
-        curAction.addPosition(curPos.x, curPos.y);
-        startPos.x = curPos.x;
-        startPos.y = curPos.y;
+        positions.push(curPos);
+        startPos = { x: curPos.x, y: curPos.y };
         break;
       }
       case Tool.EYEDROPPER: {
@@ -187,26 +188,25 @@ canvas.addEventListener('mousemove', e => {
 // handle mouse release
 document.addEventListener('mouseup', e => {
   if (mouseClicked) {
+    paintbrush.color = brushColor;
     const curPos = { x: e.offsetX, y: e.offsetY };
     switch (curTool) {
       case Tool.PAINTBRUSH:
       case Tool.ERASER: {
         if (e.target === canvas) {
-          paintbrush.color = curAction.brushColor;
           paintbrush.drawPoint(curPos.x, curPos.y);
         }
         // add action to stack
-        actionStack.add(curAction);
+        actionStack.add(new DrawAction(paintbrush.size, paintbrush.color, positions.slice()));
         setUndoEnabled(true);
         setRedoEnabled(false);
         break;
       }
       case Tool.BUCKET: {
-        paintbrush.color = curAction.brushColor;
         // only add action if fill was performed on valid coordinate and selected color != pixel color
         if (e.target === canvas && paintbrush.floodFill(curPos.x, curPos.y)) {
-          curAction.fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-          actionStack.add(curAction);
+          const fillData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+          actionStack.add(new FillAction(fillData));
           setUndoEnabled(true);
           setRedoEnabled(false);
         }
@@ -226,7 +226,7 @@ document.addEventListener('mouseup', e => {
       }
     }
 
-    curAction = null;
+    positions.length = 0;
     mouseClicked = false;
     curButtonCode = null; 
   }
@@ -261,12 +261,13 @@ clearBtn.addEventListener('click', () => {
   // wiping the canvas counts as an action only if it's not already blank
   if (!paintbrush.canvasIsBlank()) {
     // if pressed while drawing, save current path before erasing
-    if (curAction) {
-      actionStack.add(curAction);
-      curAction = new Action(curAction.brushSize, curAction.brushColor);
+    if (positions.length > 0) {
+      paintbrush.color = brushColor;
+      actionStack.add(new DrawAction(paintbrush.size, paintbrush.color, positions.slice()));
+      positions = positions.slice(positions.length - 1, positions.length);
     }
     paintbrush.clearCanvas();
-    actionStack.add(new Action(null, null));
+    actionStack.add(new ClearAction());
     setUndoEnabled(true);
     setRedoEnabled(false);
   }

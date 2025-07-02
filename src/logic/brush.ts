@@ -24,7 +24,7 @@ class Brush {
     this.#color = color;
   }
 
-  /** @type {string} Color value used for the eraser tool */
+  /** Color value used for the eraser tool */
   static COLOR_ERASER: string = '#000000ff';
 
   /**
@@ -234,11 +234,11 @@ class Brush {
     const h = this.#ctx.canvas.height;
 
     // the slice is to exclude alpha
-    const d = this.#getColorDataAtCoords(x, y, this.#ctx.getImageData(1, 0, w, h)) as RGBColor
+    const d = this.#getColorDataAtCoords(x, y, this.#ctx.getImageData(1, 0, w, h)) as RGBColor;
     return '#'
       + d.red.toString(16).padStart(2, '0')
       + d.green.toString(16).padStart(2, '0')
-      + d.blue.toString(16).padStart(2, '0')
+      + d.blue.toString(16).padStart(2, '0');
   }
 
   /**
@@ -252,7 +252,7 @@ class Brush {
       red: parseInt(code.slice(1, 3), 16),
       green: parseInt(code.slice(3, 5), 16),
       blue: parseInt(code.slice(5), 16),
-    }
+    };
   }
 
   /**
@@ -272,7 +272,7 @@ class Brush {
       green: d[i + 1],
       blue: d[i + 2],
       alpha: d[i + 3],
-    }
+    };
   }
 
   /**
@@ -290,7 +290,7 @@ class Brush {
       && Math.abs(a.blue - b.blue) <= tolerance
       // only false when comparing brush color with background's (alpha = 0)
       && Math.abs(a.alpha - b.alpha) <= 255
-    )
+    );
   }
 }
 

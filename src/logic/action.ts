@@ -1,4 +1,4 @@
-import Brush from "./brush";
+import Brush from './brush';
 
 /** Represents a position on the canvas, with x- and y-coordinates. */
 interface Position { x: number, y: number }

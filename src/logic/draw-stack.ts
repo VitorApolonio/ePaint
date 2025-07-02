@@ -1,3 +1,4 @@
+import { Action } from './action';
 import Brush from './brush';
 
 /**
@@ -7,15 +8,15 @@ import Brush from './brush';
  */
 class DrawStack {
   // note that actions will be one-indexed, as 0 represents the state before any action
-  #index = 0;
-  #actions = [];
-  #brush;
+  #index: number = 0;
+  #actions: Action[] = [];
+  #brush: Brush;
 
   /**
    * Creates a new DrawStack instance.
    * @param {HTMLCanvasElement} canvas - The canvas element to draw on
    */
-  constructor(canvas) {
+  constructor(canvas: HTMLCanvasElement) {
     this.#brush = new Brush(canvas);
   }
 
@@ -23,7 +24,7 @@ class DrawStack {
    * Checks if an undo operation is possible.
    * @returns {boolean} True if there are actions that can be undone, false otherwise
    */
-  canUndo() {
+  canUndo(): boolean {
     return this.#index > 0;
   }
 
@@ -31,7 +32,7 @@ class DrawStack {
    * Checks if a redo operation is possible.
    * @returns {boolean} True if there are actions that can be redone, false otherwise
    */
-  canRedo() {
+  canRedo(): boolean {
     return this.#index < this.#actions.length;
   }
 
@@ -39,7 +40,7 @@ class DrawStack {
    * Adds a new action to the stack and removes any actions beyond the current index.
    * @param {Action} action - The action to add to the stack
    */
-  add(action) {
+  add(action: Action) {
     // delete actions beyond the current index
     const howMany = this.#actions.length - this.#index;
     for (let i = 0; i < howMany; i++) {
@@ -47,6 +48,7 @@ class DrawStack {
     }
     this.#actions.push(action);
     this.#index++;
+    console.log(this.#actions);
   }
 
   /**
@@ -92,35 +94,8 @@ class DrawStack {
    * and executing the appropriate drawing operations based on the action type.
    * @param {Action} action - The action to draw on the canvas
    */
-  drawAction(action) {
-    // restore brush state
-    this.#brush.color = action.brushColor;
-    this.#brush.size = action.brushSize;
-
-    const positions = action.positions;
-    if (positions.length > 1) {
-      // connect all positions with lines
-      let startPos = { x: positions[0].x, y: positions[0].y };
-      for (let i = 1; i < positions.length; i++) {
-        this.#brush.drawLine(startPos.x, startPos.y, positions[i].x, positions[i].y);
-        startPos = positions[i];
-      }
-    // draw a point / fill if the action has only one position
-    } else if (positions.length === 1) {
-      if (action.isFill) {
-        this.#brush.clearCanvas();
-        this.#brush.drawImage(action.fillData);
-      } else {
-        this.#brush.drawPoint(positions[0].x, positions[0].y);
-      }
-    // an action without any coordinates means the canvas was wiped
-    } else {
-      this.#brush.clearCanvas();
-    }
-
-    // reset brush state
-    this.#brush.color = null;
-    this.#brush.size = null;
+  drawAction(action: Action) {
+    action.perform(this.#brush);
   }
 }
 
