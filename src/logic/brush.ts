@@ -1,11 +1,16 @@
+/** Represents a color in the RGB space. */
+interface RGBColor { red: number, green: number, blue: number }
+/** Represents a color in the RGBA space. */
+interface RGBAColor extends RGBColor { alpha: number }
+
 /**
  * Represents a brush tool for drawing on a canvas.
  * Provides functionality for drawing points, lines, flood filling, and managing canvas state.
  */
 class Brush {
-  #size;
-  #color;
-  #ctx;
+  #size: number;
+  #color: string;
+  #ctx: CanvasRenderingContext2D;
 
   /**
    * Creates a new Brush instance.
@@ -13,20 +18,20 @@ class Brush {
    * @param {number} [size=1] - The initial size of the brush
    * @param {string} [color='#ffffff'] - The initial color of the brush in hexadecimal format
    */
-  constructor(canvas, size = 1, color = '#ffffff') {
+  constructor(canvas: HTMLCanvasElement, size: number = 1, color: string = '#ffffff') {
     this.#ctx = canvas.getContext('2d');
     this.#size = size;
     this.#color = color;
   }
 
   /** @type {string} Color value used for the eraser tool */
-  static COLOR_ERASER = '#000000ff';
+  static COLOR_ERASER: string = '#000000ff';
 
   /**
    * Sets the brush size.
    * @param {number} newSize - The new brush size
    */
-  set size(newSize) {
+  set size(newSize: number) {
     this.#size = newSize;
   }
 
@@ -34,7 +39,7 @@ class Brush {
    * Sets the brush color.
    * @param {string} newColor - The new color in hexadecimal format
    */
-  set color(newColor) {
+  set color(newColor: string) {
     this.#color = newColor;
   }
 
@@ -42,7 +47,7 @@ class Brush {
    * Gets the current brush size.
    * @returns {number} The current brush size
    */
-  get size() {
+  get size(): number {
     return this.#size;
   }
 
@@ -50,7 +55,7 @@ class Brush {
    * Gets the current brush color.
    * @returns {string} The current color in hexadecimal format
    */
-  get color() {
+  get color(): string {
     return this.#color;
   }
 
@@ -59,7 +64,7 @@ class Brush {
    * @param {number} x - The x-coordinate
    * @param {number} y - The y-coordinate
    */
-  drawPoint(x, y) {
+  drawPoint(x: number, y: number) {
     this.#ctx.globalAlpha = 1;
     this.#ctx.fillStyle = this.#color;
     // handle eraser tool special case
@@ -81,7 +86,7 @@ class Brush {
    * @param {number} endX - The ending x-coordinate
    * @param {number} endY - The ending y-coordinate
    */
-  drawLine(startX, startY, endX, endY) {
+  drawLine(startX: number, startY: number, endX: number, endY: number) {
     this.#ctx.globalAlpha = 1;
     this.#ctx.lineCap = 'round';
     this.#ctx.lineWidth = this.#size;
@@ -103,7 +108,7 @@ class Brush {
    * Draws an image onto the canvas.
    * @param {ImageData} image - The image data to draw
    */
-  drawImage(image) {
+  drawImage(image: ImageData) {
     this.#ctx.putImageData(image, 0, 0);
   }
 
@@ -114,7 +119,7 @@ class Brush {
    * @param {number} startY - The starting y-coordinate
    * @returns {boolean} True if the fill operation was performed, false if the starting pixel already matches the fill color
    */
-  floodFill(startX, startY) {
+  floodFill(startX: number, startY: number): boolean {
     const w = this.#ctx.canvas.width;
     const h = this.#ctx.canvas.height;
     const newImageData = this.#ctx.getImageData(0, 0, w, h);
@@ -122,7 +127,7 @@ class Brush {
     const color = this.#getColorDataAtCoords(startX, startY, newImageData);
 
     // return if the clicked pixel is already painted
-    if (this.#colorEquals(color, this.#hexToRgb(this.#color).concat(color[3]))) {
+    if (this.#colorEquals(color, this.#hexToRgb(this.#color) as RGBAColor)) {
       return false;
     }
 
@@ -138,11 +143,13 @@ class Brush {
     queueY[tail++] = startY;
 
     // color current pixel
-    let newColor = this.#hexToRgb(this.#color).concat(color[3] ? color[3] : 255);
+    let newColor = this.#hexToRgb(this.#color) as RGBAColor;
+    newColor.alpha = color.alpha || 255;
     let idx = (startY * w + startX) * 4;
-    for (let i = 0; i < 4; i++) {
-      newImageData.data[idx + i] = newColor[i];
-    }
+    newImageData.data[idx] = newColor.red;
+    newImageData.data[idx + 1] = newColor.green;
+    newImageData.data[idx + 2] = newColor.blue;
+    newImageData.data[idx + 3] = newColor.alpha;
 
     while (head < tail) {
       const x = queueX[head];
@@ -173,11 +180,13 @@ class Brush {
         }
 
         // color current pixel
-        newColor = this.#hexToRgb(this.#color).concat(curColor[3] ? curColor[3] : 255);
+        newColor = this.#hexToRgb(this.#color) as RGBAColor;
+        newColor.alpha = color.alpha || 255;
         idx = (ny * w + nx) * 4;
-        for (let i = 0; i < 4; i++) {
-          newImageData.data[idx + i] = newColor[i];
-        }
+        newImageData.data[idx] = newColor.red;
+        newImageData.data[idx + 1] = newColor.green;
+        newImageData.data[idx + 2] = newColor.blue;
+        newImageData.data[idx + 3] = newColor.alpha;
 
         // add to queue
         queueX[tail] = nx;
@@ -206,7 +215,7 @@ class Brush {
    * Checks if the canvas is completely blank (all pixels are transparent).
    * @returns {boolean} True if the canvas is blank, false otherwise
    */
-  canvasIsBlank() {
+  canvasIsBlank(): boolean {
     const w = this.#ctx.canvas.width;
     const h = this.#ctx.canvas.height;
     // https://stackoverflow.com/a/17386803
@@ -220,26 +229,30 @@ class Brush {
    * @param {number} y - The y-coordinate
    * @returns {string} The color in hexadecimal format (e.g., '#ffffff')
    */
-  getColorAtPixel(x, y) {
+  getColorAtPixel(x: number, y: number): string {
     const w = this.#ctx.canvas.width;
     const h = this.#ctx.canvas.height;
 
     // the slice is to exclude alpha
-    const d = this.#getColorDataAtCoords(x, y, this.#ctx.getImageData(1, 0, w, h)).slice(0, 3);
-    return '#' + d.map(n => {
-      const c = n.toString(16);
-      return c.length === 1 ? '0' + c : c;
-    }).join('');
+    const d = this.#getColorDataAtCoords(x, y, this.#ctx.getImageData(1, 0, w, h)) as RGBColor
+    return '#'
+      + d.red.toString(16).padStart(2, '0')
+      + d.green.toString(16).padStart(2, '0')
+      + d.blue.toString(16).padStart(2, '0')
   }
 
   /**
    * Converts a hexadecimal color code to RGB values.
    * @param {string} code - The hexadecimal color code (e.g., '#ffffff')
-   * @returns {number[]} An array containing RGB values [red, green, blue]
+   * @returns {RGBColor} An object containing RGB values (red, green, blue)
    * @private
    */
-  #hexToRgb(code) {
-    return [parseInt(code.slice(1, 3), 16), parseInt(code.slice(3, 5), 16), parseInt(code.slice(5), 16)];
+  #hexToRgb(code: string): RGBColor {
+    return {
+      red: parseInt(code.slice(1, 3), 16),
+      green: parseInt(code.slice(3, 5), 16),
+      blue: parseInt(code.slice(5), 16),
+    }
   }
 
   /**
@@ -247,32 +260,37 @@ class Brush {
    * @param {number} x - The x-coordinate of the pixel
    * @param {number} y - The y-coordinate of the pixel
    * @param {ImageData} data - The canvas image data
-   * @returns {number[]} An array containing RGBA values [red, green, blue, alpha]
+   * @returns {RGBAColor} An object containing RGBA values (red, green, blue, alpha)
    * @private
    */
-  #getColorDataAtCoords(x, y, data) {
+  #getColorDataAtCoords(x: number, y: number, data: ImageData): RGBAColor {
     const w = this.#ctx.canvas.width;
     const i = (y * w + x) * 4;
     const d = data.data;
-    return [d[i], d[i + 1], d[i + 2], d[i + 3]];
+    return {
+      red: d[i],
+      green: d[i + 1],
+      blue: d[i + 2],
+      alpha: d[i + 3],
+    }
   }
 
   /**
-   * Compares two RGBA color arrays to determine if they are similar enough to be considered equal.
-   * @param {number[]} a - First color array in RGBA format
-   * @param {number[]} b - Second color array in RGBA format
+   * Compares two RGBA colors to determine if they are similar enough to be considered equal.
+   * @param {RGBAColor} a - First color array in RGBA format
+   * @param {RGBAColor} b - Second color array in RGBA format
    * @param {number} [tolerance=15] - Maximum allowed difference between color components
    * @returns {boolean} True if colors are considered equal, false otherwise
    * @private
    */
-  #colorEquals(a, b, tolerance = 15) {
+  #colorEquals(a: RGBAColor, b: RGBAColor, tolerance: number = 15): boolean {
     return (
-      Math.abs(a[0] - b[0]) <= tolerance
-      && Math.abs(a[1] - b[1]) <= tolerance
-      && Math.abs(a[2] - b[2]) <= tolerance
+      Math.abs(a.red - b.red) <= tolerance
+      && Math.abs(a.green - b.green) <= tolerance
+      && Math.abs(a.blue - b.blue) <= tolerance
       // only false when comparing brush color with background's (alpha = 0)
-      && Math.abs(a[3] - b[3]) < 255
-    );
+      && Math.abs(a.alpha - b.alpha) <= 255
+    )
   }
 }
 

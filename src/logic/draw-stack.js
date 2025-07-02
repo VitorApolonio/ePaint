@@ -1,4 +1,4 @@
-import Brush from './brush.js';
+import Brush from './brush';
 
 /**
  * Manages a stack of drawing actions that can be undone and redone.

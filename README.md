@@ -85,7 +85,7 @@ Several changes can be made to improve the run time of the algorithm, some of th
 - Avoiding using `shift()` for popping the queue
 - Avoiding methods like `map()` and `forEach()`
 
-To see this project's implementation, which includes these optimizations, look at the `floodFill()` method in the `brush.js` file.
+To see this project's implementation, which includes these optimizations, look at the `floodFill()` method in the `brush.ts` file.
 
 ### Undo / Redo
 

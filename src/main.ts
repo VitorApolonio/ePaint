@@ -76,21 +76,24 @@ const createWindow = () => {
       },
     ],
   }));
-  const undoItem = {
+  const undoItem = new MenuItem({
     label: 'Undo',
     accelerator: process.platform === 'darwin' ? 'Cmd+Z' : 'Ctrl+Z',
     enabled: false,
     click: () => { mainWindow.webContents.send('undo-shortcut'); },
-  };
-  const redoItem = {
+  });
+  const redoItem = new MenuItem({
     label: 'Redo',
     accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Ctrl+Y',
     enabled: false,
     click: () => { mainWindow.webContents.send('redo-shortcut'); },
-  };
+  });
+  const editMenu = new Menu();
+  editMenu.append(undoItem);
+  editMenu.append(redoItem);
   menu.append(new MenuItem({
     role: 'editMenu',
-    submenu: [undoItem, redoItem],
+    submenu: editMenu,
   }));
 
   // disable or enable undo/redo buttons
