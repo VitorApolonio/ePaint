@@ -131,7 +131,7 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
     resizable: false,
     minimizable: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.ts'),
+      preload: path.join(__dirname, 'preload.js'),
     },
     icon: path.join(__dirname, 'img/icon.png'),
   });
