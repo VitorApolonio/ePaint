@@ -48,7 +48,6 @@ class DrawStack {
     }
     this.#actions.push(action);
     this.#index++;
-    console.log(this.#actions);
   }
 
   /**
@@ -61,7 +60,7 @@ class DrawStack {
       this.#brush.clearCanvas();
       // draw this action and all the ones before it
       for (let i = 1; i <= this.#index; i++) {
-        this.drawAction(this.#actions[i - 1]);
+        this.#actions[i - 1].perform(this.#brush);
       }
     }
   }
@@ -76,7 +75,7 @@ class DrawStack {
       this.#brush.clearCanvas();
       // draw this action and all the ones before it
       for (let i = 1; i <= this.#index; i++) {
-        this.drawAction(this.#actions[i - 1]);
+        this.#actions[i - 1].perform(this.#brush);
       }
     }
   }
@@ -87,15 +86,6 @@ class DrawStack {
   clear() {
     this.#index = 0;
     this.#actions.length = 0; // man i love this language
-  }
-
-  /**
-   * Draws a single action on the canvas by restoring the brush state
-   * and executing the appropriate drawing operations based on the action type.
-   * @param {Action} action - The action to draw on the canvas
-   */
-  drawAction(action: Action) {
-    action.perform(this.#brush);
   }
 }
 
