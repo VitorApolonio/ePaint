@@ -1,6 +1,11 @@
 import { createRoot } from 'react-dom/client';
+import Tool from './logic/tool';
+import React from 'react';
+import ToolSelect from './components/ToolSelect';
 
 const App = () => {
+  const [curTool, setCurTool] = React.useState(Tool.PAINTBRUSH);
+
   return (
     <>
       <div id="canvas-container">
@@ -9,31 +14,7 @@ const App = () => {
 
       <div id="tools-container">
         {/* tool selection */}
-        <div className="tool">
-          <p><strong>Selected&nbsp;tool</strong></p>
-          <div className="field has-addons">
-            <p className="control">
-              <button id="brush-tool" className="button is-primary is-selected" title="Paintbrush">
-                <span className="icon"><i data-lucide="brush"></i></span>
-              </button>
-            </p>
-            <p className="control">
-              <button id="eraser-tool" className="button" title="Eraser">
-                <span className="icon"><i data-lucide="eraser"></i></span>
-              </button>
-            </p>
-            <p className="control">
-              <button id="fill-tool" className="button" title="Paint Bucket">
-                <span className="icon"><i data-lucide="paint-bucket"></i></span>
-              </button>
-            </p>
-            <p className="control">
-              <button id="eyedropper-tool" className="button" title="Color Picker">
-                <span className="icon"><i data-lucide="pipette"></i></span>
-              </button>
-            </p>
-          </div>
-        </div>
+        <ToolSelect curTool={curTool} toolSetterFn={setCurTool} />
 
         {/* brush size */}
         <div className="tool">
