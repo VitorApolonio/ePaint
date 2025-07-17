@@ -28,6 +28,11 @@ canvas {
   flex: 1;
 }
 
+.color-picker {
+  width: 4rem;
+  cursor: pointer;
+}
+
 #canvas-container {
   border-style: solid;
   align-content: center;
@@ -46,9 +51,4 @@ canvas {
   justify-items: center;
   align-items: flex-end;
   user-select: none;
-}
-
-#color-select-primary, #color-select-secondary {
-  width: 4rem;
-  cursor: pointer;
 }

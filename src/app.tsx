@@ -1,12 +1,15 @@
 import { createRoot } from 'react-dom/client';
-import Tool from './logic/tool';
 import React from 'react';
-import ToolSelect from './components/ToolSelect';
+import Tool from './logic/tool';
+import BrushColorSelect from './components/BrushColorSelect';
 import BrushSizeSelect from './components/BrushSizeSelect';
+import ToolSelect from './components/ToolSelect';
 
 const App = () => {
   const [curTool, setCurTool] = React.useState(Tool.PAINTBRUSH);
   const [brushSize, setBrushSize] = React.useState(5);
+  const [colorPrimary, setColorPrimary] = React.useState('#ff7f00');
+  const [colorSecondary, setColorSecondary] = React.useState('#007fff');
 
   return (
     <>
@@ -22,22 +25,11 @@ const App = () => {
         <BrushSizeSelect sizes={[2, 5, 10, 15, 20, 25, 30]} curSize={brushSize} sizeSetterFn={setBrushSize} />
 
         {/* brush color */}
-        <div className="tool">
-          <p><strong>Color&nbsp;1&nbsp;/&nbsp;Color&nbsp;2</strong></p>
-          <div className="field is-grouped">
-            <p className="control">
-              <input id="color-select-primary" type="color" className="input" />
-            </p>
-            <p className="control">
-              <button id="swap-colors" className="button" title="Swap colors">
-                <span className="icon"><i data-lucide="arrow-left-right"></i></span>
-              </button>
-            </p>
-            <p className="control">
-              <input id="color-select-secondary" type="color" className="input" />
-            </p>
-          </div>
-        </div>
+        <BrushColorSelect
+          colorPrimary={colorPrimary}
+          colorSecondary={colorSecondary}
+          colorPrimarySetterFn={setColorPrimary}
+          colorSecondarySetterFn={setColorSecondary} />
 
         {/* undo / redo */}
         <div className="tool">

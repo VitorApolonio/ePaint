@@ -42,22 +42,22 @@ const ToolSelect = (props: ToolSelectProps) => {
           title="Paintbrush"
           iconLucide={<Brush />}
           onClick={() => props.toolSetterFn(Tool.PAINTBRUSH)}
-          selected={props.curTool === Tool.PAINTBRUSH}/>
+          selected={props.curTool === Tool.PAINTBRUSH} />
         <ToolButton
           title="Eraser"
           iconLucide={<Eraser />}
           onClick={() => props.toolSetterFn(Tool.ERASER)}
-          selected={props.curTool === Tool.ERASER}/>
+          selected={props.curTool === Tool.ERASER} />
         <ToolButton
           title="Paint Bucket"
           iconLucide={<PaintBucket />}
           onClick={() => props.toolSetterFn(Tool.BUCKET)}
-          selected={props.curTool === Tool.BUCKET}/>
+          selected={props.curTool === Tool.BUCKET} />
         <ToolButton
           title="Color Picker"
           iconLucide={<Pipette />}
           onClick={() => props.toolSetterFn(Tool.EYEDROPPER)}
-          selected={props.curTool === Tool.EYEDROPPER}/>
+          selected={props.curTool === Tool.EYEDROPPER} />
       </div>
     </div>
   );
