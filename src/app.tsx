@@ -2,9 +2,11 @@ import { createRoot } from 'react-dom/client';
 import Tool from './logic/tool';
 import React from 'react';
 import ToolSelect from './components/ToolSelect';
+import BrushSizeSelect from './components/BrushSizeSelect';
 
 const App = () => {
   const [curTool, setCurTool] = React.useState(Tool.PAINTBRUSH);
+  const [brushSize, setBrushSize] = React.useState(5);
 
   return (
     <>
@@ -17,14 +19,7 @@ const App = () => {
         <ToolSelect curTool={curTool} toolSetterFn={setCurTool} />
 
         {/* brush size */}
-        <div className="tool">
-          <p><strong>Brush&nbsp;size</strong></p>
-          <div className="select">
-            <select id="brush-size-select">
-              {/* options added through JS */}
-            </select>
-          </div>
-        </div>
+        <BrushSizeSelect sizes={[2, 5, 10, 15, 20, 25, 30]} curSize={brushSize} sizeSetterFn={setBrushSize} />
 
         {/* brush color */}
         <div className="tool">

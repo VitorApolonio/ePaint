@@ -1,5 +1,6 @@
 import './app';
 import './index.css';
+import './lucide';
 // display window
 window.electronAPI.mainWinReady();
 

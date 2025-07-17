@@ -1,12 +1,12 @@
 import Tool from '../logic/tool';
-import React from 'react';
+import { ReactNode } from 'react';
 import { Brush, Eraser, PaintBucket, Pipette } from 'lucide-react';
 
 interface ToolButtonProps {
   /* hover text */
   title: string;
   /* React component from lucide-react */
-  iconLucide: React.ReactNode;
+  iconLucide: ReactNode;
   /* function to run when clicking the button */
   onClick: () => void;
   /* whether this button is currently selected */
