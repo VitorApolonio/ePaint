@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Tool from './logic/tool';
 import BrushColorSelect from './components/BrushColorSelect';
 import BrushSizeSelect from './components/BrushSizeSelect';
@@ -12,7 +12,7 @@ const App = () => {
   const [brushSize, setBrushSize] = useState(5);
   const [colorPrimary, setColorPrimary] = useState('#ff7f00');
   const [colorSecondary, setColorSecondary] = useState('#007fff');
-  const [actionStack, setActionStack] = useState(null as null | DrawStack)
+  const [actionStack, setActionStack] = useState(null as null | DrawStack);
 
   return (
     <>
