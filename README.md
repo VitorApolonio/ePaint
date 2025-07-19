@@ -117,8 +117,9 @@ use I came across the exponential function and just knew it was meant to be.
 ___
 ## To-do list
 
-- fix issues with file naming on release, improve windows installer
+- fix slowdown with color picker on React
 - restructure the project to use React (would simplify making a new color picker)
+- fix issues with file naming on release, improve windows installer
 - use custom method for drawing lines to get rid of antialiasing
 - instead of quietly setting res to 100x100, inform user of this minimum when making a new canvas
 - maybe allow resizing current drawing instead of having to make a new one

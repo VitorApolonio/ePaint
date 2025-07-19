@@ -87,4 +87,4 @@ class ClearAction implements Action {
   }
 }
 
-export { Action, FillAction, DrawAction, ClearAction };
+export { Action, FillAction, DrawAction, ClearAction, Position };

@@ -1,20 +1,33 @@
 import { createRoot } from 'react-dom/client';
-import React from 'react';
+import { useRef, useState } from 'react';
 import Tool from './logic/tool';
 import BrushColorSelect from './components/BrushColorSelect';
 import BrushSizeSelect from './components/BrushSizeSelect';
 import ToolSelect from './components/ToolSelect';
+import Canvas from './components/Canvas';
+import DrawStack from './logic/draw-stack';
 
 const App = () => {
-  const [curTool, setCurTool] = React.useState(Tool.PAINTBRUSH);
-  const [brushSize, setBrushSize] = React.useState(5);
-  const [colorPrimary, setColorPrimary] = React.useState('#ff7f00');
-  const [colorSecondary, setColorSecondary] = React.useState('#007fff');
+  const [curTool, setCurTool] = useState(Tool.PAINTBRUSH);
+  const [brushSize, setBrushSize] = useState(5);
+  const [colorPrimary, setColorPrimary] = useState('#ff7f00');
+  const [colorSecondary, setColorSecondary] = useState('#007fff');
+  const [actionStack, setActionStack] = useState(null as null | DrawStack)
 
   return (
     <>
       <div id="canvas-container">
-        <canvas></canvas>
+        <Canvas
+          width={800}
+          height={600}
+          tool={curTool}
+          brushSize={brushSize}
+          colorA={colorPrimary}
+          colorB={colorSecondary}
+          colorSetterA={setColorPrimary}
+          colorSetterB={setColorSecondary}
+          actionStack={actionStack}
+          actionStackSetter={setActionStack} />
       </div>
 
       <div id="tools-container">

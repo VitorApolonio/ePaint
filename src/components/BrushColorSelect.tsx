@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowLeftRight } from 'lucide-react';
 
 interface SwapButtonProps {
