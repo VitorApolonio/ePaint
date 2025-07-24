@@ -1,6 +1,9 @@
 interface ButtonProps {
+  /* text displayed on the button */
   text: string;
+  /* whether this button is a confirm button (defines appearance) */
   confirm: boolean;
+  /* a function to run when this button is clicked */
   clickHandler: () => void;
 }
 
@@ -13,7 +16,9 @@ const Button = (props: ButtonProps) => {
 };
 
 interface DialogButtonsProps {
+  /* a function to clear the input fields */
   clearFieldsFn: () => void;
+  /* a function to resize the canvas according to the values in the fields */
   resizeFn: () => void;
 }
 

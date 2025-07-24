@@ -2,9 +2,13 @@ import React from 'react';
 import { RefObject } from 'react';
 
 interface ValueFieldProps {
+  /* a ref to this field */
   fieldRef: RefObject<HTMLInputElement>;
+  /* placeholder text */
   text: string;
+  /* displayed besides the field */
   unit: string;
+  /* whether this field should have autofocus active */
   focus: boolean;
 }
 
