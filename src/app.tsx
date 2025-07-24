@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Tool from './logic/tool';
 import BrushColorSelect from './components/BrushColorSelect';
 import BrushSizeSelect from './components/BrushSizeSelect';
@@ -19,7 +19,7 @@ const App = () => {
   const [actionStack, setActionStack] = useState(null as null | DrawStack);
 
   const [brush, setBrush] = useState(null as null | Brush);
-  const [brushColor, setBrushColor] = useState(colorPrimary)
+  const [brushColor, setBrushColor] = useState(colorPrimary);
 
   const [holdingMouse, setHoldingMouse] = useState(false);
   const [positions, setPositions] = useState([{ x: 0, y: 9 }] as [Position, ...Position[]]);
@@ -29,7 +29,7 @@ const App = () => {
   const onMouseUp = (e: React.MouseEvent) => {
     if (holdingMouse) {
       brush.color = brushColor;
-      const rect = e.currentTarget.getBoundingClientRect()
+      const rect = e.currentTarget.getBoundingClientRect();
       const curPos = {
         x: Math.round(e.clientX - rect.left),
         y: Math.round(e.clientY - rect.top),
@@ -70,7 +70,7 @@ const App = () => {
       }
 
       // reset state
-      setPositions(positions.slice(0, 1) as [Position, ...Position[]])
+      setPositions(positions.slice(0, 1) as [Position, ...Position[]]);
       setHoldingMouse(false);
     }
   };
