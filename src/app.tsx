@@ -98,7 +98,7 @@ const App = () => {
 
   return (
     <div id="root" onMouseUp={onMouseUp}>
-      <div id="canvas-container">
+      <div className="canvas-container">
         <Canvas
           width={800}
           height={600}
@@ -116,7 +116,7 @@ const App = () => {
           brushRef={brushRef} />
       </div>
 
-      <div id="tools-container">
+      <div className="tools-container">
         {/* tool selection */}
         <ToolSelect
           curTool={curTool}

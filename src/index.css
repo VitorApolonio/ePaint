@@ -33,7 +33,7 @@ canvas {
   cursor: pointer;
 }
 
-#canvas-container {
+.canvas-container {
   border-style: solid;
   align-content: center;
   justify-self: center;
@@ -43,7 +43,7 @@ canvas {
   flex: 1 80%;
 }
 
-#tools-container {
+.tools-container {
   align-content: center;
   display: flex;
   flex-wrap: wrap;
