@@ -1,7 +1,5 @@
 import Brush from './brush';
-
-/** Represents a position on the canvas, with x- and y-coordinates. */
-interface Position { x: number, y: number }
+import { Position, PosVector } from './position';
 
 /**
  * Represents an operation that changes the state of the canvas in some way.
@@ -45,9 +43,9 @@ class DrawAction implements Action {
    * Creates a DrawAction instance.
    * @param {number} brushSize - The current brush size (px)
    * @param {string} brushColor - The current brush color (hex)
-   * @param {[Position, ...Position[]]} positions - The positions composing the path
+   * @param {PosVector} positions - The positions composing the path
    */
-  constructor(brushSize: number, brushColor: string, positions: [Position, ...Position[]]) {
+  constructor(brushSize: number, brushColor: string, positions: PosVector) {
     this.#positions = positions;
     this.#brushSize = brushSize;
     this.#brushColor = brushColor;
@@ -87,4 +85,4 @@ class ClearAction implements Action {
   }
 }
 
-export { Action, FillAction, DrawAction, ClearAction, Position };
+export { Action, FillAction, DrawAction, ClearAction };
