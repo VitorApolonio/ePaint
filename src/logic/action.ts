@@ -75,11 +75,6 @@ class DrawAction implements Action {
  * Represents the action of clearing the canvas.
  */
 class ClearAction implements Action {
-  /**
-   * Create a ClearAction instance.
-   */
-  constructor() {}
-
   perform(brush: Brush) {
     brush.clearCanvas();
   }

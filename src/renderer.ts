@@ -28,7 +28,7 @@ const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
 let curTool: Tool = Tool.PAINTBRUSH;
 
 // whether the mouse is being held down
-let mouseClicked: boolean = false;
+let mouseClicked = false;
 
 // the currently clicked mouse button
 let curButtonCode: MouseButton = null;

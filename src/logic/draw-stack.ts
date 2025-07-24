@@ -8,7 +8,7 @@ import Brush from './brush';
  */
 class DrawStack {
   // note that actions will be one-indexed, as 0 represents the state before any action
-  #index: number = 0;
+  #index = 0;
   #actions: Action[] = [];
   #brush: Brush;
 
