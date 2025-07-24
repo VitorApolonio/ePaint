@@ -97,20 +97,12 @@ const createWindow = () => {
   }));
 
   // disable or enable undo/redo buttons
-  ipcMain.on('undo-enable', () => {
-    undoItem.enabled = true;
+  ipcMain.on('undo-set-enabled', (_event, enabled: boolean) => {
+    undoItem.enabled = enabled;
     Menu.setApplicationMenu(menu);
   });
-  ipcMain.on('undo-disable', () => {
-    undoItem.enabled = false;
-    Menu.setApplicationMenu(menu);
-  });
-  ipcMain.on('redo-enable', () => {
-    redoItem.enabled = true;
-    Menu.setApplicationMenu(menu);
-  });
-  ipcMain.on('redo-disable', () => {
-    redoItem.enabled = false;
+  ipcMain.on('redo-set-enabled', (_event, enabled: boolean) => {
+    redoItem.enabled = enabled;
     Menu.setApplicationMenu(menu);
   });
 

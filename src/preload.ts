@@ -8,10 +8,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // undo/redo
   onUndoShortcut: callback => ipcRenderer.on('undo-shortcut', callback),
   onRedoShortcut: callback => ipcRenderer.on('redo-shortcut', callback),
-  enableUndo: () => ipcRenderer.send('undo-enable'),
-  disableUndo: () => ipcRenderer.send('undo-disable'),
-  enableRedo: () => ipcRenderer.send('redo-enable'),
-  disableRedo: () => ipcRenderer.send('redo-disable'),
+  setUndoEnabled: (enabled: boolean) => ipcRenderer.send('undo-set-enabled', enabled),
+  setRedoEnabled: (enabled: boolean) => ipcRenderer.send('redo-set-enabled', enabled),
   // save drawing
   onSaveImage: callback => ipcRenderer.on('save-image', (_event, path) => callback(path)),
   saveImageToFile: (path, arrBuffer) => ipcRenderer.send('save-image-to-file', path, arrBuffer),

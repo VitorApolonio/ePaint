@@ -117,6 +117,7 @@ use I came across the exponential function and just knew it was meant to be.
 ___
 ## To-do list
 
+- use interface for electronapi preload object
 - fix slowdown with color picker on React
 - restructure the project to use React (would simplify making a new color picker)
 - fix issues with file naming on release, improve windows installer

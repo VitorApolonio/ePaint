@@ -12,12 +12,15 @@ import { DrawAction, FillAction } from './logic/action';
 import MouseButton from './logic/mouse-button';
 import ClearCanvas from './components/ClearCanvas';
 import { PosVector } from './logic/position';
+import UndoRedo from './components/UndoRedo';
 
 const App = () => {
   const [curTool, setCurTool] = useState(Tool.PAINTBRUSH);
   const [brushSize, setBrushSize] = useState(5);
   const [colorPrimary, setColorPrimary] = useState('#ff7f00');
   const [colorSecondary, setColorSecondary] = useState('#007fff');
+  const [undoEnabled, setUndoEnabled] = useState(false);
+  const [redoEnabled, setRedoEnabled] = useState(false);
 
   const actionStackRef = useRef(null as null | DrawStack);
   const brushRef = useRef(null as null | Brush);
@@ -111,21 +114,7 @@ const App = () => {
           colorSecondarySetterFn={setColorSecondary} />
 
         {/* undo / redo */}
-        <div className="tool">
-          <p><strong>Undo&nbsp;/&nbsp;Redo</strong></p>
-          <div className="field has-addons">
-            <p className="control">
-              <button disabled id="undo-btn" className="button">
-                <span className="icon"><i data-lucide="undo"></i></span>
-              </button>
-            </p>
-            <p className="control">
-              <button disabled id="redo-btn" className="button">
-                <span className="icon"><i data-lucide="redo"></i></span>
-              </button>
-            </p>
-          </div>
-        </div>
+        <UndoRedo />
 
         {/* wipe canvas */}
         <ClearCanvas

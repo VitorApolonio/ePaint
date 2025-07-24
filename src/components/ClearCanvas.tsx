@@ -6,8 +6,11 @@ import DrawStack from '../logic/draw-stack';
 import { PosVector } from '../logic/position';
 
 interface ClearCanvasProps {
+  /* main paintbrush */
   brushRef: RefObject<Brush>;
+  /* action stack */
   stackRef: RefObject<DrawStack>;
+  /* positions composing the current mouse path */
   posRef: RefObject<PosVector>;
 }
 
