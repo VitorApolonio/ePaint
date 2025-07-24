@@ -15,6 +15,6 @@ body {
   justify-content: space-around;
 }
 
-#fields {
+.fields-container {
   align-self: center;
 }
