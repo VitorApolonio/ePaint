@@ -1,6 +1,6 @@
-import { Redo, Undo } from "lucide-react";
-import { ReactNode, RefObject, useEffect } from "react"
-import DrawStack from "src/logic/draw-stack";
+import { Redo, Undo } from 'lucide-react';
+import { ReactNode, RefObject, useEffect } from 'react';
+import DrawStack from 'src/logic/draw-stack';
 
 interface StateControlButtonProps {
   /* whether this button is disabled */
@@ -18,8 +18,8 @@ const StateControlButton = (props: StateControlButtonProps) => {
         <span className="icon">{props.iconLucide}</span>
       </button>
     </p>
-  )
-}
+  );
+};
 
 interface UndoRedoProps {
   /* the action stack */
@@ -34,25 +34,25 @@ interface UndoRedoProps {
 
 const UndoRedo = (props: UndoRedoProps) => {
   const undoHandler = () => {
-    props.stackRef.current.undo()
+    props.stackRef.current.undo();
     if (!props.stackRef.current.canUndo()) {
       props.undoSetterFn(false);
     }
     props.redoSetterFn(true);
-  }
+  };
   const redoHandler = () => {
-    props.stackRef.current.redo()
+    props.stackRef.current.redo();
     if (!props.stackRef.current.canRedo()) {
       props.redoSetterFn(false);
     }
     props.undoSetterFn(true);
-  }
+  };
 
   // set up shortcuts
   useEffect(() => {
     window.electronAPI.onUndoShortcut(undoHandler);
     window.electronAPI.onRedoShortcut(redoHandler);
-  }, [])
+  }, []);
 
   return (
     <div className="tool">
@@ -62,7 +62,7 @@ const UndoRedo = (props: UndoRedoProps) => {
         <StateControlButton disabled={!props.redoActive} onClick={redoHandler} iconLucide={<Redo />} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default UndoRedo;

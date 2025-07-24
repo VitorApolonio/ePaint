@@ -6,16 +6,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // show window
   mainWinReady: () => ipcRenderer.send('main-win-ready'),
   // undo/redo
-  onUndoShortcut: callback => ipcRenderer.on('undo-shortcut', callback),
-  onRedoShortcut: callback => ipcRenderer.on('redo-shortcut', callback),
-  setUndoEnabled: (enabled: boolean) => ipcRenderer.send('undo-set-enabled', enabled),
-  setRedoEnabled: (enabled: boolean) => ipcRenderer.send('redo-set-enabled', enabled),
+  onUndoShortcut: cb => ipcRenderer.on('undo-shortcut', cb),
+  onRedoShortcut: cb => ipcRenderer.on('redo-shortcut', cb),
+  setUndoEnabled: enabled => ipcRenderer.send('undo-set-enabled', enabled),
+  setRedoEnabled: enabled => ipcRenderer.send('redo-set-enabled', enabled),
   // save drawing
-  onSaveImage: callback => ipcRenderer.on('save-image', (_event, path) => callback(path)),
-  saveImageToFile: (path, arrBuffer) => ipcRenderer.send('save-image-to-file', path, arrBuffer),
+  onSaveImage: cb => ipcRenderer.on('save-image', (_event, path) => cb(path)),
+  saveImageToFile: (path, arrBuf) => ipcRenderer.send('save-image-to-file', path, arrBuf),
   // new drawing
   cancelNew: () => ipcRenderer.send('cancel-new'),
-  onClearNewFields: callback => ipcRenderer.on('clear-new-fields', callback),
-  resizeCanvas: (width, height) => ipcRenderer.send('canvas-resize', width, height),
-  onResizeCanvas: callback => ipcRenderer.on('canvas-resize', (_event, width, height) => callback(width, height)),
-});
+  onClearNewFields: cb => ipcRenderer.on('clear-new-fields', cb),
+  resizeCanvas: (w, h) => ipcRenderer.send('canvas-resize', w, h),
+  onResizeCanvas: cb => ipcRenderer.on('canvas-resize', (_event, w, h) => cb(w, h)),
+} as ElectronAPI);

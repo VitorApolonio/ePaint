@@ -37,11 +37,11 @@ const App = () => {
   const setUndoActive = (active: boolean) => {
     setUndoEnabled(active);
     window.electronAPI.setUndoEnabled(active);
-  }
+  };
   const setRedoActive = (active: boolean) => {
     setRedoEnabled(active);
     window.electronAPI.setRedoEnabled(active);
-  }
+  };
 
   // handle creating a new blank canvas
   window.electronAPI.onResizeCanvas((w: number, h: number) => {
