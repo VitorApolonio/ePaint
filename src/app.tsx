@@ -30,6 +30,19 @@ const App = () => {
 
   const canvasRef = useRef(null as null | HTMLCanvasElement);
 
+  /* 
+   * These wrapper functions should almost always be used instead of the
+   * state setters, as they also toggle the keyboard shortcuts.
+   */
+  const setUndoActive = (active: boolean) => {
+    setUndoEnabled(active);
+    window.electronAPI.setUndoEnabled(active);
+  }
+  const setRedoActive = (active: boolean) => {
+    setRedoEnabled(active);
+    window.electronAPI.setRedoEnabled(active);
+  }
+
   const onMouseUp = (e: React.MouseEvent) => {
     if (holdingMouseRef.current) {
       brushRef.current.color = brushColorRef.current;
@@ -46,7 +59,9 @@ const App = () => {
             brushRef.current.drawPoint(curPos.x, curPos.y);
           }
           // add action to stack
-          actionStackRef.current.add(new DrawAction(brushSize, brushColorRef.current, positionsRef.current));
+          actionStackRef.current.add(new DrawAction(brushSize, brushColorRef.current, positionsRef.current as PosVector));
+          setUndoActive(true);
+          setRedoActive(false);
           break;
         }
         case Tool.BUCKET: {
@@ -56,6 +71,8 @@ const App = () => {
               .getContext('2d')
               .getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
             actionStackRef.current.add(new FillAction(fillData));
+            setUndoActive(true);
+            setRedoActive(false);
           }
           break;
         }
@@ -101,10 +118,15 @@ const App = () => {
 
       <div id="tools-container">
         {/* tool selection */}
-        <ToolSelect curTool={curTool} toolSetterFn={setCurTool} />
+        <ToolSelect
+          curTool={curTool}
+          toolSetterFn={setCurTool} />
 
         {/* brush size */}
-        <BrushSizeSelect sizes={[2, 5, 10, 15, 20, 25, 30]} curSize={brushSize} sizeSetterFn={setBrushSize} />
+        <BrushSizeSelect 
+          sizes={[2, 5, 10, 15, 20, 25, 30]}
+          curSize={brushSize}
+          sizeSetterFn={setBrushSize} />
 
         {/* brush color */}
         <BrushColorSelect
@@ -114,13 +136,20 @@ const App = () => {
           colorSecondarySetterFn={setColorSecondary} />
 
         {/* undo / redo */}
-        <UndoRedo />
+        <UndoRedo
+          undoActive={undoEnabled}
+          undoSetterFn={setUndoActive}
+          redoActive={redoEnabled}
+          redoSetterFn={setRedoActive}
+          stackRef={actionStackRef} />
 
         {/* wipe canvas */}
         <ClearCanvas
           brushRef={brushRef}
           stackRef={actionStackRef}
-          posRef={positionsRef} />
+          posRef={positionsRef}
+          undoStateFn={setUndoActive}
+          redoStateFn={setRedoActive} />
       </div>
     </div>
   );

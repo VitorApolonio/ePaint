@@ -12,6 +12,9 @@ interface ClearCanvasProps {
   stackRef: RefObject<DrawStack>;
   /* positions composing the current mouse path */
   posRef: RefObject<PosVector>;
+  /* setters for undo/redo state */
+  undoStateFn: (enabled: boolean) => void;
+  redoStateFn: (enabled: boolean) => void;
 }
 
 const ClearCanvas = (props: ClearCanvasProps) => {
@@ -19,16 +22,18 @@ const ClearCanvas = (props: ClearCanvasProps) => {
     // wiping the canvas counts as an action only if it's not already blank
     if (!props.brushRef.current.canvasIsBlank()) {
       // if pressed while drawing, save current path before erasing
-      if (props.posRef.current.length) {
+      if (props.posRef.current.length > 1) {
         props.stackRef.current.add(new DrawAction(
           props.brushRef.current.size,
           props.brushRef.current.color,
-          props.posRef.current.slice() as PosVector,
+          props.posRef.current,
         ));
         props.posRef.current.slice(props.posRef.current.length - 1);
       }
       props.brushRef.current.clearCanvas();
       props.stackRef.current.add(new ClearAction());
+      props.undoStateFn(true);
+      props.redoStateFn(false);
     }
   };
 
