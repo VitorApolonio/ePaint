@@ -1,7 +1,5 @@
 import Brush from './brush';
-
-/** Represents a position on the canvas, with x- and y-coordinates. */
-interface Position { x: number, y: number }
+import { PosVector } from './position';
 
 /**
  * Represents an operation that changes the state of the canvas in some way.
@@ -37,7 +35,7 @@ class FillAction implements Action {
  * Represents a path or single point drawn on the canvas.
  */
 class DrawAction implements Action {
-  #positions: Position[];
+  #positions: PosVector;
   #brushSize: number;
   #brushColor: string;
 
@@ -45,10 +43,11 @@ class DrawAction implements Action {
    * Creates a DrawAction instance.
    * @param {number} brushSize - The current brush size (px)
    * @param {string} brushColor - The current brush color (hex)
-   * @param {[Position, ...Position[]]} positions - The positions composing the path
+   * @param {PosVector} positions - The positions composing the path
    */
-  constructor(brushSize: number, brushColor: string, positions: [Position, ...Position[]]) {
-    this.#positions = positions;
+  constructor(brushSize: number, brushColor: string, positions: PosVector) {
+    // a shallow copy is saved to avoid issues with references
+    this.#positions = positions.slice() as PosVector;
     this.#brushSize = brushSize;
     this.#brushColor = brushColor;
   }
@@ -77,11 +76,6 @@ class DrawAction implements Action {
  * Represents the action of clearing the canvas.
  */
 class ClearAction implements Action {
-  /**
-   * Create a ClearAction instance.
-   */
-  constructor() {}
-
   perform(brush: Brush) {
     brush.clearCanvas();
   }

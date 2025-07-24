@@ -4,7 +4,7 @@ html {
   overflow-y: hidden;
 }
 
-body {
+#root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
   padding: 1rem;
@@ -28,7 +28,12 @@ canvas {
   flex: 1;
 }
 
-#canvas-container {
+.color-picker {
+  width: 4rem;
+  cursor: pointer;
+}
+
+.canvas-container {
   border-style: solid;
   align-content: center;
   justify-self: center;
@@ -38,7 +43,7 @@ canvas {
   flex: 1 80%;
 }
 
-#tools-container {
+.tools-container {
   align-content: center;
   display: flex;
   flex-wrap: wrap;
@@ -46,9 +51,4 @@ canvas {
   justify-items: center;
   align-items: flex-end;
   user-select: none;
-}
-
-#color-select-primary, #color-select-secondary {
-  width: 4rem;
-  cursor: pointer;
 }

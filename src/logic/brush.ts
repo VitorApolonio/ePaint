@@ -18,14 +18,14 @@ class Brush {
    * @param {number} [size=1] - The initial size of the brush
    * @param {string} [color='#ffffff'] - The initial color of the brush in hexadecimal format
    */
-  constructor(canvas: HTMLCanvasElement, size: number = 1, color: string = '#ffffff') {
+  constructor(canvas: HTMLCanvasElement, size = 1, color = '#ffffff') {
     this.#ctx = canvas.getContext('2d');
     this.#size = size;
     this.#color = color;
   }
 
   /** Color value used for the eraser tool */
-  static COLOR_ERASER: string = '#000000ff';
+  static COLOR_ERASER = '#000000ff';
 
   /**
    * Sets the brush size.
@@ -36,19 +36,19 @@ class Brush {
   }
 
   /**
-   * Sets the brush color.
-   * @param {string} newColor - The new color in hexadecimal format
-   */
-  set color(newColor: string) {
-    this.#color = newColor;
-  }
-
-  /**
    * Gets the current brush size.
    * @returns {number} The current brush size
    */
   get size(): number {
     return this.#size;
+  }
+
+  /**
+   * Sets the brush color.
+   * @param {string} newColor - The new color in hexadecimal format
+   */
+  set color(newColor: string) {
+    this.#color = newColor;
   }
 
   /**
@@ -283,7 +283,7 @@ class Brush {
    * @returns {boolean} True if colors are considered equal, false otherwise
    * @private
    */
-  #colorEquals(a: RGBAColor, b: RGBAColor, tolerance: number = 15): boolean {
+  #colorEquals(a: RGBAColor, b: RGBAColor, tolerance = 15): boolean {
     return (
       Math.abs(a.red - b.red) <= tolerance
       && Math.abs(a.green - b.green) <= tolerance

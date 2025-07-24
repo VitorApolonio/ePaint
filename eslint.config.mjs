@@ -1,14 +1,15 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { defineConfig, globalIgnores } from 'eslint/config';
+import { globalIgnores } from 'eslint/config';
 
-
-export default defineConfig([
+export default tseslint.config(
+  js.configs.recommended,
+  tseslint.configs.strict,
+  tseslint.configs.stylistic,
   globalIgnores(['.vite/*']),
-  { files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], plugins: { js }, extends: ['js/recommended'] },
+  { files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], plugins: { tseslint }, extends: [tseslint.configs.strict] },
   { files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], languageOptions: { globals: globals.browser } },
-  tseslint.configs.recommended,
   {
     rules: {
       semi: [2, 'always'],
@@ -19,6 +20,7 @@ export default defineConfig([
         SwitchCase: 1,
       }],
       'comma-dangle': [2, 'always-multiline'],
+      'eol-last': [2, 'always'],
     },
   },
-]);
+);

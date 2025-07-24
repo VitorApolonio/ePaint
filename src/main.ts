@@ -97,27 +97,19 @@ const createWindow = () => {
   }));
 
   // disable or enable undo/redo buttons
-  ipcMain.on('undo-enable', () => {
-    undoItem.enabled = true;
+  ipcMain.on('undo-set-enabled', (_event, enabled: boolean) => {
+    undoItem.enabled = enabled;
     Menu.setApplicationMenu(menu);
   });
-  ipcMain.on('undo-disable', () => {
-    undoItem.enabled = false;
-    Menu.setApplicationMenu(menu);
-  });
-  ipcMain.on('redo-enable', () => {
-    redoItem.enabled = true;
-    Menu.setApplicationMenu(menu);
-  });
-  ipcMain.on('redo-disable', () => {
-    redoItem.enabled = false;
+  ipcMain.on('redo-set-enabled', (_event, enabled: boolean) => {
+    redoItem.enabled = enabled;
     Menu.setApplicationMenu(menu);
   });
 
   Menu.setApplicationMenu(menu);
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 };
 
 const createNewCanvasPrompt = (parent: BrowserWindow) => {
@@ -197,6 +189,3 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
