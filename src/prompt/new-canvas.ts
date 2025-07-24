@@ -1,2 +1,2 @@
-import './prompt'
+import './prompt';
 import './new-canvas.css';

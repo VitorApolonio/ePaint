@@ -1,5 +1,5 @@
-import React from 'react'
-import { RefObject } from 'react'
+import React from 'react';
+import { RefObject } from 'react';
 
 interface ValueFieldProps {
   fieldRef: RefObject<HTMLInputElement>;
@@ -11,8 +11,8 @@ interface ValueFieldProps {
 const ValueField = (props: ValueFieldProps) => {
   // allow only numbers to be typed
   const restrictInput = () => {
-    props.fieldRef.current.value = props.fieldRef.current.value.replace(/\D/g, '')
-  }
+    props.fieldRef.current.value = props.fieldRef.current.value.replace(/\D/g, '');
+  };
 
   return (
     <div className="field has-addons">
@@ -29,8 +29,8 @@ const ValueField = (props: ValueFieldProps) => {
         <span className="button is-static">{props.unit}</span>
       </div>
     </div>
-  )
-}
+  );
+};
 
 interface FieldsProps {
   widthFieldRef: RefObject<HTMLInputElement>;
@@ -43,10 +43,10 @@ const Fields = (props: FieldsProps) => {
   // resize if user presses enter
   const onKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      props.resizeFn()
-      props.clearFieldsFn()
+      props.resizeFn();
+      props.clearFieldsFn();
     }
-  }
+  };
 
   return (
     <div className="fields-container" onKeyDown={e => onKeyPress(e)}>
@@ -62,7 +62,7 @@ const Fields = (props: FieldsProps) => {
         fieldRef={props.heightFieldRef}
         focus={false} />
     </div>
-  )
-}
+  );
+};
 
 export default Fields;

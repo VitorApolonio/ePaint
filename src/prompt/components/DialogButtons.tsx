@@ -9,8 +9,8 @@ const Button = (props: ButtonProps) => {
     <div className="control">
       <button className={`button${props.confirm ? ' is-link' : ''}`} onClick={props.clickHandler}>{props.text}</button>
     </div>
-  )
-}
+  );
+};
 
 interface DialogButtonsProps {
   clearFieldsFn: () => void;
@@ -19,14 +19,14 @@ interface DialogButtonsProps {
 
 const DialogButtons = (props: DialogButtonsProps) => {
   const cancelHandler = () => {
-    props.clearFieldsFn()
-    window.electronAPI.cancelNew()
-  }
+    props.clearFieldsFn();
+    window.electronAPI.cancelNew();
+  };
 
   const confirmHandler = () => {
-    props.resizeFn()
-    props.clearFieldsFn()
-  }
+    props.resizeFn();
+    props.clearFieldsFn();
+  };
 
   return (
     <div className="buttons-container">
@@ -41,7 +41,7 @@ const DialogButtons = (props: DialogButtonsProps) => {
           clickHandler={confirmHandler} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default DialogButtons;

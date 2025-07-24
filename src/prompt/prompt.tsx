@@ -1,17 +1,17 @@
-import { useRef } from "react"
-import { createRoot } from "react-dom/client"
-import Fields from "./components/Fields"
-import DialogButtons from "./components/DialogButtons"
+import { useRef } from 'react';
+import { createRoot } from 'react-dom/client';
+import Fields from './components/Fields';
+import DialogButtons from './components/DialogButtons';
 
 const CanvasResizePrompt = () => {
-  const widthRef = useRef(null as null | HTMLInputElement)
-  const heightRef = useRef(null as null | HTMLInputElement)
+  const widthRef = useRef(null as null | HTMLInputElement);
+  const heightRef = useRef(null as null | HTMLInputElement);
 
   const clearFields = () => {
     widthRef.current.value = '';
     heightRef.current.value = '';
-    widthRef.current.focus()
-  }
+    widthRef.current.focus();
+  };
 
   const resize = () => {
     const w = parseInt(widthRef.current.value);
@@ -20,16 +20,19 @@ const CanvasResizePrompt = () => {
     // minimum resolution
     const minW = 300;
     const minH = 300;
+    // maximum resolution
+    const maxW = 7680; // 8K
+    const maxH = 4320;
 
     window.electronAPI.resizeCanvas(
-      isNaN(w) ? minW : Math.max(minW, w),
-      isNaN(h) ? minH : Math.max(minH, h)
+      isNaN(w) ? minW : Math.min(maxW, Math.max(minW, w)),
+      isNaN(h) ? minH : Math.min(maxH, Math.max(minH, h)),
     );
     window.electronAPI.cancelNew();
-  }
+  };
 
   // clear fields on window close
-  window.electronAPI.onClearNewFields(clearFields)
+  window.electronAPI.onClearNewFields(clearFields);
 
   return (
     <>
@@ -43,9 +46,9 @@ const CanvasResizePrompt = () => {
         clearFieldsFn={clearFields}
         resizeFn={resize} />
     </>
-  )
-}
+  );
+};
 
 createRoot(document.body).render(
-  <CanvasResizePrompt />
-)
+  <CanvasResizePrompt />,
+);
