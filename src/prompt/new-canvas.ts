@@ -19,9 +19,10 @@ const clearFields = () => {
   widthField.focus();
 };
 const resize = () => {
-  const w = Math.max(parseInt(widthField.value), 100);
-  const h = Math.max(parseInt(heightField.value), 100);
-  window.electronAPI.resizeCanvas(w, h);
+  const w = parseInt(widthField.value);
+  const h = parseInt(heightField.value);
+
+  window.electronAPI.resizeCanvas(isNaN(w) ? 300 : Math.max(300, w), isNaN(h) ? 300 : Math.max(300, h));
   window.electronAPI.cancelNew();
 };
 
