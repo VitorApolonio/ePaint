@@ -17,7 +17,7 @@ const SwapButton = (props: SwapButtonProps) => {
   };
   return (
     <p className="control">
-      <button id="swap-colors" className="button" title="Swap colors" onClick={onClick}>
+      <button className="button" title="Swap colors" onClick={onClick}>
         <span className="icon"><ArrowLeftRight /></span>
       </button>
     </p>
