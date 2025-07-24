@@ -20,6 +20,7 @@ export default tseslint.config(
         SwitchCase: 1,
       }],
       'comma-dangle': [2, 'always-multiline'],
+      'eol-last': [2, 'always'],
     },
   },
 );
