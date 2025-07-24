@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useState } from 'react';
 import Tool from './logic/tool';
@@ -6,6 +7,9 @@ import BrushSizeSelect from './components/BrushSizeSelect';
 import ToolSelect from './components/ToolSelect';
 import Canvas from './components/Canvas';
 import DrawStack from './logic/draw-stack';
+import Brush from './logic/brush';
+import { DrawAction, FillAction, Position } from './logic/action';
+import MouseButton from './logic/mouse-button';
 
 const App = () => {
   const [curTool, setCurTool] = useState(Tool.PAINTBRUSH);
@@ -14,20 +18,86 @@ const App = () => {
   const [colorSecondary, setColorSecondary] = useState('#007fff');
   const [actionStack, setActionStack] = useState(null as null | DrawStack);
 
+  const [brush, setBrush] = useState(null as null | Brush);
+  const [brushColor, setBrushColor] = useState(colorPrimary)
+
+  const [holdingMouse, setHoldingMouse] = useState(false);
+  const [positions, setPositions] = useState([{ x: 0, y: 9 }] as [Position, ...Position[]]);
+
+  const canvasRef = useRef(null as null | HTMLCanvasElement);
+
+  const onMouseUp = (e: React.MouseEvent) => {
+    if (holdingMouse) {
+      brush.color = brushColor;
+      const rect = e.currentTarget.getBoundingClientRect()
+      const curPos = {
+        x: Math.round(e.clientX - rect.left),
+        y: Math.round(e.clientY - rect.top),
+      };
+      switch (curTool) {
+        case Tool.PAINTBRUSH:
+        case Tool.ERASER: {
+          // draw a dot if only one position exists
+          if (e.target === canvasRef.current && positions.length === 1) {
+            brush.drawPoint(curPos.x, curPos.y);
+          }
+          // add action to stack
+          actionStack.add(new DrawAction(brushSize, brushColor, positions));
+          break;
+        }
+        case Tool.BUCKET: {
+          // only add action if fill was performed on valid coordinate and selected color != pixel color
+          if (e.target === canvasRef.current && brush.floodFill(curPos.x, curPos.y)) {
+            const fillData = canvasRef.current
+              .getContext('2d')
+              .getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
+            actionStack.add(new FillAction(fillData));
+          }
+          break;
+        }
+        case Tool.EYEDROPPER: {
+          if (e.target === canvasRef.current) {
+            // update selected color
+            const color = brush.getColorAtPixel(curPos.x, curPos.y);
+            if (e.button === MouseButton.MAIN) {
+              setColorPrimary(color);
+            } else {
+              setColorSecondary(color);
+            }
+            break;
+          }
+        }
+      }
+
+      // reset state
+      setPositions(positions.slice(0, 1) as [Position, ...Position[]])
+      setHoldingMouse(false);
+    }
+  };
+
   return (
-    <>
+    <div id="root" onMouseUp={onMouseUp}>
       <div id="canvas-container">
         <Canvas
           width={800}
           height={600}
+          canvasRef={canvasRef}
           tool={curTool}
+          brushColor={brushColor}
+          brushColorSetter={setBrushColor}
           brushSize={brushSize}
+          positions={positions}
+          positionsSetter={setPositions}
           colorA={colorPrimary}
           colorB={colorSecondary}
           colorSetterA={setColorPrimary}
           colorSetterB={setColorSecondary}
           actionStack={actionStack}
-          actionStackSetter={setActionStack} />
+          actionStackSetter={setActionStack}
+          holdingMouse={holdingMouse}
+          holdingMouseSetter={setHoldingMouse}
+          brush={brush}
+          brushSetter={setBrush} />
       </div>
 
       <div id="tools-container">
@@ -70,10 +140,10 @@ const App = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.body).render(
   <App />,
 );

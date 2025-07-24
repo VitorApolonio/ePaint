@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { DrawAction, FillAction, Position } from '../logic/action';
 import MouseButton from '../logic/mouse-button';
@@ -7,39 +7,51 @@ import Tool from '../logic/tool';
 import DrawStack from '../logic/draw-stack';
 
 interface CanvasProps {
+  /* canvas dimensions */
   width: number;
   height: number;
+  /* reference to the canvas element */
+  canvasRef: RefObject<HTMLCanvasElement>;
+  /* currently selected tool */
   tool: Tool;
+  /* brush size in px */
   brushSize: number;
+  /* current brush color in hexadecimal */
+  brushColor: string;
+  brushColorSetter: (color: string) => void;
+  /* array with positions the mouse has gone through during a path */
+  positions: [Position, ...Position[]];
+  positionsSetter: (positions: [Position, ...Position[]]) => void
+  /* main and secondary colors */
   colorA: string;
   colorB: string;
   colorSetterA: (color: string) => void;
   colorSetterB: (color: string) => void;
+  /* stack keeping track of all actions (for undo/redo) */
   actionStack: DrawStack
   actionStackSetter: (stack: DrawStack) => void
+  /* whether a mouse button is being held */
+  holdingMouse: boolean
+  holdingMouseSetter: (holding: boolean) => void
+  /* main brush used for drawing on canvas */
+  brush: Brush
+  brushSetter: (brush: Brush) => void
 }
 
 const Canvas = (props: CanvasProps) => {
-  const canvasRef = useRef(null as null | HTMLCanvasElement);
-  const [brush, setBrush] = useState(null as null | Brush);
-
   const curBtnCodeRef = useRef(MouseButton.MAIN);
-  const holdingMouseBtnRef = useRef(false);
-  const brushColorRef = useRef(props.colorA);
-
   const startPosRef = useRef({ x: 0, y: 0 } as Position);
-  const positionsRef = useRef([startPosRef.current] as [Position, ...Position[]]);
 
   // initialize brush, done only once
   useEffect(() => {
-    const brush = new Brush(canvasRef.current);
+    const brush = new Brush(props.canvasRef.current);
     brush.size = props.brushSize;
-    setBrush(brush);
-    props.actionStackSetter(new DrawStack(canvasRef.current));
+    props.brushSetter(brush);
+    props.actionStackSetter(new DrawStack(props.canvasRef.current));
   }, []);
 
   const onMouseDown = (e: React.MouseEvent) => {
-    holdingMouseBtnRef.current = true;
+    props.holdingMouseSetter(true)
     curBtnCodeRef.current = e.button;
 
     // set color
@@ -47,14 +59,14 @@ const Canvas = (props: CanvasProps) => {
       case Tool.PAINTBRUSH:
       case Tool.BUCKET: {
         if (curBtnCodeRef.current === MouseButton.MAIN) {
-          brushColorRef.current = props.colorA;
+          props.brushColorSetter(props.colorA)
         } else {
-          brushColorRef.current = props.colorB;
+          props.brushColorSetter(props.colorB)
         }
         break;
       }
       case Tool.ERASER: {
-        brushColorRef.current = Brush.COLOR_ERASER;
+        props.brushColorSetter(Brush.COLOR_ERASER)
         break;
       }
     }
@@ -68,14 +80,14 @@ const Canvas = (props: CanvasProps) => {
           x: Math.round(e.clientX - rect.left),
           y: Math.round(e.clientY - rect.top),
         };
-        positionsRef.current[0] = startPosRef.current;
+        props.positionsSetter([startPosRef.current])
         break;
       }
     }
   };
 
   const onMouseMove = (e: React.MouseEvent) => {
-    if (holdingMouseBtnRef.current) {
+    if (props.holdingMouse) {
       const rect = e.currentTarget.getBoundingClientRect();
       const curPos = {
         x: Math.round(e.clientX - rect.left),
@@ -84,8 +96,8 @@ const Canvas = (props: CanvasProps) => {
       switch (props.tool) {
         case Tool.PAINTBRUSH:
         case Tool.ERASER: {
-          brush.color = brushColorRef.current;
-          brush.drawLine(
+          props.brush.color = props.brushColor;
+          props.brush.drawLine(
             startPosRef.current.x,
             startPosRef.current.y,
             curPos.x,
@@ -95,11 +107,11 @@ const Canvas = (props: CanvasProps) => {
             x: curPos.x,
             y: curPos.y,
           };
-          positionsRef.current.push(startPosRef.current);
+          props.positionsSetter(props.positions.concat(startPosRef.current) as [Position, ...Position[]])
           break;
         }
         case Tool.EYEDROPPER: {
-          const color = brush.getColorAtPixel(curPos.x, curPos.y);
+          const color = props.brush.getColorAtPixel(curPos.x, curPos.y);
           if (curBtnCodeRef.current === MouseButton.MAIN) {
             props.colorSetterA(color);
           } else {
@@ -111,79 +123,13 @@ const Canvas = (props: CanvasProps) => {
     }
   };
 
-  // non-react event listeners won't update with new state values, how lovely
-  const brushRef = useRef(brush);
-  const toolRef = useRef(props.tool);
-  const stackRef = useRef(props.actionStack);
-  useEffect(() => {
-    brushRef.current = brush;
-    stackRef.current = props.actionStack;
-    toolRef.current = props.tool;
-  }, [brush, props.actionStack, props.tool]);
-
-  // also triggers outside of canvas, by an overlay
-  const onMouseUp = (e: MouseEvent) => {
-    if (holdingMouseBtnRef.current) {
-      brushRef.current.color = brushColorRef.current;
-      // const rect = e.currentTarget.getBoundingClientRect()
-      const curPos = {
-        // x: Math.round(e.clientX - rect.left),
-        // y: Math.round(e.clientY - rect.top)
-        x: e.offsetX,
-        y: e.offsetY,
-      };
-      switch (toolRef.current) {
-        case Tool.PAINTBRUSH:
-        case Tool.ERASER: {
-          // draw a dot if only one position exists
-          if (e.target === canvasRef.current && positionsRef.current.length === 1) {
-            brush.drawPoint(curPos.x, curPos.y);
-          }
-          // add action to stack
-          stackRef.current.add(new DrawAction(props.brushSize, brushColorRef.current, positionsRef.current));
-          break;
-        }
-        case Tool.BUCKET: {
-          // only add action if fill was performed on valid coordinate and selected color != pixel color
-          if (e.target === canvasRef.current && brushRef.current.floodFill(curPos.x, curPos.y)) {
-            const fillData = canvasRef.current
-              .getContext('2d')
-              .getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
-            stackRef.current.add(new FillAction(fillData));
-          }
-          break;
-        }
-        case Tool.EYEDROPPER: {
-          if (e.target === canvasRef.current) {
-            // update selected color
-            const color = brushRef.current.getColorAtPixel(curPos.x, curPos.y);
-            if (curBtnCodeRef.current === MouseButton.MAIN) {
-              props.colorSetterA(color);
-            } else {
-              props.colorSetterB(color);
-            }
-            break;
-          }
-        }
-      }
-
-      // reset state
-      positionsRef.current.length = 1;
-      holdingMouseBtnRef.current = false;
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('mouseup', onMouseUp);
-  }, []);
-
   return (
     <canvas
       width={props.width}
       height={props.height}
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMove}
-      ref={canvasRef}>
+      ref={props.canvasRef}>
     </canvas>
   );
 };
