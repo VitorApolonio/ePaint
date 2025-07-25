@@ -69,7 +69,7 @@ const App = () => {
     });
   }, []);
 
-  const onMouseUp = (e: React.MouseEvent) => {
+  const onMouseUpOrLeave = (e: React.MouseEvent) => {
     if (holdingMouseRef.current) {
       brushRef.current.color = brushColorRef.current;
       const curPos = {
@@ -122,7 +122,7 @@ const App = () => {
   };
 
   return (
-    <div id="root" onMouseUp={onMouseUp}>
+    <div id="root" onMouseUp={onMouseUpOrLeave} onMouseLeave={onMouseUpOrLeave}>
       <div className="canvas-container">
         <Canvas
           width={800}
