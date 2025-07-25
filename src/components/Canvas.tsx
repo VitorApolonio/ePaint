@@ -69,10 +69,9 @@ const Canvas = (props: CanvasProps) => {
     switch (props.tool) {
       case Tool.PAINTBRUSH:
       case Tool.ERASER: {
-        const rect = e.currentTarget.getBoundingClientRect();
         startPosRef.current = {
-          x: Math.round(e.clientX - rect.left),
-          y: Math.round(e.clientY - rect.top),
+          x: e.nativeEvent.offsetX,
+          y: e.nativeEvent.offsetY,
         };
         props.posRef.current[0] = startPosRef.current;
         break;
@@ -82,10 +81,9 @@ const Canvas = (props: CanvasProps) => {
 
   const onMouseMove = (e: React.MouseEvent) => {
     if (props.holdingMouseRef.current) {
-      const rect = e.currentTarget.getBoundingClientRect();
       const curPos = {
-        x: Math.round(e.clientX - rect.left),
-        y: Math.round(e.clientY - rect.top),
+        x: e.nativeEvent.offsetX,
+        y: e.nativeEvent.offsetY,
       };
       switch (props.tool) {
         case Tool.PAINTBRUSH:

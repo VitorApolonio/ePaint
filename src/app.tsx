@@ -69,10 +69,9 @@ const App = () => {
   const onMouseUp = (e: React.MouseEvent) => {
     if (holdingMouseRef.current) {
       brushRef.current.color = brushColorRef.current;
-      const rect = e.currentTarget.getBoundingClientRect();
       const curPos = {
-        x: Math.round(e.clientX - rect.left),
-        y: Math.round(e.clientY - rect.top),
+        x: e.nativeEvent.offsetX,
+        y: e.nativeEvent.offsetY,
       };
       switch (curTool) {
         case Tool.PAINTBRUSH:
