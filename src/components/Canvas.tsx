@@ -1,4 +1,5 @@
-import React, { RefObject } from 'react';
+import React from 'react';
+import { RefObject } from 'react';
 import { useEffect, useRef } from 'react';
 import { Position, PosVector } from '../logic/position';
 import MouseButton from '../logic/mouse-button';

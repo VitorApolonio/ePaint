@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useRef, useState } from 'react';
 import Tool from './logic/tool';
@@ -43,28 +43,31 @@ const App = () => {
     window.electronAPI.setRedoEnabled(active);
   };
 
-  // handle creating a new blank canvas
-  window.electronAPI.onResizeCanvas((w: number, h: number) => {
-    brushRef.current.clearCanvas();
-    actionStackRef.current.clear();
-    setUndoActive(false);
-    setRedoActive(false);
-    canvasRef.current.width = w;
-    canvasRef.current.height = h;
-  });
+  // done only once
+  useEffect(() => {
+    // handle creating a new blank canvas
+    window.electronAPI.onResizeCanvas((w: number, h: number) => {
+      brushRef.current.clearCanvas();
+      actionStackRef.current.clear();
+      setUndoActive(false);
+      setRedoActive(false);
+      canvasRef.current.width = w;
+      canvasRef.current.height = h;
+    });
 
-  // handle saving the canvas as an image file
-  window.electronAPI.onSaveImage((path: string) => {
-    if (path) {
-      canvasRef.current.toBlob(blob => {
-        if (blob) {
-          blob.arrayBuffer().then(buf => {
-            window.electronAPI.saveImageToFile(path, buf);
-          });
-        }
-      });
-    }
-  });
+    // handle saving the canvas as an image file
+    window.electronAPI.onSaveImage((path: string) => {
+      if (path) {
+        canvasRef.current.toBlob(blob => {
+          if (blob) {
+            blob.arrayBuffer().then(buf => {
+              window.electronAPI.saveImageToFile(path, buf);
+            });
+          }
+        });
+      }
+    });
+  }, []);
 
   const onMouseUp = (e: React.MouseEvent) => {
     if (holdingMouseRef.current) {
