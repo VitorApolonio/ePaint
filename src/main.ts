@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { Jimp } from 'jimp';
+import Channel from './logic/channel';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -21,7 +22,7 @@ const createWindow = () => {
   });
 
   // display window when CSS finishes loading
-  ipcMain.once('main-win-ready', () => {
+  ipcMain.once(Channel.MAIN_WIN_READY, () => {
     if (mainWindow && !mainWindow.isVisible()) {
       mainWindow.show();
     }
@@ -38,8 +39,8 @@ const createWindow = () => {
   const newCanvasWin = createNewCanvasPrompt(mainWindow);
 
   // forward data with width/height on resize confirm
-  ipcMain.on('canvas-resize', (_event, width, height) => {
-    mainWindow.webContents.send('canvas-resize', width, height);
+  ipcMain.on(Channel.RESIZE_CANVAS, (_event, width, height) => {
+    mainWindow.webContents.send(Channel.RESIZE_CANVAS, width, height);
   });
 
   // create app menu
@@ -73,7 +74,7 @@ const createWindow = () => {
               { name: 'Windows Bitmap (BMP)', extensions: ['bmp'] },
               { name: 'All Files', extensions: ['*'] },
             ],
-          }).then(r => mainWindow.webContents.send('save-image', r.filePath));
+          }).then(r => mainWindow.webContents.send(Channel.SAVE_CANVAS_AS_IMAGE, r.filePath));
         },
       },
     ],
@@ -84,13 +85,13 @@ const createWindow = () => {
     label: 'Undo',
     accelerator: 'CmdOrCtrl+Z',
     enabled: false,
-    click: () => { mainWindow.webContents.send('undo-shortcut'); },
+    click: () => { mainWindow.webContents.send(Channel.UNDO_THROUGH_SHORTCUT); },
   });
   const redoItem = new MenuItem({
     label: 'Redo',
     accelerator: 'Shift+CmdOrCtrl+Z',
     enabled: false,
-    click: () => { mainWindow.webContents.send('redo-shortcut'); },
+    click: () => { mainWindow.webContents.send(Channel.REDO_THROUGH_SHORTCUT); },
   });
   const editMenu = new Menu();
   editMenu.append(undoItem);
@@ -108,11 +109,11 @@ const createWindow = () => {
   }));
 
   // disable or enable undo/redo buttons
-  ipcMain.on('undo-set-enabled', (_event, enabled: boolean) => {
+  ipcMain.on(Channel.UNDO_SET_ENABLED, (_event, enabled: boolean) => {
     undoItem.enabled = enabled;
     Menu.setApplicationMenu(menu);
   });
-  ipcMain.on('redo-set-enabled', (_event, enabled: boolean) => {
+  ipcMain.on(Channel.REDO_SET_ENABLED, (_event, enabled: boolean) => {
     redoItem.enabled = enabled;
     Menu.setApplicationMenu(menu);
   });
@@ -142,8 +143,8 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
     newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt/new-canvas.html`));
   }
 
-  // close when user clicks cancel
-  ipcMain.on('cancel-new', () => {
+  // close when the user clicks cancel or confirm
+  ipcMain.on(Channel.CLOSE_RESIZE_PROMPT, () => {
     newCanvasWin.hide();
   });
 
@@ -151,7 +152,7 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
   newCanvasWin.on('close', e => {
     e.preventDefault();
     newCanvasWin.hide();
-    newCanvasWin.webContents.send('clear-new-fields');
+    newCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
   });
 
   // disable minimize
@@ -164,7 +165,7 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
 };
 
 // file saving
-ipcMain.on('save-image-to-file', async (_event, path, arrBuffer) => {
+ipcMain.on(Channel.WRITE_IMAGE_TO_DISK, async (_event, path, arrBuffer) => {
   const supported = ['png', 'jpg', 'jpeg', 'bmp', 'tif', 'tiff'];
   const ext = path.split('.').pop().toLowerCase();
   if (supported.includes(ext)) {
