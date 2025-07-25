@@ -181,8 +181,8 @@ class Brush {
 
         // color current pixel
         newColor = this.#hexToRgb(this.#color) as RGBAColor;
-        newColor.alpha = color.alpha || 255;
         idx = (ny * w + nx) * 4;
+        newColor.alpha = newImageData.data[idx + 3] || 255;
         newImageData.data[idx] = newColor.red;
         newImageData.data[idx + 1] = newColor.green;
         newImageData.data[idx + 2] = newColor.blue;
