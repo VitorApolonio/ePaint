@@ -44,6 +44,8 @@ const createWindow = () => {
 
   // create app menu
   const menu = new Menu();
+
+  // file menu
   menu.append(new MenuItem({
     role: 'fileMenu',
     submenu: [
@@ -76,15 +78,17 @@ const createWindow = () => {
       },
     ],
   }));
+
+  // edit menu
   const undoItem = new MenuItem({
     label: 'Undo',
-    accelerator: process.platform === 'darwin' ? 'Cmd+Z' : 'Ctrl+Z',
+    accelerator: 'CmdOrCtrl+Z',
     enabled: false,
     click: () => { mainWindow.webContents.send('undo-shortcut'); },
   });
   const redoItem = new MenuItem({
     label: 'Redo',
-    accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Shift+Ctrl+Z',
+    accelerator: 'Shift+CmdOrCtrl+Z',
     enabled: false,
     click: () => { mainWindow.webContents.send('redo-shortcut'); },
   });
@@ -94,6 +98,13 @@ const createWindow = () => {
   menu.append(new MenuItem({
     role: 'editMenu',
     submenu: editMenu,
+  }));
+
+  // hidden dev tools toggle
+  menu.append(new MenuItem({
+    role: 'toggleDevTools',
+    visible: false,
+    accelerator: 'Shift+CmdOrCtrl+Alt+F12',
   }));
 
   // disable or enable undo/redo buttons
@@ -107,9 +118,6 @@ const createWindow = () => {
   });
 
   Menu.setApplicationMenu(menu);
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 };
 
 const createNewCanvasPrompt = (parent: BrowserWindow) => {
