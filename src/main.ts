@@ -84,7 +84,7 @@ const createWindow = () => {
   });
   const redoItem = new MenuItem({
     label: 'Redo',
-    accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Ctrl+Y',
+    accelerator: process.platform === 'darwin' ? 'Shift+Cmd+Z' : 'Shift+Ctrl+Z',
     enabled: false,
     click: () => { mainWindow.webContents.send('redo-shortcut'); },
   });
