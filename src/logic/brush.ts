@@ -19,7 +19,9 @@ class Brush {
    * @param {string} [color='#ffffff'] - The initial color of the brush in hexadecimal format
    */
   constructor(canvas: HTMLCanvasElement, size = 1, color = '#ffffff') {
-    this.#ctx = canvas.getContext('2d');
+    // disable transparency as not all file formats support it
+    this.#ctx = canvas.getContext('2d', { alpha: false });
+
     this.#size = size;
     this.#color = color;
   }
