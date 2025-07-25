@@ -45,7 +45,7 @@ const App = () => {
 
   // done only once
   useEffect(() => {
-    // handle creating a new blank canvas
+    // handle resizing the canvas
     window.electronAPI.onResizeCanvas((w: number, h: number) => {
       brushRef.current.clearCanvas();
       actionStackRef.current.clear();
@@ -67,6 +67,9 @@ const App = () => {
         });
       }
     });
+
+    // handle switching tool with shortcuts
+    window.electronAPI.onToolSwitch(setCurTool);
   }, []);
 
   const onMouseUpOrLeave = (e: React.MouseEvent) => {

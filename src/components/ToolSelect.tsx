@@ -39,22 +39,22 @@ const ToolSelect = (props: ToolSelectProps) => {
       <p><strong>Selected&nbsp;tool</strong></p>
       <div className="field has-addons">
         <ToolButton
-          title="Paintbrush"
+          title={Tool.PAINTBRUSH}
           iconLucide={<Brush />}
           onClick={() => props.toolSetterFn(Tool.PAINTBRUSH)}
           selected={props.curTool === Tool.PAINTBRUSH} />
         <ToolButton
-          title="Eraser"
+          title={Tool.ERASER}
           iconLucide={<Eraser />}
           onClick={() => props.toolSetterFn(Tool.ERASER)}
           selected={props.curTool === Tool.ERASER} />
         <ToolButton
-          title="Paint Bucket"
+          title={Tool.BUCKET}
           iconLucide={<PaintBucket />}
           onClick={() => props.toolSetterFn(Tool.BUCKET)}
           selected={props.curTool === Tool.BUCKET} />
         <ToolButton
-          title="Color Picker"
+          title={Tool.EYEDROPPER}
           iconLucide={<Pipette />}
           onClick={() => props.toolSetterFn(Tool.EYEDROPPER)}
           selected={props.curTool === Tool.EYEDROPPER} />

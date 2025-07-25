@@ -3,6 +3,7 @@ import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { Jimp } from 'jimp';
 import Channel from './logic/channel';
+import Tool from './logic/tool';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -85,13 +86,13 @@ const createWindow = () => {
     label: 'Undo',
     accelerator: 'CmdOrCtrl+Z',
     enabled: false,
-    click: () => { mainWindow.webContents.send(Channel.UNDO_THROUGH_SHORTCUT); },
+    click: () => mainWindow.webContents.send(Channel.UNDO_THROUGH_SHORTCUT),
   });
   const redoItem = new MenuItem({
     label: 'Redo',
     accelerator: 'Shift+CmdOrCtrl+Z',
     enabled: false,
-    click: () => { mainWindow.webContents.send(Channel.REDO_THROUGH_SHORTCUT); },
+    click: () => mainWindow.webContents.send(Channel.REDO_THROUGH_SHORTCUT),
   });
   const editMenu = new Menu();
   editMenu.append(undoItem);
@@ -99,6 +100,33 @@ const createWindow = () => {
   menu.append(new MenuItem({
     role: 'editMenu',
     submenu: editMenu,
+  }));
+
+  // tools menu
+  menu.append(new MenuItem({
+    label: 'Tools',
+    submenu: [
+      {
+        label: Tool.PAINTBRUSH,
+        accelerator: 'B',
+        click: () => mainWindow.webContents.send(Channel.SET_CURRENT_TOOL, Tool.PAINTBRUSH),
+      },
+      {
+        label: Tool.ERASER,
+        accelerator: 'E',
+        click: () => mainWindow.webContents.send(Channel.SET_CURRENT_TOOL, Tool.ERASER),
+      },
+      {
+        label: Tool.BUCKET,
+        accelerator: 'G',
+        click: () => mainWindow.webContents.send(Channel.SET_CURRENT_TOOL, Tool.BUCKET),
+      },
+      {
+        label: Tool.EYEDROPPER,
+        accelerator: 'I',
+        click: () => mainWindow.webContents.send(Channel.SET_CURRENT_TOOL, Tool.EYEDROPPER),
+      },
+    ],
   }));
 
   // hidden dev tools toggle

@@ -13,6 +13,8 @@ enum Channel {
 
   SAVE_CANVAS_AS_IMAGE = 'save-canvas',
   WRITE_IMAGE_TO_DISK = 'write-canvas-image',
+
+  SET_CURRENT_TOOL = 'change-tool',
 }
 
 export default Channel;

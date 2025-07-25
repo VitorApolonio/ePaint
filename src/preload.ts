@@ -19,4 +19,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   resizeCanvas: (w, h) => ipcRenderer.send(Channel.RESIZE_CANVAS, w, h),
   // listen for new dimensions from the main IPC
   onResizeCanvas: cb => ipcRenderer.on(Channel.RESIZE_CANVAS, (_event, w, h) => cb(w, h)),
+  // change tool by shortcut
+  onToolSwitch: cb => ipcRenderer.on(Channel.SET_CURRENT_TOOL, (_event, tool) => cb(tool)),
 } as ElectronAPI);
