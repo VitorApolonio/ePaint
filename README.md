@@ -1,4 +1,5 @@
-# ePaint: A drawing app
+<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><img src="https://github.com/VitorApolonio/ePaint/blob/main/src/img/banner.png" alt="Banner logo" title="A drawing app." /></a>
+
 ___
 ## What is this?
 
@@ -118,14 +119,12 @@ ___
 ## To-do list
 
 - (maybe) change redo shortcut to `Ctrl+Shift+Z`
-- use interface for electronapi preload object
 - fix slowdown with color picker on React
-- restructure the project to use React (would simplify making a new color picker)
 - fix issues with file naming on release, improve windows installer
 - use custom method for drawing lines to get rid of antialiasing
 - instead of quietly setting res to 100x100, inform user of this minimum when making a new canvas
 - maybe allow resizing current drawing instead of having to make a new one
-- Ctrl+Scroll or Ctrl+-\+ to zoom
+- `Ctrl+Scroll` or `Ctrl+-\+` to zoom
 - remove all debug messages (when finished)
 - maybe replace the default HTML color picker
 - fix painting dot when leaving color picker
