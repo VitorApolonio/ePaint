@@ -7,7 +7,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        newCanvas: resolve(__dirname, 'src/prompt/new-canvas.html'),
+        promptResize: resolve(__dirname, 'src/prompt-resize/index.html'),
       },
     },
   },

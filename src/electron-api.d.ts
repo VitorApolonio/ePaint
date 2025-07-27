@@ -1,6 +1,6 @@
 // this file only exists to avoid "electronAPI is not a property" errors
 
-import Tool from "./logic/tool";
+import Tool from './logic/tool';
 
 declare global {
   interface ElectronAPI {

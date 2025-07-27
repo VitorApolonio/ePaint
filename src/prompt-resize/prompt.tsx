@@ -25,6 +25,7 @@ const CanvasResizePrompt = () => {
     const maxH = 4320;
 
     window.electronAPI.resizeCanvas(
+      // fields left empty are considered the minimum value
       isNaN(w) ? minW : Math.min(maxW, Math.max(minW, w)),
       isNaN(h) ? minH : Math.min(maxH, Math.max(minH, h)),
     );

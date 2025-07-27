@@ -52,18 +52,8 @@ const createWindow = () => {
     role: 'fileMenu',
     submenu: [
       {
-        label: 'New...',
-        accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
-        click: () => {
-          if (newCanvasWin && !newCanvasWin.isVisible()) {
-            newCanvasWin.center();
-            newCanvasWin.show();
-          }
-        },
-      },
-      {
-        label: 'Save image...',
-        accelerator: process.platform === 'darwin' ? 'Cmd+S' : 'Ctrl+S',
+        label: 'Save...',
+        accelerator: 'CmdOrCtrl+S',
         click: () => {
           dialog.showSaveDialog({
             title: 'Save drawing',
@@ -97,6 +87,16 @@ const createWindow = () => {
   const editMenu = new Menu();
   editMenu.append(undoItem);
   editMenu.append(redoItem);
+  editMenu.append(new MenuItem({
+    label: 'Resize...',
+    accelerator: 'CmdOrCtrl+R',
+    click: () => {
+      if (newCanvasWin && !newCanvasWin.isVisible()) {
+        newCanvasWin.center();
+        newCanvasWin.show();
+      }
+    },
+  }));
   menu.append(new MenuItem({
     role: 'editMenu',
     submenu: editMenu,
@@ -166,9 +166,9 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/prompt/new-canvas.html`);
+    newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/prompt-resize/index.html`);
   } else {
-    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt/new-canvas.html`));
+    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt-resize/index.html`));
   }
 
   // close when the user clicks cancel or confirm

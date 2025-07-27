@@ -47,12 +47,12 @@ const App = () => {
   useEffect(() => {
     // handle resizing the canvas
     window.electronAPI.onResizeCanvas((w: number, h: number) => {
-      brushRef.current.clearCanvas();
-      actionStackRef.current.clear();
-      setUndoActive(false);
-      setRedoActive(false);
+      const curW = canvasRef.current.width;
+      const curH = canvasRef.current.height;
+      const dataBkp = canvasRef.current.getContext('2d').getImageData(0, 0, Math.min(w, curW), Math.min(h, curH));
       canvasRef.current.width = w;
       canvasRef.current.height = h;
+      brushRef.current.drawImage(dataBkp);
     });
 
     // handle saving the canvas as an image file
