@@ -52,6 +52,11 @@ const createWindow = () => {
     role: 'fileMenu',
     submenu: [
       {
+        label: 'New canvas',
+        accelerator: 'CmdOrCtrl+N',
+        click: () => mainWindow.webContents.send(Channel.CLEAR_THROUGH_SHORTCUT),
+      },
+      {
         label: 'Save...',
         accelerator: 'CmdOrCtrl+S',
         click: () => {

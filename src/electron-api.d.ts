@@ -16,6 +16,9 @@ declare global {
     /** Toggles the redo shortcut. */
     setRedoEnabled: (enabled: boolean) => void;
 
+    /** Defines a function to run when the clear canvas shortcut is triggered. */
+    onClearShortcut: (callback: () => void) => void;
+
     /** Defines a function to call when the user tries to save the canvas. */
     onSaveImage: (callback: (path: string) => void) => void;
     /** Sends the file path and image data as an ArrayBuffer to the main IPC. */

@@ -1,5 +1,5 @@
 import { BrushCleaning } from 'lucide-react';
-import { RefObject } from 'react';
+import { RefObject, useEffect } from 'react';
 import { ClearAction, DrawAction } from '../logic/action';
 import Brush from '../logic/brush';
 import DrawStack from '../logic/draw-stack';
@@ -36,6 +36,11 @@ const ClearCanvas = (props: ClearCanvasProps) => {
       props.redoStateFn(false);
     }
   };
+
+  // handle clearing by shortcut
+  useEffect(() => {
+    window.electronAPI.onClearShortcut(onClick);
+  }, []);
 
   return (
     <div className="tool">

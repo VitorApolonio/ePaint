@@ -7,6 +7,8 @@ enum Channel {
   UNDO_THROUGH_SHORTCUT = 'undo-shortcut',
   REDO_THROUGH_SHORTCUT = 'redo-shortcut',
 
+  CLEAR_THROUGH_SHORTCUT = 'clear-shortcut',
+
   CLOSE_RESIZE_PROMPT = 'close-resize-prompt',
   RESET_RESIZE_PROMPT = 'reset-resize-prompt',
   RESIZE_CANVAS = 'resize-canvas',

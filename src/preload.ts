@@ -21,4 +21,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onResizeCanvas: cb => ipcRenderer.on(Channel.RESIZE_CANVAS, (_event, w, h) => cb(w, h)),
   // change tool by shortcut
   onToolSwitch: cb => ipcRenderer.on(Channel.SET_CURRENT_TOOL, (_event, tool) => cb(tool)),
+  // wipe canvas by shortcut
+  onClearShortcut: cb => ipcRenderer.on(Channel.CLEAR_THROUGH_SHORTCUT, cb),
 } as ElectronAPI);
