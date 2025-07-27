@@ -1,8 +1,7 @@
-// this file only exists to avoid "electronAPI is not a property" errors
-
 import Tool from './logic/tool';
 
 declare global {
+  /** Interface where functions using IPC are exposed by the preload script. */
   interface ElectronAPI {
     /** Signals the necessary resources have been loaded and the window can now be shown. */
     mainWinReady: () => void;
@@ -19,6 +18,8 @@ declare global {
     /** Defines a function to run when the clear canvas shortcut is triggered. */
     onClearShortcut: (callback: () => void) => void;
 
+    /** Defines a function to call when the user tries opening a file. */
+    onOpenImage: (callback: (buf: NonSharedBuffer) => void) => void;
     /** Defines a function to call when the user tries to save the canvas. */
     onSaveImage: (callback: (path: string) => void) => void;
     /** Sends the file path and image data as an ArrayBuffer to the main IPC. */
@@ -36,6 +37,7 @@ declare global {
     /** Define a function to run when the tool changes by a shortcut. */
     onToolSwitch: (callback: (tool: Tool) => void) => void;
   }
+
   interface Window {
     electronAPI: ElectronAPI;
   }

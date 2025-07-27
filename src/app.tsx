@@ -13,6 +13,7 @@ import MouseButton from './logic/mouse-button';
 import ClearCanvas from './components/ClearCanvas';
 import { PosVector } from './logic/position';
 import UndoRedo from './components/UndoRedo';
+import CanvasLimits from './logic/canvas-limits';
 
 const App = () => {
   const [curTool, setCurTool] = useState(Tool.PAINTBRUSH);
@@ -46,7 +47,7 @@ const App = () => {
   // done only once
   useEffect(() => {
     // handle resizing the canvas
-    window.electronAPI.onResizeCanvas((w: number, h: number) => {
+    window.electronAPI.onResizeCanvas((w, h) => {
       const curW = canvasRef.current.width;
       const curH = canvasRef.current.height;
       const dataBkp = canvasRef.current.getContext('2d').getImageData(0, 0, Math.min(w, curW), Math.min(h, curH));
@@ -55,8 +56,18 @@ const App = () => {
       brushRef.current.drawImage(dataBkp);
     });
 
+    // handle drawing image files onto the canvas
+    window.electronAPI.onOpenImage(async (buf) => {
+      createImageBitmap(new Blob([buf])).then(img => {
+        // resize canvas to image size, respecting limits
+        canvasRef.current.width = Math.min(CanvasLimits.MAX_W, Math.max(CanvasLimits.MIN_W, img.width));
+        canvasRef.current.height = Math.min(CanvasLimits.MAX_H, Math.max(CanvasLimits.MIN_H, img.height));
+        canvasRef.current.getContext('2d').drawImage(img, 0, 0);
+      });
+   });
+
     // handle saving the canvas as an image file
-    window.electronAPI.onSaveImage((path: string) => {
+    window.electronAPI.onSaveImage((path) => {
       if (path) {
         canvasRef.current.toBlob(blob => {
           if (blob) {

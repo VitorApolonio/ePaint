@@ -13,6 +13,7 @@ enum Channel {
   RESET_RESIZE_PROMPT = 'reset-resize-prompt',
   RESIZE_CANVAS = 'resize-canvas',
 
+  LOAD_IMAGE_TO_CANVAS = 'open-canvas',
   SAVE_CANVAS_AS_IMAGE = 'save-canvas',
   WRITE_IMAGE_TO_DISK = 'write-canvas-image',
 

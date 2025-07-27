@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import fs from 'fs';
 import { Jimp } from 'jimp';
 import Channel from './logic/channel';
 import Tool from './logic/tool';
@@ -18,6 +19,7 @@ const createWindow = () => {
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false,
     },
     icon: path.join(__dirname, 'img/icon.png'),
   });
@@ -55,6 +57,32 @@ const createWindow = () => {
         label: 'New canvas',
         accelerator: 'CmdOrCtrl+N',
         click: () => mainWindow.webContents.send(Channel.CLEAR_THROUGH_SHORTCUT),
+      },
+      {
+        label: 'Open...',
+        accelerator: 'CmdOrCtrl+O',
+        click: () => {
+          dialog.showOpenDialog({
+            title: 'Open drawing',
+            defaultPath: app.getPath('pictures'),
+            filters: [
+              { name: 'Portable Network Graphics (PNG)', extensions: ['png'] },
+              { name: 'Joint Photographic Experts Group (JPEG)', extensions: ['jpg', 'jpeg'] },
+              { name: 'Tagged Image File Format (TIFF)', extensions: ['tif', 'tiff'] },
+              { name: 'Windows Bitmap (BMP)', extensions: ['bmp'] },
+              { name: 'All Files', extensions: ['*'] },
+            ],
+          }).then(async r => {
+            if (!r.canceled && r.filePaths.length) {
+              const supported = ['png', 'jpg', 'jpeg', 'bmp', 'tif', 'tiff'];
+              const ext = r.filePaths[0].split('.').pop().toLowerCase();
+              if (supported.includes(ext)) {
+                const imgBuf = fs.readFileSync(r.filePaths[0]);
+                mainWindow.webContents.send(Channel.LOAD_IMAGE_TO_CANVAS, imgBuf);
+              }
+            }
+          });
+        },
       },
       {
         label: 'Save...',

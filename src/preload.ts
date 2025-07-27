@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setUndoEnabled: enabled => ipcRenderer.send(Channel.UNDO_SET_ENABLED, enabled),
   setRedoEnabled: enabled => ipcRenderer.send(Channel.REDO_SET_ENABLED, enabled),
   // save drawing
+  onOpenImage: cb => ipcRenderer.on(Channel.LOAD_IMAGE_TO_CANVAS, (_event, buf) => cb(buf)),
   onSaveImage: cb => ipcRenderer.on(Channel.SAVE_CANVAS_AS_IMAGE, (_event, path) => cb(path)),
   saveImageToFile: (path, arrBuf) => ipcRenderer.send(Channel.WRITE_IMAGE_TO_DISK, path, arrBuf),
   // canvas resize prompt
