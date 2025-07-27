@@ -6,8 +6,6 @@ interface ValueFieldProps {
   fieldRef: RefObject<HTMLInputElement>;
   /* placeholder text */
   text: string;
-  /* displayed besides the field */
-  unit: string;
   /* whether this field should have autofocus active */
   focus: boolean;
 }
@@ -19,19 +17,14 @@ const ValueField = (props: ValueFieldProps) => {
   };
 
   return (
-    <div className="field has-addons">
-      <div className="control">
-        <input
-          type="text"
-          className="input"
-          placeholder={props.text}
-          onInput={restrictInput}
-          autoFocus={props.focus}
-          ref={props.fieldRef} />
-      </div>
-      <div className="control">
-        <span className="button is-static">{props.unit}</span>
-      </div>
+    <div className="control">
+      <input
+        type="text"
+        className="input"
+        placeholder={props.text}
+        onInput={restrictInput}
+        autoFocus={props.focus}
+        ref={props.fieldRef} />
     </div>
   );
 };
@@ -54,17 +47,20 @@ const Fields = (props: FieldsProps) => {
 
   return (
     <div className="fields-container" onKeyDown={e => onKeyPress(e)}>
-      <label className="label">Resolution:</label>
-      <ValueField
-        text="Width"
-        unit="px"
-        fieldRef={props.widthFieldRef}
-        focus={true} />
-      <ValueField
-        text="Height"
-        unit="px"
-        fieldRef={props.heightFieldRef}
-        focus={false} />
+      <label className="label">New resolution:</label>
+      <div className="field has-addons">
+        <ValueField
+          text="Width"
+          fieldRef={props.widthFieldRef}
+          focus={true} />
+        <div className="control">
+          <span className="button is-static">x</span>
+        </div>
+        <ValueField
+          text="Height"
+          fieldRef={props.heightFieldRef}
+          focus={false} />
+        </div>
     </div>
   );
 };

@@ -10,7 +10,7 @@ interface ButtonProps {
 const Button = (props: ButtonProps) => {
   return (
     <div className="control">
-      <button className={`button${props.confirm ? ' is-link' : ''}`} onClick={props.clickHandler}>{props.text}</button>
+      <button className={`button${props.confirm ? ' is-primary' : ''}`} onClick={props.clickHandler}>{props.text}</button>
     </div>
   );
 };

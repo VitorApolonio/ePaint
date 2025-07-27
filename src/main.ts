@@ -87,6 +87,7 @@ const createWindow = () => {
   const editMenu = new Menu();
   editMenu.append(undoItem);
   editMenu.append(redoItem);
+  editMenu.append(new MenuItem({ type: 'separator' }));
   editMenu.append(new MenuItem({
     label: 'Resize...',
     accelerator: 'CmdOrCtrl+R',
@@ -153,7 +154,7 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
   // preload new canvas prompt
   const newCanvasWin = new BrowserWindow({
     width: 320,
-    height: 256,
+    height: 200,
     show: false,
     parent: parent,
     modal: true,
