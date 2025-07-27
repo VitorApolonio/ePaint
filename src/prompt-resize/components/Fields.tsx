@@ -60,7 +60,7 @@ const Fields = (props: FieldsProps) => {
           text="Height"
           fieldRef={props.heightFieldRef}
           focus={false} />
-        </div>
+      </div>
     </div>
   );
 };

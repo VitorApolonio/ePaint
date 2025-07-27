@@ -72,36 +72,46 @@ const createWindow = () => {
   }));
 
   // edit menu
-  const undoItem = new MenuItem({
-    label: 'Undo',
-    accelerator: 'CmdOrCtrl+Z',
-    enabled: false,
-    click: () => mainWindow.webContents.send(Channel.UNDO_THROUGH_SHORTCUT),
-  });
-  const redoItem = new MenuItem({
-    label: 'Redo',
-    accelerator: 'Shift+CmdOrCtrl+Z',
-    enabled: false,
-    click: () => mainWindow.webContents.send(Channel.REDO_THROUGH_SHORTCUT),
-  });
-  const editMenu = new Menu();
-  editMenu.append(undoItem);
-  editMenu.append(redoItem);
-  editMenu.append(new MenuItem({ type: 'separator' }));
-  editMenu.append(new MenuItem({
-    label: 'Resize...',
-    accelerator: 'CmdOrCtrl+R',
-    click: () => {
-      if (newCanvasWin && !newCanvasWin.isVisible()) {
-        newCanvasWin.center();
-        newCanvasWin.show();
-      }
-    },
-  }));
   menu.append(new MenuItem({
     role: 'editMenu',
-    submenu: editMenu,
+    submenu: [
+      {
+        id: 'undo',
+        label: 'Undo',
+        accelerator: 'CmdOrCtrl+Z',
+        enabled: false,
+        click: () => mainWindow.webContents.send(Channel.UNDO_THROUGH_SHORTCUT),
+      },
+      {
+        id: 'redo',
+        label: 'Redo',
+        accelerator: 'Shift+CmdOrCtrl+Z',
+        enabled: false,
+        click: () => mainWindow.webContents.send(Channel.REDO_THROUGH_SHORTCUT),
+      },
+      { type: 'separator' },
+      {
+        label: 'Resize...',
+        accelerator: 'CmdOrCtrl+R',
+        click: () => {
+          if (newCanvasWin && !newCanvasWin.isVisible()) {
+            newCanvasWin.center();
+            newCanvasWin.show();
+          }
+        },
+      },
+    ],
   }));
+
+  // disable or enable undo/redo buttons
+  ipcMain.on(Channel.UNDO_SET_ENABLED, (_event, enabled: boolean) => {
+    menu.getMenuItemById('undo').enabled = enabled;
+    Menu.setApplicationMenu(menu);
+  });
+  ipcMain.on(Channel.REDO_SET_ENABLED, (_event, enabled: boolean) => {
+    menu.getMenuItemById('redo').enabled = enabled;
+    Menu.setApplicationMenu(menu);
+  });
 
   // tools menu
   menu.append(new MenuItem({
@@ -136,16 +146,6 @@ const createWindow = () => {
     visible: false,
     accelerator: 'Shift+CmdOrCtrl+Alt+F12',
   }));
-
-  // disable or enable undo/redo buttons
-  ipcMain.on(Channel.UNDO_SET_ENABLED, (_event, enabled: boolean) => {
-    undoItem.enabled = enabled;
-    Menu.setApplicationMenu(menu);
-  });
-  ipcMain.on(Channel.REDO_SET_ENABLED, (_event, enabled: boolean) => {
-    redoItem.enabled = enabled;
-    Menu.setApplicationMenu(menu);
-  });
 
   Menu.setApplicationMenu(menu);
 };
