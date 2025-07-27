@@ -244,6 +244,25 @@ class Brush {
   }
 
   /**
+   * Resizes the canvas to the specified resolution, limiting it to the specified minimum and maximum.
+   * @param {number} newWidth - The new width in pixels
+   * @param {number} newHeight - The new height in pixels
+   * @param {number} [minW=300] - The minimum width, defaults to 300 if omitted
+   * @param {number} [minH=300] - The minimum height, defaults to 300 if omitted
+   * @param {number} [maxW=7680] - The maximum width, defaults to 7680 if ommited
+   * @param {number} [maxH=4320] - The maximum height, defaults to 4320 if omitted
+   */
+  resizeCanvas(newWidth: number, newHeight: number, minW = 300, minH = 300, maxW = 7680, maxH = 4320) {
+    const w = this.#ctx.canvas.width;
+    const h = this.#ctx.canvas.height;
+
+    const bkp = this.#ctx.getImageData(0, 0, w, h);
+    this.#ctx.canvas.width = Math.min(maxW, Math.max(newWidth, minW));
+    this.#ctx.canvas.height = Math.min(maxH, Math.max(newHeight, minH));
+    this.drawImage(bkp);
+  }
+
+  /**
    * Converts a hexadecimal color code to RGB values.
    * @param {string} code - The hexadecimal color code (e.g., '#ffffff')
    * @returns {RGBColor} An object containing RGB values (red, green, blue)

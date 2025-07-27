@@ -8,12 +8,11 @@ import ToolSelect from './components/ToolSelect';
 import Canvas from './components/Canvas';
 import DrawStack from './logic/draw-stack';
 import Brush from './logic/brush';
-import { DrawAction, FillAction } from './logic/action';
+import { DrawAction, FillAction, LoadAction, ResizeAction } from './logic/action';
 import MouseButton from './logic/mouse-button';
 import ClearCanvas from './components/ClearCanvas';
 import { PosVector } from './logic/position';
 import UndoRedo from './components/UndoRedo';
-import CanvasLimits from './logic/canvas-limits';
 
 const App = () => {
   const [curTool, setCurTool] = useState(Tool.PAINTBRUSH);
@@ -48,23 +47,26 @@ const App = () => {
   useEffect(() => {
     // handle resizing the canvas
     window.electronAPI.onResizeCanvas((w, h) => {
-      const curW = canvasRef.current.width;
-      const curH = canvasRef.current.height;
-      const dataBkp = canvasRef.current.getContext('2d').getImageData(0, 0, Math.min(w, curW), Math.min(h, curH));
-      canvasRef.current.width = w;
-      canvasRef.current.height = h;
-      brushRef.current.drawImage(dataBkp);
+      brushRef.current.resizeCanvas(w, h);
+      // add action to stack
+      actionStackRef.current.add(new ResizeAction(w, h));
+      setUndoActive(true);
+      setRedoActive(false);
     });
 
     // handle drawing image files onto the canvas
     window.electronAPI.onOpenImage(async (buf) => {
       createImageBitmap(new Blob([buf])).then(img => {
-        // resize canvas to image size, respecting limits
-        canvasRef.current.width = Math.min(CanvasLimits.MAX_W, Math.max(CanvasLimits.MIN_W, img.width));
-        canvasRef.current.height = Math.min(CanvasLimits.MAX_H, Math.max(CanvasLimits.MIN_H, img.height));
-        canvasRef.current.getContext('2d').drawImage(img, 0, 0);
+        // resize canvas to image size
+        brushRef.current.resizeCanvas(img.width, img.height);
+        const ctx = canvasRef.current.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        // add action to stack
+        actionStackRef.current.add(new LoadAction(img));
+        setUndoActive(true);
+        setRedoActive(false);
       });
-   });
+    });
 
     // handle saving the canvas as an image file
     window.electronAPI.onSaveImage((path) => {

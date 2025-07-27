@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import Fields from './components/Fields';
 import DialogButtons from './components/DialogButtons';
-import CanvasLimits from '../logic/canvas-limits';
 
 const CanvasResizePrompt = () => {
   const widthRef = useRef(null as null | HTMLInputElement);
@@ -20,8 +19,8 @@ const CanvasResizePrompt = () => {
 
     window.electronAPI.resizeCanvas(
       // fields left empty are set to the minimum resolution
-      isNaN(w) ? CanvasLimits.MIN_W : Math.min(CanvasLimits.MAX_W, Math.max(CanvasLimits.MIN_W, w)),
-      isNaN(h) ? CanvasLimits.MIN_H : Math.min(CanvasLimits.MAX_H, Math.max(CanvasLimits.MIN_H, h)),
+      isNaN(w) ? 0 : w,
+      isNaN(h) ? 0 : h,
     );
     window.electronAPI.cancelNew();
   };

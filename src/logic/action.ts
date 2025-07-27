@@ -20,7 +20,7 @@ class FillAction implements Action {
 
   /**
    * Creates a FillAction instance.
-   * @param {ImageData} fillData - The state of the canvas after the fill.
+   * @param {ImageData} fillData - The state of the canvas after the fill
    */
   constructor(fillData: ImageData) {
     this.#fillData = fillData;
@@ -81,4 +81,55 @@ class ClearAction implements Action {
   }
 }
 
-export { Action, FillAction, DrawAction, ClearAction };
+/**
+ * Represents the action of resizing the canvas.
+ */
+class ResizeAction implements Action {
+  #newWidth: number;
+  #newHeight: number;
+
+  /**
+   * Creates a ResizeAction instance.
+   * @param {number} newWidth - The new canvas width (px)
+   * @param {number} newHeight - The new canvas height (px)
+   */
+  constructor(newWidth: number, newHeight: number) {
+    this.#newWidth = newWidth;
+    this.#newHeight = newHeight;
+  }
+
+  perform(brush: Brush) {
+    brush.resizeCanvas(this.#newWidth, this.#newHeight);
+  }
+}
+
+/**
+ * Represents the action of loading an image file.
+ */
+class LoadAction implements Action {
+  #fillAct: FillAction;
+  #resAct: ResizeAction;
+
+  /**
+   * Creates a LoadAction instance.
+   * @param {ImageBitmap} imageBitmap - The loaded image file
+   */
+  constructor(imageBitmap: ImageBitmap) {
+    const offScrCanvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
+    const w = offScrCanvas.width;
+    const h = offScrCanvas.height;
+
+    const ctx = offScrCanvas.getContext('2d');
+    ctx.drawImage(imageBitmap, 0, 0);
+
+    this.#fillAct = new FillAction(ctx.getImageData(0, 0, w, h));
+    this.#resAct = new ResizeAction(w, h);
+  }
+
+  perform(brush: Brush) {
+    this.#resAct.perform(brush);
+    this.#fillAct.perform(brush);
+  }
+}
+
+export { Action, FillAction, DrawAction, ClearAction, ResizeAction, LoadAction };

@@ -58,6 +58,8 @@ class DrawStack {
     if (this.#index > 0) {
       this.#index--;
       this.#brush.clearCanvas();
+      // start at default res
+      this.#brush.resizeCanvas(800, 600);
       // draw this action and all the ones before it
       for (let i = 1; i <= this.#index; i++) {
         this.#actions[i - 1].perform(this.#brush);
@@ -73,6 +75,8 @@ class DrawStack {
     if (this.#index < this.#actions.length) {
       this.#index++;
       this.#brush.clearCanvas();
+      // start at default res
+      this.#brush.resizeCanvas(800, 600);
       // draw this action and all the ones before it
       for (let i = 1; i <= this.#index; i++) {
         this.#actions[i - 1].perform(this.#brush);
