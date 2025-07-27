@@ -58,6 +58,7 @@ const createWindow = () => {
         accelerator: 'CmdOrCtrl+N',
         click: () => mainWindow.webContents.send(Channel.CLEAR_THROUGH_SHORTCUT),
       },
+      { type: 'separator' },
       {
         label: 'Open...',
         accelerator: 'CmdOrCtrl+O',
