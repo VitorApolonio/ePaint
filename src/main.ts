@@ -19,7 +19,6 @@ const createWindow = () => {
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      webSecurity: false,
     },
     icon: path.join(__dirname, 'img/icon.png'),
   });
@@ -38,8 +37,9 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
-  // preload new canvas prompt
-  const newCanvasWin = createNewCanvasPrompt(mainWindow);
+  // preload windows
+  const newCanvasWin = createResizeCanvasWindow(mainWindow);
+  const aboutWin = createAboutWindow(mainWindow);
 
   // forward data with width/height on resize confirm
   ipcMain.on(Channel.RESIZE_CANVAS, (_event, width, height) => {
@@ -174,26 +174,40 @@ const createWindow = () => {
     ],
   }));
 
-  // hidden dev tools toggle
+  // help menu
   menu.append(new MenuItem({
-    role: 'toggleDevTools',
-    visible: false,
-    accelerator: 'Shift+CmdOrCtrl+Alt+F12',
+    role: 'help',
+    submenu: [
+      {
+        label: 'About ePaint',
+        click: () => {
+          if (aboutWin && !aboutWin.isVisible()) {
+            aboutWin.center();
+            aboutWin.show();
+          }
+        },
+      },
+      {
+        // hidden dev tools toggle
+        role: 'toggleDevTools',
+        visible: false,
+        accelerator: 'Shift+CmdOrCtrl+Alt+F12',
+      },
+    ],
   }));
 
   Menu.setApplicationMenu(menu);
 };
 
-const createNewCanvasPrompt = (parent: BrowserWindow) => {
+const createResizeCanvasWindow = (parent: BrowserWindow) => {
   // preload new canvas prompt
-  const newCanvasWin = new BrowserWindow({
+  const resizeCanvasWin = new BrowserWindow({
     width: 320,
     height: 200,
     show: false,
     parent: parent,
     modal: true,
     resizable: false,
-    minimizable: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -201,30 +215,66 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-resize/index.html`);
+    resizeCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-resize/index.html`);
   } else {
-    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-resize/index.html`));
+    resizeCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-resize/index.html`));
   }
 
   // close when the user clicks cancel or confirm
   ipcMain.on(Channel.CLOSE_RESIZE_PROMPT, () => {
-    newCanvasWin.hide();
+    resizeCanvasWin.hide();
   });
 
   // prevent destroying the window on close
-  newCanvasWin.on('close', e => {
+  resizeCanvasWin.on('close', e => {
     e.preventDefault();
-    newCanvasWin.hide();
-    newCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
+    resizeCanvasWin.hide();
+    resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
   });
 
   // disable minimize
-  newCanvasWin.on('minimize', (e: Event) => {
+  resizeCanvasWin.on('minimize', (e: Event) => {
     e.preventDefault();
-    newCanvasWin.restore();
+    resizeCanvasWin.restore();
   });
 
-  return newCanvasWin;
+  return resizeCanvasWin;
+};
+
+const createAboutWindow = (parent: BrowserWindow) => {
+  const aboutWindow = new BrowserWindow({
+    width: 320,
+    height: 256,
+    show: false,
+    resizable: false,
+    parent: parent,
+    modal: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
+    icon: path.join(__dirname, 'img/icon.png'),
+  });
+
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    aboutWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-about/index.html`);
+  } else {
+    aboutWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-about/index.html`));
+  }
+
+  // prevent destroying the window on close
+  aboutWindow.on('close', e => {
+    e.preventDefault();
+    aboutWindow.hide();
+  });
+
+  // minimize main window instead
+  aboutWindow.on('minimize', (e: Event) => {
+    e.preventDefault();
+    parent.minimize();
+    aboutWindow.hide();
+  });
+
+  return aboutWindow;
 };
 
 // file saving

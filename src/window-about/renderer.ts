@@ -1,2 +1,2 @@
-import './window'
-import './index.css'
+import './window';
+import './index.css';
