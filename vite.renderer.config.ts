@@ -7,7 +7,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        promptResize: resolve(__dirname, 'src/prompt-resize/index.html'),
+        promptResize: resolve(__dirname, 'src/window-resize/index.html'),
       },
     },
   },

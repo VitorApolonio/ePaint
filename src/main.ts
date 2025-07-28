@@ -201,9 +201,9 @@ const createNewCanvasPrompt = (parent: BrowserWindow) => {
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/prompt-resize/index.html`);
+    newCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-resize/index.html`);
   } else {
-    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/prompt-resize/index.html`));
+    newCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-resize/index.html`));
   }
 
   // close when the user clicks cancel or confirm

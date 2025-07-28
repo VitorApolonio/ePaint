@@ -1,2 +1,2 @@
-import './prompt';
+import './window';
 import './index.css';

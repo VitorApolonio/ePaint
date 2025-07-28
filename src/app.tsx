@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react'
+import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useRef, useState } from 'react';
 import Tool from './logic/tool';

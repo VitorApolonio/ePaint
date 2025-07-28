@@ -29,7 +29,7 @@ const CanvasResizePrompt = () => {
   window.electronAPI.onClearNewFields(clearFields);
 
   return (
-    <>
+    <div id="root">
       <Fields
         widthFieldRef={widthRef}
         heightFieldRef={heightRef}
@@ -39,7 +39,7 @@ const CanvasResizePrompt = () => {
       <DialogButtons
         clearFieldsFn={clearFields}
         resizeFn={resize} />
-    </>
+    </div>
   );
 };
 
