@@ -11,7 +11,7 @@ if (started) {
   app.quit();
 }
 
-const createWindow = () => {
+const createMainWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1024,
@@ -214,6 +214,9 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
     icon: path.join(__dirname, 'img/icon.png'),
   });
 
+  // hide menu
+  resizeCanvasWin.setMenuBarVisibility(false);
+
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     resizeCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-resize/index.html`);
   } else {
@@ -255,6 +258,9 @@ const createAboutWindow = (parent: BrowserWindow) => {
     icon: path.join(__dirname, 'img/icon.png'),
   });
 
+  // hide menu
+  aboutWindow.setMenuBarVisibility(false);
+
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     aboutWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-about/index.html`);
   } else {
@@ -281,6 +287,7 @@ const createAboutWindow = (parent: BrowserWindow) => {
 ipcMain.on(Channel.WRITE_IMAGE_TO_DISK, async (_event, path, arrBuffer) => {
   const supported = ['png', 'jpg', 'jpeg', 'bmp', 'tif', 'tiff'];
   const ext = path.split('.').pop().toLowerCase();
+  // ignore paths with unsupported extensions
   if (supported.includes(ext)) {
     Jimp.read(arrBuffer).then(img => {
       img.write(path);
@@ -292,13 +299,13 @@ ipcMain.on(Channel.WRITE_IMAGE_TO_DISK, async (_event, path, arrBuffer) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow();
+  createMainWindow();
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+      createMainWindow();
     }
   });
 });
