@@ -235,10 +235,11 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
     resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
   });
 
-  // disable minimize
+  // minimize main window instead
   resizeCanvasWin.on('minimize', (e: Event) => {
     e.preventDefault();
-    resizeCanvasWin.restore();
+    parent.minimize()
+    resizeCanvasWin.hide();
   });
 
   return resizeCanvasWin;
