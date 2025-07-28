@@ -44,7 +44,7 @@ const ClearCanvas = (props: ClearCanvasProps) => {
 
   return (
     <div className="tool">
-      <p><strong>Clear&nbsp;canvas</strong></p>
+      <label className="label">Clear canvas</label>
       <button className="button is-warning" onClick={onClick}>
         <span className="icon"><BrushCleaning /></span>
         <span>Clear</span>

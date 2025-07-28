@@ -56,7 +56,7 @@ const UndoRedo = (props: UndoRedoProps) => {
 
   return (
     <div className="tool">
-      <p><strong>Undo&nbsp;/&nbsp;Redo</strong></p>
+      <label className="label">Undo / Redo</label>
       <div className="field has-addons">
         <StateControlButton disabled={!props.undoActive} onClick={undoHandler} iconLucide={<Undo />} />
         <StateControlButton disabled={!props.redoActive} onClick={redoHandler} iconLucide={<Redo />} />
