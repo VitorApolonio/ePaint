@@ -118,6 +118,7 @@ use I came across the exponential function and just knew it was meant to be.
 ___
 ## To-do list
 
+- migrate this section to an Obsidian folder
 - remove dash from package name
 - include new features in this readme
 - allow opening image files
