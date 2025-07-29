@@ -224,6 +224,7 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
   resizeCanvasWin.webContents.on('before-input-event', (_event, input) => {
     if (input.key === 'Escape') {
       resizeCanvasWin.hide();
+      resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
     }
   });
 
