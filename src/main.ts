@@ -38,7 +38,7 @@ const createMainWindow = () => {
   }
 
   // preload windows
-  const newCanvasWin = createResizeCanvasWindow(mainWindow);
+  const resizeWin = createResizeCanvasWindow(mainWindow);
   const aboutWin = createAboutWindow(mainWindow);
 
   // forward data with width/height on resize confirm
@@ -102,6 +102,12 @@ const createMainWindow = () => {
           }).then(r => mainWindow.webContents.send(Channel.SAVE_CANVAS_AS_IMAGE, r.filePath));
         },
       },
+      { type: 'separator' },
+      {
+        role: 'close',
+        label: 'Quit',
+        accelerator: 'CmdOrCtrl+Q',
+      },
     ],
   }));
 
@@ -128,9 +134,9 @@ const createMainWindow = () => {
         label: 'Resize...',
         accelerator: 'CmdOrCtrl+R',
         click: () => {
-          if (newCanvasWin && !newCanvasWin.isVisible()) {
-            newCanvasWin.center();
-            newCanvasWin.show();
+          if (resizeWin && !resizeWin.isVisible()) {
+            resizeWin.center();
+            resizeWin.show();
           }
         },
       },
@@ -214,6 +220,13 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
     icon: path.join(__dirname, 'img/icon.png'),
   });
 
+  // close with esc
+  resizeCanvasWin.webContents.on('before-input-event', (_event, input) => {
+    if (input.key === 'Escape') {
+      resizeCanvasWin.hide();
+    }
+  });
+
   // hide menu
   resizeCanvasWin.setMenuBarVisibility(false);
 
@@ -257,6 +270,13 @@ const createAboutWindow = (parent: BrowserWindow) => {
       preload: path.join(__dirname, 'preload.js'),
     },
     icon: path.join(__dirname, 'img/icon.png'),
+  });
+
+  // close with esc
+  aboutWindow.webContents.on('before-input-event', (_event, input) => {
+    if (input.key === 'Escape') {
+      aboutWindow.hide();
+    }
   });
 
   // hide menu
