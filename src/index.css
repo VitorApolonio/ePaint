@@ -21,6 +21,10 @@ canvas {
   cursor: crosshair;
 }
 
+.label {
+  white-space: nowrap;
+}
+
 .tool {
   margin: 2vh 2vw;
   text-align: center;
