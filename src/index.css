@@ -1,29 +1,13 @@
-@import 'bulma/css/bulma.css';
-
-html {
-  overflow-y: hidden;
-}
+@import './base.css';
 
 #root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  padding: 1rem;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
   justify-content: space-around;
-  user-select: none;
+  align-items: center;
 }
 
 canvas {
   display: flex;
   cursor: crosshair;
-}
-
-.label {
-  white-space: nowrap;
 }
 
 .tool {

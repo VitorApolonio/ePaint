@@ -1,0 +1,25 @@
+/*
+ * This file is imported by every other css file in the project,
+ * make sure to check them before changing anything.
+ */
+
+@import 'bulma/css/bulma.css';
+
+html {
+  overflow-y: hidden;
+}
+
+#root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  padding: 1rem;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+  user-select: none;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}

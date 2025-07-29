@@ -1,10 +1,4 @@
-@import 'bulma/css/bulma.css';
-@import '../index.css';
-
-#root {
-  justify-content: normal;
-  align-items: normal;
-}
+@import '../base.css';
 
 .fields-container {
   align-content: center;

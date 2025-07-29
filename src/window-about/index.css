@@ -1,9 +1,4 @@
-@import 'bulma/css/bulma.css';
-@import '../index.css';
-
-#root {
-  justify-content: space-between;
-}
+@import '../base.css';
 
 .top, .bottom {
   align-content: space-around;
