@@ -1,17 +1,9 @@
 @import 'bulma/css/bulma.css';
-
-html {
-  overflow-y: hidden;
-}
+@import '../index.css';
 
 #root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  padding: 1rem;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-flow: column;
+  justify-content: normal;
+  align-items: normal;
 }
 
 .fields-container {
