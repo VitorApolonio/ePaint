@@ -1,2 +1,19 @@
 @import 'bulma/css/bulma.css';
 @import '../index.css';
+
+#root {
+  justify-content: space-between;
+}
+
+.top, .bottom {
+  align-content: space-around;
+  justify-items: center;
+}
+
+.top {
+  flex-grow: 1;
+}
+
+img {
+  width: 35vw;
+}

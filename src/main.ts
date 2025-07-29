@@ -238,7 +238,7 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
   // minimize main window instead
   resizeCanvasWin.on('minimize', (e: Event) => {
     e.preventDefault();
-    parent.minimize()
+    parent.minimize();
     resizeCanvasWin.hide();
   });
 
