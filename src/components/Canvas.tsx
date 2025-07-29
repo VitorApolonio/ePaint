@@ -40,10 +40,14 @@ const Canvas = (props: CanvasProps) => {
 
   // initialize brush, done only once
   useEffect(() => {
-    props.brushRef.current = new Brush(props.canvasRef.current);
-    props.brushRef.current.size = props.brushSize;
+    props.brushRef.current = new Brush(props.canvasRef.current, props.brushSize);
     props.stackRef.current = new DrawStack(props.canvasRef.current);
   }, []);
+
+  // set brush size
+  if (props.brushRef.current) {
+    props.brushRef.current.size = props.brushSize;
+  }
 
   const onMouseDown = (e: React.MouseEvent) => {
     props.holdingMouseRef.current = true;
