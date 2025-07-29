@@ -1,4 +1,4 @@
-import { Action } from './action';
+import { Action, ResizeAction } from './action';
 import Brush from './brush';
 
 /**
@@ -57,13 +57,7 @@ class DrawStack {
   undo() {
     if (this.#index > 0) {
       this.#index--;
-      this.#brush.clearCanvas();
-      // start at default res
-      this.#brush.resizeCanvas(800, 600);
-      // draw this action and all the ones before it
-      for (let i = 1; i <= this.#index; i++) {
-        this.#actions[i - 1].perform(this.#brush);
-      }
+      this.#performUpToCurrent();
     }
   }
 
@@ -74,13 +68,7 @@ class DrawStack {
   redo() {
     if (this.#index < this.#actions.length) {
       this.#index++;
-      this.#brush.clearCanvas();
-      // start at default res
-      this.#brush.resizeCanvas(800, 600);
-      // draw this action and all the ones before it
-      for (let i = 1; i <= this.#index; i++) {
-        this.#actions[i - 1].perform(this.#brush);
-      }
+      this.#performUpToCurrent();
     }
   }
 
@@ -90,6 +78,32 @@ class DrawStack {
   clear() {
     this.#index = 0;
     this.#actions.length = 0; // man i love this language
+  }
+
+  /**
+   * Performs all actions in the stack up to the current index.
+   */
+  #performUpToCurrent() {
+    this.#brush.clearCanvas();
+
+    // start at default res
+    this.#brush.resizeCanvas(800, 600);
+
+    // only the last resize operation is performed
+    let lastResize: Action = null;
+
+    for (let i = 1; i <= this.#index; i++) {
+      const curAct = this.#actions[i - 1];
+      if (curAct instanceof ResizeAction) {
+        lastResize = curAct;
+      } else {
+        curAct.perform(this.#brush);
+      }
+    }
+
+    if (lastResize) {
+      lastResize.perform(this.#brush);
+    }
   }
 }
 

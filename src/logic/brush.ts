@@ -20,7 +20,7 @@ class Brush {
    */
   constructor(canvas: HTMLCanvasElement, size = 1, color = '#ffffff') {
     // disable transparency as not all file formats support it
-    this.#ctx = canvas.getContext('2d', { alpha: false });
+    this.#ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
 
     this.#size = size;
     this.#color = color;
@@ -256,7 +256,7 @@ class Brush {
     const w = this.#ctx.canvas.width;
     const h = this.#ctx.canvas.height;
 
-    const bkp = this.#ctx.getImageData(0, 0, w, h);
+    const bkp = this.#ctx.getImageData(0, 0, Math.min(w, Math.max(newWidth, minW)), Math.min(h, Math.max(newHeight, minH)));
     this.#ctx.canvas.width = Math.min(maxW, Math.max(newWidth, minW));
     this.#ctx.canvas.height = Math.min(maxH, Math.max(newHeight, minH));
     this.drawImage(bkp);
