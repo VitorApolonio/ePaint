@@ -115,20 +115,3 @@ like The Organic Chemistry Tutor, so from the get-go the app was designed with t
 
 I wanted the icon to be something drawn onto a rainbow gradient, and while looking for stuff I could
 use I came across the exponential function and just knew it was meant to be.
-___
-## To-do list
-
-- migrate this section to an Obsidian folder
-- remove dash from package name
-- include new features in this readme
-- fix slowdown with color picker on React
-- fix issues with file naming on release, improve windows installer
-- use custom method for drawing lines to get rid of antialiasing
-- instead of quietly setting res to 100x100, inform user of this minimum when making a new canvas
-- `Ctrl+Scroll` or `Ctrl+-\+` to zoom
-- maybe replace the default HTML color picker
-- fix painting dot when leaving color picker
-- limit number of kept actions
-- show brush size on cursor
-- create unit tests
-- click and drag copy paste/move
