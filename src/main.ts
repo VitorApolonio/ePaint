@@ -197,7 +197,7 @@ const createMainWindow = () => {
         // hidden dev tools toggle
         role: 'toggleDevTools',
         visible: false,
-        accelerator: 'Shift+CmdOrCtrl+Alt+F12',
+        accelerator: 'Shift+CmdOrCtrl+Alt+N',
       },
     ],
   }));
