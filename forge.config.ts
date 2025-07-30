@@ -3,6 +3,7 @@ import { MakerWix } from '@electron-forge/maker-wix';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
+import { MakerDMG } from '@electron-forge/maker-dmg';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
@@ -26,6 +27,11 @@ const config: ForgeConfig = {
       programFilesFolderName: 'ePaint',
       shortcutFolderName: 'ePaint',
       upgradeCode: '7967ab5f-913b-4e2a-ad0c-c7dee76749f2',
+    }),
+    new MakerDMG({
+      name: 'ePaint',
+      icon: 'src/img/icon.icns',
+      format: 'ULFO',
     }),
     new MakerRpm({
       options: {
