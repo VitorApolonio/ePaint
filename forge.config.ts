@@ -21,6 +21,8 @@ const config: ForgeConfig = {
       icon: 'src/img/icon.ico',
       ui: {
         chooseDirectory: true,
+        // TODO: Create the template XML and uncomment this line
+        // template: 'src/wix-template.wxs',
       },
       language: 1033,
       programFilesFolderName: 'ePaint',
