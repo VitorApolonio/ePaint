@@ -14,16 +14,21 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm ci
 
       - name: Build Application
-        run: npm run make
+        run: pnpm run make
 
       - name: Upload Installer Artifacts
         uses: actions/upload-artifact@v4
