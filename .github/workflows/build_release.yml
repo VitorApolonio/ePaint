@@ -24,6 +24,9 @@ jobs:
         with:
           version: 10
 
+      - name: Configure pnpm
+        run: pnpm config set node-linker hoisted
+
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
