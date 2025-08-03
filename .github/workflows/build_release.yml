@@ -14,24 +14,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: Configure pnpm
-        run: pnpm config set node-linker hoisted
-
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Build Application
-        run: pnpm run make
+        run: npm run make
 
       - name: Upload Installer Artifacts
         uses: actions/upload-artifact@v4
