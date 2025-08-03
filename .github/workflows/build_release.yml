@@ -25,7 +25,7 @@ jobs:
           version: 10
 
       - name: Install Dependencies
-        run: pnpm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build Application
         run: pnpm run make
