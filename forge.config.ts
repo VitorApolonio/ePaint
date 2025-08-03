@@ -7,6 +7,7 @@ import { MakerDMG } from '@electron-forge/maker-dmg';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import { PublisherGithub } from '@electron-forge/publisher-github';
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -14,6 +15,16 @@ const config: ForgeConfig = {
     icon: 'src/img/icon',
   },
   rebuildConfig: {},
+  publishers: [
+    new PublisherGithub({
+      repository: {
+        owner: 'VitorApolonio',
+        name: 'ePaint',
+      },
+      prerelease: true,
+      draft: true,
+    }),
+  ],
   makers: [
     new MakerWix({
       name: 'ePaint',
