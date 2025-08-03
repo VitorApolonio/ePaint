@@ -22,7 +22,8 @@ const config: ForgeConfig = {
         name: 'ePaint',
       },
       prerelease: true,
-      draft: true,
+      tagPrefix: `nightly-${new Date().toISOString().split('T')[0].replace('-', '')}-v`,
+      generateReleaseNotes: true,
     }),
   ],
   makers: [
