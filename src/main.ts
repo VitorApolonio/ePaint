@@ -1,15 +1,9 @@
 import { app, BrowserWindow, Menu, MenuItem, ipcMain, dialog } from 'electron';
 import path from 'node:path';
-import started from 'electron-squirrel-startup';
 import fs from 'fs';
 import { Jimp } from 'jimp';
 import Channel from './logic/channel';
 import Tool from './logic/tool';
-
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (started) {
-  app.quit();
-}
 
 const createMainWindow = () => {
   // Create the browser window.
