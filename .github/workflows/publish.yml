@@ -42,6 +42,7 @@ jobs:
         with:
           files: ${{env.FILE_LIST}}
           name: ${{env.RELEASE_NAME}}
+          tag_name: ${{env.TAG_NAME}}
           generate_release_notes: true
           prerelease: true
           draft: true
