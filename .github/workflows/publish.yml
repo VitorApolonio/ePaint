@@ -33,13 +33,20 @@ jobs:
         id: date
         run: echo "date=$(date +'%Y%m%d')" >> "$GITHUB_OUTPUT"
 
+      - name: Get Artifact List
+        id: files
+        run: echo "files=$(find out/make/ -type f)" >> "$GITHUB_OUTPUT"
+
       - name: Release build
         uses: softprops/action-gh-release@v2
         with:
-          files: out/make/*
+          files: ${{env.FILE_LIST}}
           name: ${{env.RELEASE_NAME}}
           generate_release_notes: true
           prerelease: true
           draft: true
+          fail_on_unmatched_files: true
         env:
           RELEASE_NAME: nightly-${{steps.date.outputs.date}}
+          TAG_NAME: nightly-${{steps.date.outputs.date}}
+          FILE_LIST: ${{steps.files.outputs.files}}
