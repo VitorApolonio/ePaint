@@ -16,7 +16,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,7 +26,20 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Publish Release
-        run: npm run publish
+      - name: Build App
+        run: npm run make
+
+      - name: Get Current Date
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Release build
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/make/*
+          name: ${{env.RELEASE_NAME}}
+          generate_release_notes: true
+          prerelease: true
+          draft: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_NAME: nightly-${{steps.date.outputs.date}}
