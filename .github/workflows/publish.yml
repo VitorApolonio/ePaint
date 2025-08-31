@@ -56,7 +56,7 @@ jobs:
 
       - name: Get Current Version Number
         id: version
-        run: echo "version=$(npm pkg get version)" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(npm pkg get version | tr -d '\"')" >> "$GITHUB_OUTPUT"
 
       - name: Get Artifact List
         id: files
