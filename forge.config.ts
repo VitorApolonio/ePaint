@@ -27,37 +27,6 @@ const config: ForgeConfig = {
     }),
   ],
   makers: [
-    new MakerWix({
-      name: 'ePaint',
-      exe: 'ePaint',
-      icon: 'src/img/icon.ico',
-      ui: {
-        chooseDirectory: true,
-        // TODO: Create the template XML and uncomment this line
-        // template: 'src/wix-template.wxs',
-      },
-      language: 1033,
-      programFilesFolderName: 'ePaint',
-      shortcutFolderName: 'ePaint',
-      upgradeCode: '7967ab5f-913b-4e2a-ad0c-c7dee76749f2',
-    }),
-    new MakerDMG({
-      name: 'ePaint',
-      icon: 'src/img/icon.icns',
-      format: 'ULFO',
-    }),
-    new MakerRpm({
-      options: {
-        bin: 'ePaint',
-        icon: 'src/img/icon.png',
-      },
-    }),
-    new MakerDeb({
-      options: {
-        bin: 'ePaint',
-        icon: 'src/img/icon.png',
-      },
-    }),
     new MakerZIP({}, ['darwin', 'linux', 'win32']),
   ],
   plugins: [
