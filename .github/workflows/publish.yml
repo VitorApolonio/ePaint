@@ -44,7 +44,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v5
-        
+
       - name: Download Artifacts
         uses: actions/download-artifact@v5
         with:
@@ -60,7 +60,12 @@ jobs:
 
       - name: Get Artifact List
         id: files
-        run: echo "files=$(find artifacts -type f)" >> "$GITHUB_OUTPUT"
+        run: |
+          {
+            echo "files<<EOF"
+            find artifacts -type f
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
 
       - name: Release build
         uses: softprops/action-gh-release@v2
