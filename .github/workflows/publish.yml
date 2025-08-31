@@ -33,6 +33,10 @@ jobs:
         id: date
         run: echo "date=$(date +'%Y%m%d')" >> "$GITHUB_OUTPUT"
 
+      - name: Get Current Version Number
+        id: version
+        run: echo "version=$(npm pkg get version)" >> "$GITHUB_OUTPUT"
+
       - name: Get Artifact List
         id: files
         run: echo "files=$(find out/make/ -type f)" >> "$GITHUB_OUTPUT"
@@ -40,14 +44,14 @@ jobs:
       - name: Release build
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{env.FILE_LIST}}
-          name: ${{env.RELEASE_NAME}}
-          tag_name: ${{env.TAG_NAME}}
+          files: ${{ env.FILE_LIST }}
+          name: ${{ env.RELEASE_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
           generate_release_notes: true
           prerelease: true
           draft: true
           fail_on_unmatched_files: true
         env:
-          RELEASE_NAME: nightly-${{steps.date.outputs.date}}
-          TAG_NAME: nightly-${{steps.date.outputs.date}}
-          FILE_LIST: ${{steps.files.outputs.files}}
+          RELEASE_NAME: nightly-${{ steps.date.outputs.date }}-${{ steps.version.outputs.version }}
+          TAG_NAME: nightly-${{ steps.date.outputs.date }}-${{ steps.version.outputs.version }}
+          FILE_LIST: ${{ steps.files.outputs.files }}
