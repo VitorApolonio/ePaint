@@ -1,4 +1,4 @@
-import { Action, ResizeAction } from './action';
+import { Action } from './action';
 import Brush from './brush';
 
 /**
@@ -89,20 +89,10 @@ class DrawStack {
     // start at default res
     this.#brush.resizeCanvas(800, 600);
 
-    // only the last resize operation is performed
-    let lastResize: Action = null;
-
+    // perform actions up to index
     for (let i = 1; i <= this.#index; i++) {
       const curAct = this.#actions[i - 1];
-      if (curAct instanceof ResizeAction) {
-        lastResize = curAct;
-      } else {
-        curAct.perform(this.#brush);
-      }
-    }
-
-    if (lastResize) {
-      lastResize.perform(this.#brush);
+      curAct.perform(this.#brush);
     }
   }
 }

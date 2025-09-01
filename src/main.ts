@@ -47,7 +47,7 @@ const createMainWindow = () => {
       colorPickerWin.center();
       colorPickerWin.show();
     }
-  })
+  });
 
   // create app menu
   const menu = new Menu();
@@ -260,7 +260,7 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
       resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
     }
   });
-  resizeCanvasWin.on('close', e => {
+  resizeCanvasWin.on('close', () => {
     resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
   });
 

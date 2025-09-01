@@ -1,4 +1,4 @@
-import { createRoot } from "react-dom/client";
+import { createRoot } from 'react-dom/client';
 
 const ColorPickerWindow = () => {
   return (
@@ -9,5 +9,5 @@ const ColorPickerWindow = () => {
 };
 
 createRoot(document.body).render(
-    <ColorPickerWindow />,
+  <ColorPickerWindow />,
 );
