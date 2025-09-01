@@ -9,6 +9,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         winResize: resolve(__dirname, 'src/window-resize/index.html'),
         winAbout: resolve(__dirname, 'src/window-about/index.html'),
+        winColorPicker: resolve(__dirname, 'src/window-colorpicker/index.html'),
       },
     },
   },
