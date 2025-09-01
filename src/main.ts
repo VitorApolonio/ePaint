@@ -264,6 +264,11 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
     resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
   });
 
+  // close when the user clicks cancel or confirm
+  ipcMain.on(Channel.CLOSE_RESIZE_PROMPT, () => {
+    resizeCanvasWin.hide();
+  });
+
   setUpModalWindow(resizeCanvasWin, 'window-resize');
 
   return resizeCanvasWin;
