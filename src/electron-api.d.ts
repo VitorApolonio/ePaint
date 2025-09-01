@@ -36,6 +36,9 @@ declare global {
 
     /** Define a function to run when the tool changes by a shortcut. */
     onToolSwitch: (callback: (tool: Tool) => void) => void;
+
+    /** Sends to the main IPC a call to open the color picker window, and whether the button pressed was the primary color. */
+    onColorPickerButton: (primary: boolean) => void;
   }
 
   interface Window {

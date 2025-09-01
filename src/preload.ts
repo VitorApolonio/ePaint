@@ -24,4 +24,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onToolSwitch: cb => ipcRenderer.on(Channel.SET_CURRENT_TOOL, (_event, tool) => cb(tool)),
   // wipe canvas by shortcut
   onClearShortcut: cb => ipcRenderer.on(Channel.CLEAR_THROUGH_SHORTCUT, cb),
+  // open color picker by clicking the color picker buttons
+  onColorPickerButton: primary => ipcRenderer.send(Channel.OPEN_COLOR_PICKER_WINDOW, primary),
 } as ElectronAPI);

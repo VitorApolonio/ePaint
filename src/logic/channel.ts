@@ -18,6 +18,8 @@ enum Channel {
   WRITE_IMAGE_TO_DISK = 'write-canvas-image',
 
   SET_CURRENT_TOOL = 'change-tool',
+
+  OPEN_COLOR_PICKER_WINDOW = 'open-color-picker-win',
 }
 
 export default Channel;

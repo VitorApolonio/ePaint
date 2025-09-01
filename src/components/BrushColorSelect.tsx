@@ -1,4 +1,5 @@
 import { ArrowLeftRight } from 'lucide-react';
+import { MouseEvent } from 'react';
 
 interface SwapButtonProps {
   /* colors to swap */
@@ -29,12 +30,24 @@ interface ColorSelectButtonProps {
   color: string;
   /* a function to set the button color */
   colorSetterFn: (color: string) => void;
+  /* whether this button represents the primary color */
+  isPrimary: boolean;
 }
 
 const ColorSelectButton = (props: ColorSelectButtonProps) => {
+  const onClick = (e: MouseEvent) => {
+    e.preventDefault();
+    window.electronAPI.onColorPickerButton(props.isPrimary);
+  };
+
   return (
     <p className="control">
-      <input type="color" className="input color-picker" value={props.color} onChange={e => props.colorSetterFn(e.target.value)} />
+      <input
+        type="color"
+        className="input color-picker"
+        value={props.color}
+        onChange={e => props.colorSetterFn(e.target.value)}
+        onClick={onClick} />
     </p>
   );
 };
@@ -55,13 +68,13 @@ const BrushColorSelect = (props: BrushColorSelectProps) => {
     <div className="tool">
       <label className="label">Color&nbsp;1&nbsp;/&nbsp;Color&nbsp;2</label>
       <div className="field is-grouped">
-        <ColorSelectButton color={props.colorPrimary} colorSetterFn={props.colorPrimarySetterFn} />
+        <ColorSelectButton color={props.colorPrimary} colorSetterFn={props.colorPrimarySetterFn} isPrimary={true} />
         <SwapButton
           colorA={props.colorPrimary}
           colorB={props.colorSecondary}
           setterA={props.colorPrimarySetterFn}
           setterB={props.colorSecondarySetterFn} />
-        <ColorSelectButton color={props.colorSecondary} colorSetterFn={props.colorSecondarySetterFn} />
+        <ColorSelectButton color={props.colorSecondary} colorSetterFn={props.colorSecondarySetterFn} isPrimary={false} />
       </div>
     </div>
   );

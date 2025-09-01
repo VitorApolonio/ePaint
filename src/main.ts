@@ -34,11 +34,20 @@ const createMainWindow = () => {
   // preload windows
   const resizeWin = createResizeCanvasWindow(mainWindow);
   const aboutWin = createAboutWindow(mainWindow);
+  const colorPickerWin = createColorPickerWindow(mainWindow);
 
   // forward data with width/height on resize confirm
   ipcMain.on(Channel.RESIZE_CANVAS, (_event, width, height) => {
     mainWindow.webContents.send(Channel.RESIZE_CANVAS, width, height);
   });
+
+  // open color picker menu when a button is pressed
+  ipcMain.on(Channel.OPEN_COLOR_PICKER_WINDOW, (_event, primary) => {
+    if (colorPickerWin && !colorPickerWin.isVisible()) {
+      colorPickerWin.center();
+      colorPickerWin.show();
+    }
+  })
 
   // create app menu
   const menu = new Menu();
@@ -297,6 +306,52 @@ const createAboutWindow = (parent: BrowserWindow) => {
   });
 
   return aboutWindow;
+};
+
+const createColorPickerWindow = (parent: BrowserWindow) => {
+  const colorPickerWindow = new BrowserWindow({
+    width: 512,
+    height: 300,
+    show: false,
+    resizable: false,
+    parent: parent,
+    modal: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
+    icon: path.join(__dirname, 'img/icon.png'),
+  });
+
+  // close with esc
+  colorPickerWindow.webContents.on('before-input-event', (_event, input) => {
+    if (input.key === 'Escape') {
+      colorPickerWindow.hide();
+    }
+  });
+
+  // hide menu
+  colorPickerWindow.setMenuBarVisibility(false);
+
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    colorPickerWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-color-picker/index.html`);
+  } else {
+    colorPickerWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-color-picker/index.html`));
+  }
+
+  // prevent destroying the window on close
+  colorPickerWindow.on('close', e => {
+    e.preventDefault();
+    colorPickerWindow.hide();
+  });
+
+  // minimize main window instead
+  colorPickerWindow.on('minimize', (e: Event) => {
+    e.preventDefault();
+    parent.minimize();
+    colorPickerWindow.hide();
+  });
+
+  return colorPickerWindow;
 };
 
 // file saving
