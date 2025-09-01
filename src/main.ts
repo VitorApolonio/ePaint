@@ -208,6 +208,37 @@ const createMainWindow = () => {
   Menu.setApplicationMenu(menu);
 };
 
+const setUpModalWindow = (win: BrowserWindow, folderName: string) => {
+  // close with esc
+  win.webContents.on('before-input-event', (_event, input) => {
+    if (input.key === 'Escape') {
+      win.hide();
+    }
+  });
+
+  // hide menu
+  win.setMenuBarVisibility(false);
+
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    win.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/${folderName}/index.html`);
+  } else {
+    win.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/${folderName}/index.html`));
+  }
+
+  // prevent destroying the window on close
+  win.on('close', e => {
+    e.preventDefault();
+    win.hide();
+  });
+
+  // minimize main window instead
+  win.on('minimize', (e: Event) => {
+    e.preventDefault();
+    parent.minimize();
+    win.hide();
+  });
+};
+
 const createResizeCanvasWindow = (parent: BrowserWindow) => {
   // preload new canvas prompt
   const resizeCanvasWin = new BrowserWindow({
@@ -223,41 +254,17 @@ const createResizeCanvasWindow = (parent: BrowserWindow) => {
     icon: path.join(__dirname, 'img/icon.png'),
   });
 
-  // close with esc
+  // clear fields on close
   resizeCanvasWin.webContents.on('before-input-event', (_event, input) => {
     if (input.key === 'Escape') {
-      resizeCanvasWin.hide();
       resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
     }
   });
-
-  // hide menu
-  resizeCanvasWin.setMenuBarVisibility(false);
-
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    resizeCanvasWin.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-resize/index.html`);
-  } else {
-    resizeCanvasWin.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-resize/index.html`));
-  }
-
-  // close when the user clicks cancel or confirm
-  ipcMain.on(Channel.CLOSE_RESIZE_PROMPT, () => {
-    resizeCanvasWin.hide();
-  });
-
-  // prevent destroying the window on close
   resizeCanvasWin.on('close', e => {
-    e.preventDefault();
-    resizeCanvasWin.hide();
     resizeCanvasWin.webContents.send(Channel.RESET_RESIZE_PROMPT);
   });
 
-  // minimize main window instead
-  resizeCanvasWin.on('minimize', (e: Event) => {
-    e.preventDefault();
-    parent.minimize();
-    resizeCanvasWin.hide();
-  });
+  setUpModalWindow(resizeCanvasWin, 'window-resize');
 
   return resizeCanvasWin;
 };
@@ -276,34 +283,7 @@ const createAboutWindow = (parent: BrowserWindow) => {
     icon: path.join(__dirname, 'img/icon.png'),
   });
 
-  // close with esc
-  aboutWindow.webContents.on('before-input-event', (_event, input) => {
-    if (input.key === 'Escape') {
-      aboutWindow.hide();
-    }
-  });
-
-  // hide menu
-  aboutWindow.setMenuBarVisibility(false);
-
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    aboutWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-about/index.html`);
-  } else {
-    aboutWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-about/index.html`));
-  }
-
-  // prevent destroying the window on close
-  aboutWindow.on('close', e => {
-    e.preventDefault();
-    aboutWindow.hide();
-  });
-
-  // minimize main window instead
-  aboutWindow.on('minimize', (e: Event) => {
-    e.preventDefault();
-    parent.minimize();
-    aboutWindow.hide();
-  });
+  setUpModalWindow(aboutWindow, 'window-about');
 
   return aboutWindow;
 };
@@ -322,34 +302,7 @@ const createColorPickerWindow = (parent: BrowserWindow) => {
     icon: path.join(__dirname, 'img/icon.png'),
   });
 
-  // close with esc
-  colorPickerWindow.webContents.on('before-input-event', (_event, input) => {
-    if (input.key === 'Escape') {
-      colorPickerWindow.hide();
-    }
-  });
-
-  // hide menu
-  colorPickerWindow.setMenuBarVisibility(false);
-
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    colorPickerWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/src/window-color-picker/index.html`);
-  } else {
-    colorPickerWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/src/window-color-picker/index.html`));
-  }
-
-  // prevent destroying the window on close
-  colorPickerWindow.on('close', e => {
-    e.preventDefault();
-    colorPickerWindow.hide();
-  });
-
-  // minimize main window instead
-  colorPickerWindow.on('minimize', (e: Event) => {
-    e.preventDefault();
-    parent.minimize();
-    colorPickerWindow.hide();
-  });
+  setUpModalWindow(colorPickerWindow, 'window-color-picker');
 
   return colorPickerWindow;
 };
