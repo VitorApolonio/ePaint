@@ -36,7 +36,7 @@ interface ToolSelectProps {
 const ToolSelect = (props: ToolSelectProps) => {
   return (
     <div className="tool">
-      <label className="label">Selected tool</label>
+      <label className="label">Selected&nbsp;tool</label>
       <div className="field has-addons">
         <ToolButton
           title={Tool.PAINTBRUSH}

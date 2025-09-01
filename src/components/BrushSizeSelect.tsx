@@ -10,7 +10,7 @@ interface BrushSizeSelectProps {
 const BrushSizeSelect = (props: BrushSizeSelectProps) => {
   return (
     <div className="tool">
-      <label className="label">Brush size</label>
+      <label className="label">Brush&nbsp;size</label>
       <div className="select">
         <select value={props.curSize} onChange={e => props.sizeSetterFn(parseInt(e.target.value))}>
           {props.sizes.map(size => (<option key={size} value={size}>{size}</option>))}

@@ -53,7 +53,7 @@ interface BrushColorSelectProps {
 const BrushColorSelect = (props: BrushColorSelectProps) => {
   return (
     <div className="tool">
-      <label className="label">Color 1 / Color 2</label>
+      <label className="label">Color&nbsp;1&nbsp;/&nbsp;Color&nbsp;2</label>
       <div className="field is-grouped">
         <ColorSelectButton color={props.colorPrimary} colorSetterFn={props.colorPrimarySetterFn} />
         <SwapButton
