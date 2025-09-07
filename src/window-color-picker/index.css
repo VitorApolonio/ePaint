@@ -1,1 +1,26 @@
 @import '../base.css';
+
+#root {
+  flex-flow: row;
+}
+
+.color-picker-placeholder {
+  width: 66vh;
+  height: 66vh;
+  background-color: magenta;
+  align-self: center;
+}
+
+.color-picker-container, .buttons-container {
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+}
+
+.buttons-container {
+  justify-content: space-between;
+}
+
+.color-buttons {
+  align-self: center;
+}

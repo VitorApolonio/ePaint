@@ -296,7 +296,7 @@ const createAboutWindow = (parent: BrowserWindow) => {
 const createColorPickerWindow = (parent: BrowserWindow) => {
   const colorPickerWindow = new BrowserWindow({
     width: 512,
-    height: 300,
+    height: 320,
     show: false,
     resizable: false,
     parent: parent,
